@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:src="@drawable/heart"
+            android:layout_width="10dp"
+            android:layout_height="10dp" />
+
+        <ImageView
+            android:src="@drawable/heart"
+            android:layout_width="20dp"
+            android:layout_height="20dp" />
+        <ImageView
+            android:src="@drawable/heart"
+            android:layout_width="30dp"
+            android:layout_height="30dp" />
+
+        <ImageView
+            android:src="@drawable/heart"
+            android:background="#333"
+            android:tint="#00F"
+            android:layout_width="40dp"
+            android:layout_height="40dp" />
+
+        <ImageView
+            android:src="@drawable/heart"
+            android:background="#4303"
+            android:layout_width="60dp"
+            android:layout_height="60dp" />
+
+        <ImageView
+            android:src="@drawable/heart"
+            android:background="#4033"
+            android:tint="#0F0"
+            android:layout_width="80dp"
+            android:layout_height="80dp" />
+
+        <ImageView
+            android:src="@drawable/heart"
+            android:layout_width="100dp"
+            android:background="#8330"
+            android:layout_height="100dp" />
+
+    </LinearLayout>
+</LinearLayout>

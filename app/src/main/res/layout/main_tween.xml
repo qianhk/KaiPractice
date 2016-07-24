@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@color/normal_background"
+    android:orientation="vertical"
+    android:padding="12dp"
+    android:gravity="center_horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/v_alpha"
+        android:layout_marginTop="6dp"
+        android:src="@drawable/image_guide_duck_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <ImageView
+        android:id="@+id/v_translate"
+        android:layout_marginTop="32dp"
+        android:src="@drawable/image_guide_duck_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <ImageView
+        android:id="@+id/v_rotate"
+        android:background="@color/mask_background"
+        android:layout_marginTop="32dp"
+        android:src="@drawable/img_flush"
+        android:layout_width="48dp"
+        android:layout_height="48dp" />
+
+    <ImageView
+        android:id="@+id/v_rotate_big"
+        android:layout_marginTop="32dp"
+        android:src="@drawable/img_flush"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <ImageView
+        android:id="@+id/v_scale"
+        android:layout_marginTop="32dp"
+        android:src="@drawable/icon_favorite"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/v_scale_text"
+        android:layout_marginTop="42dp"
+        android:text="钱红凯"
+        android:textSize="4sp"
+        android:textColor="@color/normal_text_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>

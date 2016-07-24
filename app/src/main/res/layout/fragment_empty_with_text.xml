@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:background="@color/normal_background"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        >
+
+    <TextView
+            android:id="@+id/tv_text"
+            android:text="haha"
+            android:background="#4FF0"
+            android:gravity="center_horizontal"
+            android:layout_marginTop="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+</android.support.v4.widget.NestedScrollView>

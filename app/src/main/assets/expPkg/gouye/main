@@ -1,0 +1,46 @@
+{
+  "pkg": "com.kai.gouye",
+  "name": "狗爷",
+  "data": [
+    {
+      "file": "01_s.png",
+      "md5": "06d56d95517e7d8c425841de487ebdc9"
+    },
+    {
+      "file": "02_s.png",
+      "md5": "87871f36640b4ef2c4d21c5857499f4a"
+    },
+    {
+      "file": "03_s.png",
+      "md5": "7b6cee4c9163bfbfd7290ef2fcceca25"
+    },
+    {
+      "file": "04_s.png",
+      "md5": "628425186e6ce703c482f402885d03c4"
+    },
+    {
+      "file": "05_s.png",
+      "md5": "befaa7281ccb8a3689a407cf36e918ad"
+    },
+    {
+      "file": "06_s.png",
+      "md5": "07dce54c21441ae3a2c781a1aa98c82c"
+    },
+    {
+      "file": "07_s.png",
+      "md5": "7c32fee085c82fd1bb53023eda2593ae"
+    },
+    {
+      "file": "08_s.png",
+      "md5": "52a5100e1b6d972145b20715fe765454"
+    },
+    {
+      "file": "09_s.png",
+      "md5": "af652cc04a793c3fe302da55951368d4"
+    },
+    {
+      "file": "10_s.png",
+      "md5": "ffb1813bfcb7356888f98449fcf0ac5f"
+    }
+  ]
+}

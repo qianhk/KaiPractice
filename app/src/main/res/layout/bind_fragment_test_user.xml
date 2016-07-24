@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools">
+
+    <data class="com.njnu.kai.practice.binding.SimpleViewBinding">
+
+        <variable name="handlers" type="com.njnu.kai.practice.bind.BindSimpleViewFragment"/>
+
+        <variable
+            name="user"
+            type="com.njnu.kai.practice.bind.vm.UserModel"/>
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/normal_background"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_uid"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{String.valueOf(user.id)}"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{user.firstName}"
+            tools:text="first name"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{user.lastName}"
+            tools:text="last name"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="@{handlers.onClickIdPlus1}"
+            android:text="id +1"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:onClick="@{handlers.onClickIdMinus1}"
+            android:layout_height="wrap_content"
+            android:text="id -1"/>
+    </LinearLayout>
+</layout>

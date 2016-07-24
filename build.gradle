@@ -1,0 +1,40 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:2.1.0'
+        classpath 'me.tatarka:gradle-retrolambda:3.2.4'
+        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
+//        classpath 'com.uphyca.gradle:gradle-android-aspectj-plugin:0.9.14' //it does not work with databinding
+    }
+}
+
+allprojects {
+    repositories {
+        jcenter()
+    }
+}
+
+allprojects {
+    tasks.whenTaskAdded { task ->
+        if (task.name.equals("lint")) {
+            task.enabled = false
+        }
+    }
+}
+
+project.ext {
+    compileSdkVersion = 23
+    buildToolsVersion = "23.0.2"
+    minSdkVersion = 15
+    targetSdkVersion = 22
+    versionCode = 1
+    versionName = "0.0.1"
+    useJack = false
+    abortOnLintError = false
+    checkLintRelease = false
+
+}

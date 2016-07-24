@@ -1,0 +1,50 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFF"
+    >
+
+    <ImageView
+        android:layout_marginLeft="40dp"
+        android:layout_marginTop="40dp"
+        android:id="@+id/iv_circle"
+        android:background="@drawable/img_dot"
+        android:elevation="15dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp" />
+
+    <ImageView
+        android:layout_marginLeft="100dp"
+        android:layout_marginTop="80dp"
+        android:id="@+id/iv_square"
+        android:background="#0F0"
+        android:elevation="10dp"
+        android:outlineProvider="bounds"
+        android:layout_width="100dp"
+        android:layout_height="150dp" />
+
+    <ImageView
+        android:layout_marginLeft="40dp"
+        android:layout_marginTop="240dp"
+        android:id="@+id/iv_circle2"
+        android:background="@drawable/img_dot"
+        android:elevation="15dp"
+        android:tint="#2C3E50"
+        android:layout_width="100dp"
+        android:layout_height="100dp" />
+
+    <ImageView
+        android:layout_marginLeft="100dp"
+        android:layout_marginTop="280dp"
+        android:id="@+id/iv_square3"
+        android:background="#0F0"
+        android:elevation="10dp"
+        android:tint="#2C3E50"
+        android:outlineProvider="bounds"
+        android:layout_width="100dp"
+        android:layout_height="100dp" />
+
+
+
+</FrameLayout>
