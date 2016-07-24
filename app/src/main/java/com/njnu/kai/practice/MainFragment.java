@@ -38,7 +38,7 @@ public class MainFragment extends ActionBarLayoutFragment implements AdapterView
     private static final ArrayList<FunctionItem> FUNCTIONS = new ArrayList<FunctionItem>();
 
     static {
-        FUNCTIONS.add(new FunctionItem("Image loader2", ImageTestEntryFragment.class, false));
+        FUNCTIONS.add(new FunctionItem("Image loader", ImageTestEntryFragment.class, false));
         FUNCTIONS.add(new FunctionItem("Retrofit Test", RetrofitEntryFragment.class, false));
         FUNCTIONS.add(new FunctionItem("RxJava Test", RxJavaTestFragment.class, false));
         FUNCTIONS.add(new FunctionItem("EditText output", EditTextOutputFragment.class, false));
