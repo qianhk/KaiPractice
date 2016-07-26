@@ -20,6 +20,7 @@ import com.njnu.kai.practice.material.reveal.RevealActivity;
 import com.njnu.kai.practice.retrofit.RetrofitEntryFragment;
 import com.njnu.kai.practice.rxjava.RxJavaTestFragment;
 import com.njnu.kai.practice.splash.SplashActivity;
+import com.njnu.kai.practice.wave.PeriscopeAnimatorFragment;
 import com.njnu.kai.support.ConstantUtils;
 import com.njnu.kai.support.FunctionItem;
 import com.njnu.kai.support.ListViewUtils;
@@ -35,7 +36,7 @@ public class MainFragment extends ActionBarLayoutFragment implements AdapterView
 
     private DragUpdateListView mListView;
 
-    private static final ArrayList<FunctionItem> FUNCTIONS = new ArrayList<FunctionItem>();
+    private static final ArrayList<FunctionItem> FUNCTIONS = new ArrayList<>();
 
     static {
         FUNCTIONS.add(new FunctionItem("Image loader", ImageTestEntryFragment.class, false));
@@ -44,6 +45,7 @@ public class MainFragment extends ActionBarLayoutFragment implements AdapterView
         FUNCTIONS.add(new FunctionItem("EditText output", EditTextOutputFragment.class, false));
         FUNCTIONS.add(new FunctionItem("Data Binding", BindTestEntryFragment.class, false));
         FUNCTIONS.add(new FunctionItem("Dagger2", TestDaggerFragment.class, false));
+        FUNCTIONS.add(new FunctionItem("Periscope", PeriscopeAnimatorFragment.class, false));
         FUNCTIONS.add(new FunctionItem("Song Danmaku", DanmaukuActivity.class, true));
         FUNCTIONS.add(new FunctionItem("TweenAnimation", TweenAnimationActivity.class, true));
         FUNCTIONS.add(new FunctionItem("FrameAnimation", FrameAnimationActivity.class, true));
