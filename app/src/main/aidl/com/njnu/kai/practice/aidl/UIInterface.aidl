@@ -4,5 +4,5 @@ interface UIInterface {
 
     void performAction();
 
-    void testAbc();
+    void notifyDisplay(String result);
 }

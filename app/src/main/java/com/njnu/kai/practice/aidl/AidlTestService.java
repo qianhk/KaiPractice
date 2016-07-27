@@ -30,6 +30,12 @@ public class AidlTestService extends Service {
         }
 
         @Override
+        public void sendBigData(String data) throws RemoteException {
+            LogUtils.e(TAG, "lookaidl at service send big data, size=" + data.length());
+            mUiCallback.notifyDisplay("receive big data, size=" + data.length());
+        }
+
+        @Override
         public void registerTestCall(UIInterface cb) throws RemoteException {
             mUiCallback = cb;
         }

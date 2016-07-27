@@ -28,6 +28,7 @@ public class AidlTestFragment extends BaseTestFragment {
     private TextView mTvResult;
 
     private View mSendView;
+    private View mSendBigView;
     private Button mBtnAction;
 
     private boolean mConnected;
@@ -58,14 +59,28 @@ public class AidlTestFragment extends BaseTestFragment {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+            } else if (viewId == R.id.btn_send_big) {
+                setBigData();
             }
         }
     };
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
+    private void setBigData() {
+        LogUtils.e(TAG, "lookaidl prepare big data...");
+        int length = 1 * 1024 * 1024 + 100 * 1024;
+        StringBuilder stringBuilder = new StringBuilder(length);
+        for (int idx = 0; idx < length; ++idx) {
+            stringBuilder.append("A");
+        }
+        LogUtils.e(TAG, "lookaidl begin Send big data...  length=" + length);
+        try {
+            mService.sendBigData(stringBuilder.toString());
+        } catch (RemoteException e) {
+            e.printStackTrace();
+            mTvResult.setText(e.toString());
+            LogUtils.e(TAG, "lookaidl send big data exception: " + e.toString());
+        }
+        LogUtils.e(TAG, "lookaidl end Send big data...");
     }
 
     @Override
@@ -81,12 +96,12 @@ public class AidlTestFragment extends BaseTestFragment {
         public void performAction() throws RemoteException {
             mTvResult.setText("toast from service");
             ToastUtils.showToast("this toast is called from service");
-            LogUtils.e(TAG, "lookaidl atui performAction ");
+            LogUtils.e(TAG, "lookaidl at ui performAction ");
         }
 
         @Override
-        public void testAbc() throws RemoteException {
-
+        public void notifyDisplay(String result) throws RemoteException {
+            mTvResult.setText(result);
         }
     };
 
@@ -104,6 +119,7 @@ public class AidlTestFragment extends BaseTestFragment {
             }
             mConnected = true;
             mSendView.setEnabled(true);
+            mSendBigView.setEnabled(true);
             mBtnAction.setEnabled(true);
             mBtnAction.setText("已连接，断开吧");
         }
@@ -118,6 +134,7 @@ public class AidlTestFragment extends BaseTestFragment {
         mService = null;
         mConnected = false;
         mSendView.setEnabled(false);
+        mSendBigView.setEnabled(false);
         mBtnAction.setEnabled(true);
         mBtnAction.setText("已断开，连接吧");
     }
@@ -133,6 +150,11 @@ public class AidlTestFragment extends BaseTestFragment {
         mSendView = view.findViewById(R.id.btn_send);
         mSendView.setOnClickListener(mOnClickListener);
         mSendView.setEnabled(false);
+
+        mSendBigView = view.findViewById(R.id.btn_send_big);
+        mSendBigView.setOnClickListener(mOnClickListener);
+        mSendBigView.setEnabled(false);
+
         return view;
     }
 }

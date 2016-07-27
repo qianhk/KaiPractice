@@ -8,4 +8,5 @@ interface ServiceInterface {
 
     void invokeCallBack(int type);
 
+    void sendBigData(String data);
 }
