@@ -16,6 +16,7 @@ import com.njnu.kai.practice.R;
 import com.njnu.kai.support.BaseTestFragment;
 import com.njnu.kai.support.LogUtils;
 import com.njnu.kai.support.ToastUtils;
+import com.njnu.kai.support.ViewUtils;
 
 /**
  * @author hongkai.qian
@@ -61,9 +62,22 @@ public class AidlTestFragment extends BaseTestFragment {
                 }
             } else if (viewId == R.id.btn_send_big) {
                 setBigData();
+            } else if (viewId == R.id.btn_new_activity) {
+                startNewActivity();
             }
         }
     };
+
+    private void startNewActivity() {
+        int length = 1 * 1024 * 1024 + 100 * 1024;
+        StringBuilder stringBuilder = new StringBuilder(length);
+        for (int idx = 0; idx < length; ++idx) {
+            stringBuilder.append("A");
+        }
+        Intent intent = new Intent(getActivity(), GetArgumentActivity.class);
+        intent.putExtra("key_string", stringBuilder.toString());
+        startActivity(intent);
+    }
 
     private void setBigData() {
         LogUtils.e(TAG, "lookaidl prepare big data...");
@@ -171,6 +185,8 @@ android.os.TransactionTooLargeException: data parcel size 2302056 bytes
         mSendBigView = view.findViewById(R.id.btn_send_big);
         mSendBigView.setOnClickListener(mOnClickListener);
         mSendBigView.setEnabled(false);
+
+        ViewUtils.bindClickListener(view, mOnClickListener, R.id.btn_new_activity);
 
         return view;
     }

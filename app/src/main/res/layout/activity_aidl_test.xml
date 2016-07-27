@@ -44,4 +44,15 @@
         android:paddingTop="6dp"
         android:text="Send Big" />
 
+    <Button
+        android:id="@+id/btn_new_activity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:paddingBottom="6dp"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp"
+        android:paddingTop="6dp"
+        android:text="New Activity" />
+
 </LinearLayout>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">KaiAnimator</string>
+    <string name="app_name">KaiPractice</string>
 
     <plurals name="plurals_test">
         <item quantity="zero">数量:啥都没有</item>
