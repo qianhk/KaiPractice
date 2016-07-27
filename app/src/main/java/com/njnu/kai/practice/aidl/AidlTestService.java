@@ -21,6 +21,11 @@ public class AidlTestService extends Service {
         return mBinder;
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        LogUtils.e(TAG, "lookaidl onDestroy at service");
+    }
 
     private final ServiceInterface.Stub mBinder = new ServiceInterface.Stub() {
         @Override

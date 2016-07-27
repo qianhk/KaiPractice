@@ -82,7 +82,24 @@ public class AidlTestFragment extends BaseTestFragment {
         }
         LogUtils.e(TAG, "lookaidl end Send big data...");
     }
-
+/*
+android.os.TransactionTooLargeException: data parcel size 2302056 bytes
+    at android.os.BinderProxy.transactNative(Native Method)
+    at android.os.BinderProxy.transact(Binder.java:503)
+    at com.njnu.kai.practice.aidl.ServiceInterface$Stub$Proxy.sendBigData(ServiceInterface.java:127)
+    at com.njnu.kai.practice.aidl.AidlTestFragment.setBigData(AidlTestFragment.java:77)
+    at com.njnu.kai.practice.aidl.AidlTestFragment.access$400(AidlTestFragment.java:25)
+    at com.njnu.kai.practice.aidl.AidlTestFragment$1.onClick(AidlTestFragment.java:63)
+    at android.view.View.performClick(View.java:5207)
+    at android.view.View$PerformClick.run(View.java:21177)
+    at android.os.Handler.handleCallback(Handler.java:739)
+    at android.os.Handler.dispatchMessage(Handler.java:95)
+    at android.os.Looper.loop(Looper.java:148)
+    at android.app.ActivityThread.main(ActivityThread.java:5441)
+    at java.lang.reflect.Method.invoke(Native Method)
+    at com.android.internal.os.ZygoteInit$MethodAndArgsCaller.run(ZygoteInit.java:738)
+    at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:628)
+ */
     @Override
     public void onDestroyView() {
         if (mConnected) {
