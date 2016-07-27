@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="app_name">KaiAnimator</string>
 
     <plurals name="plurals_test">
@@ -12,8 +12,8 @@
     </plurals>
 
     <plurals name="buy_kindle">
-        <item quantity="one">I want to buy a Kindle</item>
-        <item quantity="other">I want to buy some Kindles</item>
+        <item quantity="one">我想买一台<xliff:g id="Kindle">Kindle</xliff:g></item>
+        <item quantity="other">我想买几台<xliff:g id="Kindle">Kindle</xliff:g></item>
     </plurals>
 
 </resources>

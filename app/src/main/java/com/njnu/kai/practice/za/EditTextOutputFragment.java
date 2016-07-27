@@ -1,5 +1,6 @@
 package com.njnu.kai.practice.za;
 
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,6 +40,23 @@ public class EditTextOutputFragment extends BaseTestFragment {
         appendResult(nowZonedDateTime);
         appendResult(nowZonedDateTime.withDayOfMonth(1).format(DateTimeFormatter.ISO_DATE_TIME));
         appendResult(nowZonedDateTime.plusDays(2).format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
+        Resources resources = getResources();
+        appendResult(resources.getQuantityString(R.plurals.plurals_test, 0));
+        appendResult(resources.getQuantityString(R.plurals.plurals_test, 1));
+        appendResult(resources.getQuantityString(R.plurals.plurals_test, 2));
+        appendResult(resources.getQuantityString(R.plurals.plurals_test, 3));
+        appendResult(resources.getQuantityString(R.plurals.plurals_test, 4));
+        appendResult(resources.getQuantityString(R.plurals.plurals_test, 5));
+        appendResult("xxxx");
+        appendResult(resources.getQuantityString(R.plurals.plurals_test, 0, 0));
+        appendResult(resources.getQuantityString(R.plurals.plurals_test, 1, 1));
+        appendResult(resources.getQuantityString(R.plurals.plurals_test, 2, 2));
+        appendResult(resources.getQuantityString(R.plurals.plurals_test, 3, 3));
+        appendResult(resources.getQuantityString(R.plurals.plurals_test, 4, 4));
+        appendResult(resources.getQuantityString(R.plurals.plurals_test, 5, 5));
+
+        appendResult(resources.getQuantityString(R.plurals.buy_kindle, 1));
+        appendResult(resources.getQuantityString(R.plurals.buy_kindle, 2));
     }
 
     private String transformToStr(Object object) {
