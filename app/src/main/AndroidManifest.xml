@@ -94,5 +94,8 @@
         <activity
             android:name="com.njnu.kai.practice.material.CoordinatorLayoutActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" />
+
+        <service android:name="com.njnu.kai.practice.aidl.AidlTestService"/>
+
     </application>
 </manifest>
