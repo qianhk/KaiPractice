@@ -23,6 +23,7 @@ import com.njnu.kai.practice.rxjava.RxJavaTestFragment;
 import com.njnu.kai.practice.splash.SplashActivity;
 import com.njnu.kai.practice.wave.PeriscopeAnimatorFragment;
 import com.njnu.kai.practice.za.EditTextOutputFragment;
+import com.njnu.kai.practice.za.WebSocketTestFragment;
 import com.njnu.kai.support.ConstantUtils;
 import com.njnu.kai.support.FunctionItem;
 import com.njnu.kai.support.ListViewUtils;
@@ -46,6 +47,7 @@ public class MainFragment extends ActionBarLayoutFragment implements AdapterView
         FUNCTIONS.add(new FunctionItem("EditText output", EditTextOutputFragment.class, false));
         FUNCTIONS.add(new FunctionItem("Data Binding", BindTestEntryFragment.class, false));
         FUNCTIONS.add(new FunctionItem("Dagger2", TestDaggerFragment.class, false));
+        FUNCTIONS.add(new FunctionItem("WebSocket", WebSocketTestFragment.class, false));
         FUNCTIONS.add(new FunctionItem("Periscope", PeriscopeAnimatorFragment.class, false));
         FUNCTIONS.add(new FunctionItem("AIDL Test", AidlTestFragment.class, false));
         FUNCTIONS.add(new FunctionItem("Song Danmaku", DanmaukuActivity.class, true));
