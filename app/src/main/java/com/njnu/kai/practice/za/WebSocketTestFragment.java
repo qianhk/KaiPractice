@@ -49,6 +49,7 @@ public class WebSocketTestFragment extends BaseTestFragment implements View.OnCl
             switch (msg.what) {
                 case WHAT_ON_OPEN:
                     appendResult("onOpen");
+                    flushButtonStatus(true);
                     break;
 
                 case WHAT_ON_MESSAGE:
@@ -57,17 +58,33 @@ public class WebSocketTestFragment extends BaseTestFragment implements View.OnCl
 
                 case WHAT_ON_CLOSE:
                     receiveOnClose(msg);
+                    flushButtonStatus(false);
                     break;
 
                 case WHAT_ON_ERROR:
                     appendResult("onError: " + msg.obj);
+                    flushButtonStatus(false);
                     break;
             }
         }
     };
 
     private void receiveOnClose(Message msg) {
-        appendResult(String.format("onClose %d reason=%s remote=%b", msg.arg1, msg.obj, msg.arg2));
+        appendResult(String.format("onClose %d reason=%s remote=%d", msg.arg1, msg.obj, msg.arg2));
+        if (mWebSocketClient == null) {
+            appendResult("will exit ui");
+            edtText.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    finish();
+                }
+            }, 5000);
+        } else {
+            if (msg.arg2 != 0) { //from remote
+
+            }
+        }
+        mWebSocketClient = null;
     }
 
     @Override
@@ -97,12 +114,11 @@ public class WebSocketTestFragment extends BaseTestFragment implements View.OnCl
     public void onClick(View v) {
         int viewId = v.getId();
         if (viewId == R.id.btn_connect) {
+            btnSend.setEnabled(false);
+            btnConnect.setEnabled(false);
             if (mConnected) {
                 appendResult("will close connection");
-                btnSend.setEnabled(false);
-                btnConnect.setEnabled(false);
                 mWebSocketClient.close();
-                mWebSocketClient = null;
             } else {
                 try {
                     setResult("will connect");
@@ -117,7 +133,7 @@ public class WebSocketTestFragment extends BaseTestFragment implements View.OnCl
             }
         } else if (viewId == R.id.btn_send) {
             String sendTxt = edtText.getText().toString().trim();
-            if (sendTxt != null) {
+            if (!sendTxt.isEmpty()) {
                 appendResult("send msg:" + sendTxt);
                 mWebSocketClient.send(sendTxt);
             }
@@ -168,6 +184,19 @@ public class WebSocketTestFragment extends BaseTestFragment implements View.OnCl
         @Override
         public void onError(Exception ex) {
             mHandler.sendMessage(mHandler.obtainMessage(WHAT_ON_ERROR, ex));
+        }
+    }
+
+    @Override
+    protected void onBackPressed() {
+        if (mWebSocketClient != null) {
+            appendResult("onBackPressed");
+            btnSend.setEnabled(false);
+            btnConnect.setEnabled(false);
+            mWebSocketClient.close();
+            mWebSocketClient = null;
+        } else {
+            super.onBackPressed();
         }
     }
 }
