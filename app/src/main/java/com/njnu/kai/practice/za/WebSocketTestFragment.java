@@ -1,5 +1,10 @@
 package com.njnu.kai.practice.za;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -11,6 +16,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.njnu.kai.practice.R;
+import com.njnu.kai.support.AppRuntime;
 import com.njnu.kai.support.BaseTestFragment;
 import com.njnu.kai.support.ViewUtils;
 
@@ -41,6 +47,8 @@ public class WebSocketTestFragment extends BaseTestFragment implements View.OnCl
     public static final int WHAT_ON_MESSAGE = 2;
     public static final int WHAT_ON_CLOSE = 3;
     public static final int WHAT_ON_ERROR = 4;
+
+    private ConnectionChangeReceiver mNetworkStateReceiver;
 
     private Handler mHandler = new Handler() {
         @Override
@@ -93,6 +101,15 @@ public class WebSocketTestFragment extends BaseTestFragment implements View.OnCl
         initView(view);
         flushButtonStatus(false);
         return view;
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        mNetworkStateReceiver = new ConnectionChangeReceiver();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+        getActivity().registerReceiver(mNetworkStateReceiver, filter);
     }
 
     private void flushButtonStatus(boolean connected) {
@@ -157,6 +174,25 @@ public class WebSocketTestFragment extends BaseTestFragment implements View.OnCl
         return object != null ? object.toString() : "<object=null>";
     }
 
+    @Override
+    protected void onBackPressed() {
+        if (mWebSocketClient != null) {
+            appendResult("onBackPressed");
+            btnSend.setEnabled(false);
+            btnConnect.setEnabled(false);
+            mWebSocketClient.close();
+            mWebSocketClient = null;
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        getActivity().unregisterReceiver(mNetworkStateReceiver);
+        super.onDestroy();
+    }
+
     public class TestWebSocketClient extends WebSocketClient {
 
         public TestWebSocketClient(URI serverUri, Draft draft) {
@@ -187,16 +223,15 @@ public class WebSocketTestFragment extends BaseTestFragment implements View.OnCl
         }
     }
 
-    @Override
-    protected void onBackPressed() {
-        if (mWebSocketClient != null) {
-            appendResult("onBackPressed");
-            btnSend.setEnabled(false);
-            btnConnect.setEnabled(false);
-            mWebSocketClient.close();
-            mWebSocketClient = null;
-        } else {
-            super.onBackPressed();
+    public class ConnectionChangeReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            boolean netWorkAvailable = AppRuntime.Network.isNetWorkAvailable();
+            appendResult("net changed: available: " + netWorkAvailable);
+            if (btnConnect.isEnabled() && netWorkAvailable && !mConnected) {
+                btnConnect.performClick();
+            }
         }
     }
 }
