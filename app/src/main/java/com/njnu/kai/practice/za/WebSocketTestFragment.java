@@ -1,6 +1,9 @@
 package com.njnu.kai.practice.za;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +36,39 @@ public class WebSocketTestFragment extends BaseTestFragment implements View.OnCl
 
     private boolean mConnected;
     private TestWebSocketClient mWebSocketClient;
+
+    public static final int WHAT_ON_OPEN = 1;
+    public static final int WHAT_ON_MESSAGE = 2;
+    public static final int WHAT_ON_CLOSE = 3;
+    public static final int WHAT_ON_ERROR = 4;
+
+    private Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case WHAT_ON_OPEN:
+                    appendResult("onOpen");
+                    break;
+
+                case WHAT_ON_MESSAGE:
+                    appendResult("onMessage: " + msg.obj);
+                    break;
+
+                case WHAT_ON_CLOSE:
+                    receiveOnClose(msg);
+                    break;
+
+                case WHAT_ON_ERROR:
+                    appendResult("onError: " + msg.obj);
+                    break;
+            }
+        }
+    };
+
+    private void receiveOnClose(Message msg) {
+        appendResult(String.format("onClose %d reason=%s remote=%b", msg.arg1, msg.obj, msg.arg2));
+    }
 
     @Override
     protected View onCreateContentView(LayoutInflater layoutInflater, ViewGroup viewGroup, Bundle bundle) {
@@ -89,7 +125,11 @@ public class WebSocketTestFragment extends BaseTestFragment implements View.OnCl
     }
 
     public void setResult(Object object) {
-        edtResult.setText(this.transformToStr(object));
+        if (Looper.myLooper() != Looper.getMainLooper()) {
+
+        } else {
+            edtResult.setText(this.transformToStr(object));
+        }
     }
 
     public void appendResult(Object object) {
@@ -109,22 +149,25 @@ public class WebSocketTestFragment extends BaseTestFragment implements View.OnCl
 
         @Override
         public void onOpen(ServerHandshake handshakedata) {
-            appendResult("onOpen");
+            mHandler.sendMessage(mHandler.obtainMessage(WHAT_ON_OPEN, handshakedata));
         }
 
         @Override
         public void onMessage(String message) {
-            appendResult("onMessage: " + message);
+            mHandler.sendMessage(mHandler.obtainMessage(WHAT_ON_MESSAGE, message));
         }
 
         @Override
         public void onClose(int code, String reason, boolean remote) {
-            appendResult(String.format("onClose %d reason=%s remote=%b", code, reason, remote));
+            Message message = mHandler.obtainMessage(WHAT_ON_CLOSE, reason);
+            message.arg1 = code;
+            message.arg2 = remote ? 1 : 0;
+            mHandler.sendMessage(message);
         }
 
         @Override
         public void onError(Exception ex) {
-            appendResult("onError: " + ex.toString());
+            mHandler.sendMessage(mHandler.obtainMessage(WHAT_ON_ERROR, ex));
         }
     }
 }
