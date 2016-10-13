@@ -23,6 +23,7 @@ import com.njnu.kai.practice.rxjava.RxJavaTestFragment;
 import com.njnu.kai.practice.splash.SplashActivity;
 import com.njnu.kai.practice.wave.PeriscopeAnimatorFragment;
 import com.njnu.kai.practice.za.EditTextOutputFragment;
+import com.njnu.kai.practice.za.EditTextStatusFragment;
 import com.njnu.kai.practice.za.WebSocketTestFragment;
 import com.njnu.kai.support.ConstantUtils;
 import com.njnu.kai.support.FunctionItem;
@@ -63,6 +64,7 @@ public class MainFragment extends ActionBarLayoutFragment implements AdapterView
         FUNCTIONS.add(new FunctionItem("VectorDrawable", VectorDrawableActivity.class, true));
         FUNCTIONS.add(new FunctionItem("GuestActivity", GuestActivity.class, true));
         FUNCTIONS.add(new FunctionItem("CoordinatorLayout", CoordinatorLayoutActivity.class, true));
+        FUNCTIONS.add(new FunctionItem("EditTextStatus", EditTextStatusFragment.class, false));
     }
 
     @Override
