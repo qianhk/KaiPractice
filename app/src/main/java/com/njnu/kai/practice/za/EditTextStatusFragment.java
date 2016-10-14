@@ -3,6 +3,7 @@ package com.njnu.kai.practice.za;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputFilter;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -65,6 +66,7 @@ public class EditTextStatusFragment extends BaseTestFragment {
         }
         newFilter[len - 1] = new InputFilter.LengthFilter(11);
         mEdtText.setFilters(newFilter);
+        mEdtText.setRawInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
 
         mTvText = (TextView) rootView.findViewById(R.id.tv_text);
         mBtnTest = (Button) rootView.findViewById(R.id.btn_test);
