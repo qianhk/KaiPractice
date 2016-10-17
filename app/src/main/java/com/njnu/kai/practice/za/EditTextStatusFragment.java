@@ -1,6 +1,14 @@
 package com.njnu.kai.practice.za;
 
+import android.content.ClipData;
+import android.content.ClipDescription;
+import android.content.ClipboardManager;
+import android.content.Context;
+import android.content.Intent;
+import android.content.res.AssetFileDescriptor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.InputType;
@@ -16,6 +24,14 @@ import com.njnu.kai.practice.R;
 import com.njnu.kai.support.BaseTestFragment;
 import com.njnu.kai.support.LogUtils;
 import com.njnu.kai.support.ToastUtils;
+import com.njnu.kai.support.ViewUtils;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by kai
@@ -27,6 +43,7 @@ public class EditTextStatusFragment extends BaseTestFragment {
     private View mRootView;
     private EditText mEdtText;
     private TextView mTvText;
+    private TextView mTvResult;
     private Button mBtnTest;
 
     private View.OnClickListener mOnClickListener = new View.OnClickListener() {
@@ -46,6 +63,16 @@ public class EditTextStatusFragment extends BaseTestFragment {
     protected View onCreateContentView(LayoutInflater layoutInflater, ViewGroup viewGroup, Bundle bundle) {
         View view = layoutInflater.inflate(R.layout.fragment_edit_text_status, viewGroup, false);
         initView(view);
+
+//        ClipboardManager cm =(ClipboardManager) layoutInflater.getContext().getSystemService(Context.CLIPBOARD_SERVICE);
+//        ClipData primaryClip = cm.getPrimaryClip();
+//        ClipDescription primaryClipDescription = cm.getPrimaryClipDescription();
+//        StringBuilder stringBuilder = new StringBuilder();
+//        stringBuilder.append("description: " + primaryClipDescription.toString());
+//        stringBuilder.append("\nprimary clip: " + primaryClip.toString());
+//        mTvResult.setText(stringBuilder);
+
+        mTvResult.setText(getClipboardString());
         return view;
     }
 
@@ -101,5 +128,74 @@ public class EditTextStatusFragment extends BaseTestFragment {
                 LogUtils.i(TAG, "onFocusChange mBtnTest hasFocus=%b", hasFocus);
             }
         });
+
+        mTvResult = ViewUtils.findTextViewById(rootView, R.id.tv_result);
+    }
+
+    public CharSequence getClipboardString() {
+        Context context = getContext();
+        ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+
+        Map<String, Object> map = new HashMap<>(2);
+        ClipData clip = clipboard.getPrimaryClip();
+        if (clip != null && clip.getItemCount() > 0) {
+            ClipData.Item item = clip.getItemAt(0);
+            CharSequence text = coerceToText(context, item);
+            return text;
+        } else {
+            return "no clipboard data";
+        }
+    }
+
+    @Nullable
+    private CharSequence coerceToText(Context context, ClipData.Item item) {
+        // Condition 1. just a simple text
+        CharSequence text = item.getText();
+        if (text != null) {
+            return text;
+        }
+
+        // Condition 2. a URI value
+        Uri uri = item.getUri();
+        if (uri != null) {
+            FileInputStream stream = null;
+            try {
+                AssetFileDescriptor assetFileDescriptor = context.getContentResolver().openTypedAssetFileDescriptor(uri, "text/*", null);
+                stream = assetFileDescriptor.createInputStream();
+                InputStreamReader reader = new InputStreamReader(stream, "UTF-8");
+
+                StringBuilder builder = new StringBuilder(128);
+                char[] buffer = new char[8192];
+                int len;
+                while ((len = reader.read(buffer)) > 0) {
+                    builder.append(buffer, 0, len);
+                }
+                return builder.toString();
+
+            } catch (FileNotFoundException e) {
+                //  ignore.
+            } catch (IOException e) {
+                LogUtils.w("ClippedData Failure loading text.", e);
+            } finally {
+                if (stream != null) {
+                    try {
+                        stream.close();
+                    } catch (IOException e) {
+                        // ignore
+                    }
+                }
+            }
+
+            return uri.toString();
+        }
+
+        // Condition 3.  an intent.
+        Intent intent = item.getIntent();
+        if (intent != null) {
+            return intent.toUri(Intent.URI_INTENT_SCHEME);
+        }
+
+        // else case
+        return null;
     }
 }
