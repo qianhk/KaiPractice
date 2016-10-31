@@ -20,6 +20,7 @@ import com.njnu.kai.practice.material.composite.MaterialCompositeActivity;
 import com.njnu.kai.practice.material.reveal.RevealActivity;
 import com.njnu.kai.practice.retrofit.RetrofitEntryFragment;
 import com.njnu.kai.practice.rxjava.RxJavaTestFragment;
+import com.njnu.kai.practice.scroll.PullRefreshFragment;
 import com.njnu.kai.practice.splash.SplashActivity;
 import com.njnu.kai.practice.wave.PeriscopeAnimatorFragment;
 import com.njnu.kai.practice.za.EditTextOutputFragment;
@@ -45,6 +46,7 @@ public class MainFragment extends ActionBarLayoutFragment implements AdapterView
         FUNCTIONS.add(new FunctionItem("Image loader", ImageTestEntryFragment.class, false));
         FUNCTIONS.add(new FunctionItem("Retrofit Test", RetrofitEntryFragment.class, false));
         FUNCTIONS.add(new FunctionItem("RxJava Test", RxJavaTestFragment.class, false));
+        FUNCTIONS.add(new FunctionItem("Nested Scroll", PullRefreshFragment.class, false));
         FUNCTIONS.add(new FunctionItem("EditText output", EditTextOutputFragment.class, false));
         FUNCTIONS.add(new FunctionItem("Data Binding", BindTestEntryFragment.class, false));
         FUNCTIONS.add(new FunctionItem("Dagger2", TestDaggerFragment.class, false));

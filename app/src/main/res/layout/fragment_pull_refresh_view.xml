@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="#888"
+              android:orientation="vertical">
+
+    <com.njnu.kai.practice.scroll.PullRefreshView
+        android:id="@+id/prv_view"
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="match_parent">
+
+        <!--<include layout="@layout/fragment_pull_refresh_inner_scroll_view"/>-->
+
+        <!--<TextView-->
+            <!--android:text="好人一生平安"-->
+            <!--android:textColor="#F0F"-->
+            <!--android:gravity="center"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"/>-->
+        <include layout="@layout/fragment_pull_refresh_inner_scroll_view"/>
+    </com.njnu.kai.practice.scroll.PullRefreshView>
+</LinearLayout>
