@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+
 import com.njnu.kai.practice.aidl.AidlTestFragment;
 import com.njnu.kai.practice.bind.BindTestEntryFragment;
 import com.njnu.kai.practice.danmaku.DanmaukuActivity;
@@ -20,6 +21,8 @@ import com.njnu.kai.practice.material.composite.MaterialCompositeActivity;
 import com.njnu.kai.practice.material.reveal.RevealActivity;
 import com.njnu.kai.practice.retrofit.RetrofitEntryFragment;
 import com.njnu.kai.practice.rxjava.RxJavaTestFragment;
+import com.njnu.kai.practice.scroll.ManageTwoScrollFragment;
+import com.njnu.kai.practice.scroll.ManageTwoScrollView;
 import com.njnu.kai.practice.scroll.PullRefreshFragment;
 import com.njnu.kai.practice.splash.SplashActivity;
 import com.njnu.kai.practice.wave.PeriscopeAnimatorFragment;
@@ -47,6 +50,7 @@ public class MainFragment extends ActionBarLayoutFragment implements AdapterView
         FUNCTIONS.add(new FunctionItem("Retrofit Test", RetrofitEntryFragment.class, false));
         FUNCTIONS.add(new FunctionItem("RxJava Test", RxJavaTestFragment.class, false));
         FUNCTIONS.add(new FunctionItem("Nested Scroll", PullRefreshFragment.class, false));
+        FUNCTIONS.add(new FunctionItem("Nested Scroll2", ManageTwoScrollFragment.class, false));
         FUNCTIONS.add(new FunctionItem("EditText output", EditTextOutputFragment.class, false));
         FUNCTIONS.add(new FunctionItem("Data Binding", BindTestEntryFragment.class, false));
         FUNCTIONS.add(new FunctionItem("Dagger2", TestDaggerFragment.class, false));

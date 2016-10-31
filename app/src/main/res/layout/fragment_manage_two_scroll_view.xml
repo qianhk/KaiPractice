@@ -5,12 +5,15 @@
               android:background="#888"
               android:orientation="vertical">
 
-    <com.njnu.kai.practice.scroll.PullRefreshView
+    <com.njnu.kai.practice.scroll.ManageTwoScrollView
         android:id="@+id/prv_view"
         android:layout_width="match_parent"
-        android:orientation="vertical"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <include layout="@layout/fragment_pull_refresh_inner_scroll_view"/>
-    </com.njnu.kai.practice.scroll.PullRefreshView>
+
+        <include layout="@layout/fragment_pull_refresh_inner_scroll_view"/>
+
+    </com.njnu.kai.practice.scroll.ManageTwoScrollView>
 </LinearLayout>
