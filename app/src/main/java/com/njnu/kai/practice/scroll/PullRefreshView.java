@@ -86,7 +86,8 @@ public class PullRefreshView extends LinearLayout implements NestedScrollingPare
         //头部高度
         int headerHeight = mHeaderView.getHeight();
 
-//        LogUtils.i(TAG, "lookScroll onNestedPreScroll dy=%d", dy);
+        LogUtils.i(TAG, "lookScroll onNestedPreScroll dy=%d hH=%d top=%d tY=%.2f tSy=%d"
+                , dy, headerHeight, getTop(), target.getY(), target.getScrollY());
         if (dy > 0) {
             //向上滑动
             if (Math.abs(this.getTop() - dy) <= headerHeight) {
@@ -112,16 +113,24 @@ public class PullRefreshView extends LinearLayout implements NestedScrollingPare
         }
         if (dy < 0) {
             //向下滑动
-            if ((this.getTop() + Math.abs(dy)) <= 0) {
-                //header在向下滑动的过程
-                //this.getTop是负数dy也是负数所以需要+dy的绝对值
-                this.layout(this.getLeft(), this.getTop() + Math.abs(dy), this.getRight(), this.getBottom() + Math.abs(dy));
-                consumed[1] += dy;
-            } else {
-                if (this.getTop() < 0) {
-                    int offsetY = Math.abs(this.getTop());
-                    this.layout(this.getLeft(), this.getTop() + offsetY, this.getRight(), this.getBottom() + offsetY);
-                    consumed[1] += offsetY;
+            if (getTop() < 0) {
+                if (target.getScrollY() <= 0) {
+                    if (Math.abs(getTop()) <= headerHeight) {
+                        this.layout(this.getLeft(), this.getTop() + Math.abs(dy), this.getRight(), this.getBottom() + Math.abs(dy));
+                        consumed[1] += dy;
+                    }
+//                if ((this.getTop() + Math.abs(dy)) <= 0) {
+//                    //header在向下滑动的过程
+//                    //this.getTop是负数dy也是负数所以需要+dy的绝对值
+//                    this.layout(this.getLeft(), this.getTop() + Math.abs(dy), this.getRight(), this.getBottom() + Math.abs(dy));
+//                    consumed[1] += dy;
+//                } else {
+//                    if (this.getTop() < 0) {
+//                        int offsetY = Math.abs(this.getTop());
+//                        this.layout(this.getLeft(), this.getTop() + offsetY, this.getRight(), this.getBottom() + offsetY);
+//                        consumed[1] += offsetY;
+//                    }
+//                }
                 }
             }
         }
