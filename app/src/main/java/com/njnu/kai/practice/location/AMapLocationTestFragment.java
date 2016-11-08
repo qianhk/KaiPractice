@@ -26,7 +26,9 @@ public class AMapLocationTestFragment extends BaseTestListFragment {
         if (mLocationClient.isStarted()) {
             mLocationClient.stopLocation();
         } else {
-            mLocationClient.startLocation();
+            mLocationClient.startLocation();   //addGeoFenceAlert radius-地理围栏区域的半径，单位为米，围栏半径在100米－1000米之间
+            //PendingIntent 的 Bundle 内容中包括 status 字段，当 status 为0时表示设备从区域中离开，为1时表示设备进入该区域。
+            //文档中说是status字段,但官方demo中是int status = bundle.getInt("event"); String geoFenceId = bundle.getString("fenceid");
         }
 
 //        if (mLocationStarted) {
