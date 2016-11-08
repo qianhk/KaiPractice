@@ -15,6 +15,7 @@ import com.njnu.kai.practice.di.TestDaggerFragment;
 import com.njnu.kai.practice.entry.EntryAnimatorActivity;
 import com.njnu.kai.practice.guest.GuestActivity;
 import com.njnu.kai.practice.image.ImageTestEntryFragment;
+import com.njnu.kai.practice.location.AMap2DTestFragment;
 import com.njnu.kai.practice.location.AMapLocationTestFragment;
 import com.njnu.kai.practice.material.CoordinatorLayoutActivity;
 import com.njnu.kai.practice.material.VectorDrawableActivity;
@@ -51,7 +52,8 @@ public class MainFragment extends ActionBarLayoutFragment implements AdapterView
         FUNCTIONS.add(new FunctionItem("RxJava Test", RxJavaTestFragment.class, false));
         FUNCTIONS.add(new FunctionItem("Nested Scroll", PullRefreshFragment.class, false));
         FUNCTIONS.add(new FunctionItem("Nested Scroll2", ManageTwoScrollFragment.class, false));
-        FUNCTIONS.add(new FunctionItem("AMap Test", AMapLocationTestFragment.class, false));
+        FUNCTIONS.add(new FunctionItem("AMap Location", AMapLocationTestFragment.class, false));
+        FUNCTIONS.add(new FunctionItem("AMap 2D", AMap2DTestFragment.class, false));
         FUNCTIONS.add(new FunctionItem("EditText output", EditTextOutputFragment.class, false));
         FUNCTIONS.add(new FunctionItem("Data Binding", BindTestEntryFragment.class, false));
         FUNCTIONS.add(new FunctionItem("Dagger2", TestDaggerFragment.class, false));
