@@ -28,6 +28,11 @@ public class EditTextOutputFragment extends BaseTestFragment {
     protected View onCreateContentView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.frament_edit_text_output, container, false);
         mEdtResult = ViewUtils.findEditTextById(view, R.id.edt_result);
+        mEdtResult.setSingleLine(true);
+
+        mEdtResult.setLines(10); //前面被设置过singleLine true后, 此处lines 10会不起作用
+        mEdtResult.setSingleLine(false);
+
         return view;
     }
 
