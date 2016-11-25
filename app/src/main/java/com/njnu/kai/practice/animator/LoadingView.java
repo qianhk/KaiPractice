@@ -2,16 +2,20 @@ package com.njnu.kai.practice.animator;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.njnu.kai.practice.R;
+import com.njnu.kai.support.DisplayUtils;
 
 /**
  * Created by kai
  * since 16/11/25
  */
 public class LoadingView extends FrameLayout {
+
+    private boolean mStarted;
 
     public LoadingView(Context context) {
         super(context);
@@ -38,7 +42,9 @@ public class LoadingView extends FrameLayout {
         ImageView mouthView = new ImageView(context);
         mouthView.setImageResource(R.drawable.ic_lo_zui);
         mouthView.setScaleType(ImageView.ScaleType.CENTER);
-        addView(mouthView);
+        LayoutParams mouthParams = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        mouthParams.topMargin = DisplayUtils.dp2px(8);
+        addView(mouthView, mouthParams);
 
         ImageView organView = new ImageView(context);
         organView.setImageResource(R.drawable.ic_lo_heart);
@@ -48,14 +54,14 @@ public class LoadingView extends FrameLayout {
     }
 
     public void start() {
-
+        mStarted = true;
     }
 
     public boolean isStart() {
-        return false;
+        return mStarted;
     }
 
     public void stop() {
-
+        mStarted = false;
     }
 }
