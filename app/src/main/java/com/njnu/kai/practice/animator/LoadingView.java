@@ -10,10 +10,14 @@ import android.graphics.Paint;
 import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.view.Gravity;
+import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.AlphaAnimation;
 import android.widget.FrameLayout;
+import android.widget.ImageSwitcher;
 import android.widget.ImageView;
+import android.widget.ViewSwitcher;
 
 import com.njnu.kai.practice.R;
 import com.njnu.kai.support.DisplayUtils;
@@ -27,7 +31,7 @@ public class LoadingView extends FrameLayout {
     private TextPaint mTextPaint;
     private ImageView mWholeView;
     private ImageView mMouthView;
-    private ImageView mOrganView;
+    private ImageSwitcher mOrganView;
     private AnimatorSet mAnimatorSet;
     private boolean mStarted;
 
@@ -69,9 +73,22 @@ public class LoadingView extends FrameLayout {
 //        mouthParams.topMargin = DisplayUtils.dp2px(2);
         addView(mMouthView, mouthParams);
 
-        mOrganView = new ImageView(context);
-        mOrganView.setImageResource(R.drawable.ic_lo_heart);
-        mOrganView.setScaleType(ImageView.ScaleType.CENTER);
+        mOrganView = new ImageSwitcher(context);
+        mOrganView.setFactory(new ViewSwitcher.ViewFactory() {
+            @Override
+            public View makeView() {
+                ImageView imageView = new ImageView(getContext());
+                imageView.setScaleType(ImageView.ScaleType.CENTER);
+                return imageView;
+            }
+        });
+        mOrganView.setImageResource(mOrgans[0]);
+        AlphaAnimation inAnimation = new AlphaAnimation(0, 1);
+        inAnimation.setDuration(30);
+        mOrganView.setInAnimation(inAnimation);
+        AlphaAnimation outAnimation = new AlphaAnimation(1, 0);
+        outAnimation.setDuration(30);
+        mOrganView.setOutAnimation(outAnimation);
         LayoutParams organParams = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.CENTER);
         organParams.bottomMargin = DisplayUtils.dp2px(8);
         addView(mOrganView, organParams);
@@ -83,28 +100,14 @@ public class LoadingView extends FrameLayout {
         mOrganView.setImageResource(mOrgans[mIndex++]);
         ObjectAnimator organViewTranslationY = ObjectAnimator.ofFloat(mOrganView, "translationY", 0, -DisplayUtils.dp2px(3), DisplayUtils.dp2px(3));
         organViewTranslationY.setInterpolator(new AccelerateDecelerateInterpolator());
-//        organViewTranslationY.setStartDelay(550);
         organViewTranslationY.setDuration(300);
-//        organViewTranslationY.setRepeatCount(ValueAnimator.INFINITE);
-        organViewTranslationY.addListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animation) {
-            }
-
+        organViewTranslationY.addListener(new SimpleAnimatorListener() {
             @Override
             public void onAnimationEnd(Animator animation) {
                 mOrganView.setImageResource(mOrgans[mIndex++]);
                 if (mIndex >= mOrgans.length) {
                     mIndex = 0;
                 }
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation) {
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation) {
             }
         });
 
@@ -119,7 +122,6 @@ public class LoadingView extends FrameLayout {
 //        wholeViewTranslationY.setInterpolator(new AccelerateDecelerateInterpolator());
         wholeViewTranslationY.setStartDelay(150);
         wholeViewTranslationY.setDuration(300);
-//        wholeViewTranslationY.setRepeatCount(ValueAnimator.INFINITE);
 
         ObjectAnimator mouthViewTranslationY = wholeViewTranslationY.clone();
         mouthViewTranslationY.setTarget(mMouthView);
@@ -127,12 +129,7 @@ public class LoadingView extends FrameLayout {
         mAnimatorSet = new AnimatorSet();
         mAnimatorSet.setStartDelay(550);
         mAnimatorSet.playTogether(organAnimatorSet, wholeViewTranslationY, mouthViewTranslationY);
-        mAnimatorSet.addListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animation) {
-
-            }
-
+        mAnimatorSet.addListener(new SimpleAnimatorListener() {
             @Override
             public void onAnimationEnd(Animator animation) {
 //                mAnimatorSet = null;
@@ -141,15 +138,6 @@ public class LoadingView extends FrameLayout {
                 }
             }
 
-            @Override
-            public void onAnimationCancel(Animator animation) {
-//                mAnimatorSet = null;
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation) {
-
-            }
         });
     }
 
