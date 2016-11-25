@@ -31,6 +31,9 @@ public class LoadingView extends FrameLayout {
     private AnimatorSet mAnimatorSet;
     private boolean mStarted;
 
+    private int[] mOrgans = {R.drawable.ic_lo_heart, R.drawable.ic_lo_eye, R.drawable.ic_lo_surprise};
+    private int mIndex;
+
     public LoadingView(Context context) {
         super(context);
         init(context);
@@ -76,15 +79,45 @@ public class LoadingView extends FrameLayout {
     }
 
     private void prepareAnimator() {
-        ObjectAnimator organViewTranslationY = ObjectAnimator.ofFloat(mOrganView, "translationY", -DisplayUtils.dp2px(3), DisplayUtils.dp2px(3), 0);
+        mIndex = 0;
+        mOrganView.setImageResource(mOrgans[mIndex++]);
+        ObjectAnimator organViewTranslationY = ObjectAnimator.ofFloat(mOrganView, "translationY", 0, -DisplayUtils.dp2px(3), DisplayUtils.dp2px(3));
         organViewTranslationY.setInterpolator(new AccelerateDecelerateInterpolator());
-        organViewTranslationY.setStartDelay(550);
+//        organViewTranslationY.setStartDelay(550);
         organViewTranslationY.setDuration(300);
 //        organViewTranslationY.setRepeatCount(ValueAnimator.INFINITE);
+        organViewTranslationY.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                mOrganView.setImageResource(mOrgans[mIndex++]);
+                if (mIndex >= mOrgans.length) {
+                    mIndex = 0;
+                }
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+            }
+        });
+
+        ObjectAnimator organViewTranslationY2 = ObjectAnimator.ofFloat(mOrganView, "translationY", 0);
+        organViewTranslationY2.setDuration(50);
+
+        AnimatorSet organAnimatorSet = new AnimatorSet();
+        organAnimatorSet.playSequentially(organViewTranslationY, organViewTranslationY2);
+
 
         ObjectAnimator wholeViewTranslationY = ObjectAnimator.ofFloat(mWholeView, "translationY", 0, DisplayUtils.dp2px(6), 0);
-        wholeViewTranslationY.setInterpolator(new AccelerateDecelerateInterpolator());
-        wholeViewTranslationY.setStartDelay(700);
+//        wholeViewTranslationY.setInterpolator(new AccelerateDecelerateInterpolator());
+        wholeViewTranslationY.setStartDelay(150);
         wholeViewTranslationY.setDuration(300);
 //        wholeViewTranslationY.setRepeatCount(ValueAnimator.INFINITE);
 
@@ -92,7 +125,8 @@ public class LoadingView extends FrameLayout {
         mouthViewTranslationY.setTarget(mMouthView);
 
         mAnimatorSet = new AnimatorSet();
-        mAnimatorSet.playTogether(organViewTranslationY, wholeViewTranslationY, mouthViewTranslationY);
+        mAnimatorSet.setStartDelay(550);
+        mAnimatorSet.playTogether(organAnimatorSet, wholeViewTranslationY, mouthViewTranslationY);
         mAnimatorSet.addListener(new Animator.AnimatorListener() {
             @Override
             public void onAnimationStart(Animator animation) {
