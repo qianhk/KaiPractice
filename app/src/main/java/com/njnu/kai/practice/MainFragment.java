@@ -10,6 +10,7 @@ import android.widget.BaseAdapter;
 
 import com.njnu.kai.practice.aidl.AidlTestFragment;
 import com.njnu.kai.practice.animator.LoadingAnimatorFragment;
+import com.njnu.kai.practice.animator.PullToRefreshFragment;
 import com.njnu.kai.practice.bind.BindTestEntryFragment;
 import com.njnu.kai.practice.danmaku.DanmaukuActivity;
 import com.njnu.kai.practice.di.TestDaggerFragment;
@@ -56,6 +57,7 @@ public class MainFragment extends ActionBarLayoutFragment implements AdapterView
         FUNCTIONS.add(new FunctionItem("AMap Location", AMapLocationTestFragment.class, false));
         FUNCTIONS.add(new FunctionItem("AMap 2D", AMap2DTestFragment.class, false));
         FUNCTIONS.add(new FunctionItem("Loading Animator", LoadingAnimatorFragment.class, false));
+        FUNCTIONS.add(new FunctionItem("Pull To Refresh", PullToRefreshFragment.class, false));
         FUNCTIONS.add(new FunctionItem("EditText output", EditTextOutputFragment.class, false));
         FUNCTIONS.add(new FunctionItem("Data Binding", BindTestEntryFragment.class, false));
         FUNCTIONS.add(new FunctionItem("Dagger2", TestDaggerFragment.class, false));
