@@ -9,7 +9,6 @@ import android.widget.LinearLayout;
 import com.njnu.kai.practice.R;
 import com.njnu.kai.support.BaseTestFragment;
 
-import in.srain.cube.views.ptr.PtrClassicFrameLayout;
 import in.srain.cube.views.ptr.PtrDefaultHandler;
 import in.srain.cube.views.ptr.PtrFrameLayout;
 
@@ -20,7 +19,7 @@ import in.srain.cube.views.ptr.PtrFrameLayout;
 public class PullToRefreshFragment extends BaseTestFragment {
     private View mRootView;
     private LinearLayout mLayoutBusinessRoot;
-    private PtrClassicFrameLayout mPtrLayout;
+    private TestPtrFrameLayout mPtrLayout;
 
     @Override
     protected View onCreateContentView(LayoutInflater layoutInflater, ViewGroup viewGroup, Bundle bundle) {
@@ -32,7 +31,7 @@ public class PullToRefreshFragment extends BaseTestFragment {
     private void initView(View rootView) {
         mRootView = rootView;
         mLayoutBusinessRoot = (LinearLayout) rootView.findViewById(R.id.layout_business_root);
-        mPtrLayout = (PtrClassicFrameLayout) rootView.findViewById(R.id.ptr_layout);
+        mPtrLayout = (TestPtrFrameLayout) rootView.findViewById(R.id.ptr_layout);
         mPtrLayout.setPtrHandler(new PtrDefaultHandler() {
             @Override
             public void onRefreshBegin(PtrFrameLayout frame) {
