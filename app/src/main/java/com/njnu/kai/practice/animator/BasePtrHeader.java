@@ -8,6 +8,7 @@ import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -27,16 +28,15 @@ public class BasePtrHeader extends FrameLayout {
 
     private static final String TAG = "BasePtrHeader";
 
-    private int mCollapseTime;
-
     private TextView mTopTextView;
     private TextView mBottomTextView;
 
     private AnimatorSet mTopHideAnimatorSet;
     private AnimatorSet mTopShowAnimatorSet;
 
-    private ObjectAnimator mBottomShowAlphaAnimator;
     private ObjectAnimator mBottomHideAlphaAnimator;
+
+    private AnimatorSet mEnterLoadingAnimatorSet;
 
     private static final int ALPHA_ANIMATION_DURATION = 300;
     private ImageView mBkgImageView;
@@ -82,7 +82,7 @@ public class BasePtrHeader extends FrameLayout {
         mBottomTextView.setTextColor(Color.BLUE);
         LayoutParams bottomTextParams = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         bottomTextParams.gravity = Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM;
-//        bottomTextParams.bottomMargin = DisplayUtils.dp2px(0);
+        bottomTextParams.bottomMargin = DisplayUtils.dp2px(12);
         addView(mBottomTextView, bottomTextParams);
 
 
@@ -97,9 +97,6 @@ public class BasePtrHeader extends FrameLayout {
         mTopShowAnimatorSet = new AnimatorSet();
         mTopShowAnimatorSet.playTogether(topShowAlphaAnimator);
         mTopShowAnimatorSet.setDuration(ALPHA_ANIMATION_DURATION);
-
-        mBottomShowAlphaAnimator = ObjectAnimator.ofFloat(mBottomTextView, "alpha", 0, 1);
-        mBottomShowAlphaAnimator.setDuration(ALPHA_ANIMATION_DURATION);
 
         mBottomHideAlphaAnimator = ObjectAnimator.ofFloat(mBottomTextView, "alpha", 1, 0);
         mBottomHideAlphaAnimator.setDuration(ALPHA_ANIMATION_DURATION);
@@ -125,15 +122,15 @@ public class BasePtrHeader extends FrameLayout {
     }
 
     protected void onUIRefreshBegin() {
-        if (mCollapseTime == 0) {
-            mCollapseTime = 300;
+        if (mEnterLoadingAnimatorSet == null) {
+            setCollapseTime(300);
         }
 //        LogUtils.i(TAG, "lookPtr onUIRefreshBegin");
 //        mTopTextView.setVisibility(View.GONE);
         mTopHideAnimatorSet.start();
         mBottomTextView.setVisibility(View.VISIBLE);
-        mBottomShowAlphaAnimator.start();
-        mLastLoadingPos = mLastLoadingPosTmp;
+        mBottomTextView.setAlpha(0);
+        mEnterLoadingAnimatorSet.start();
     }
 
     protected void onUIRefreshComplete() {
@@ -141,16 +138,12 @@ public class BasePtrHeader extends FrameLayout {
         mBottomHideAlphaAnimator.start();
     }
 
-    private int mLastLoadingPos;
-    private int mLastLoadingPosTmp;
-
     protected void onUIPositionChange2(PtrFrameLayout frame, boolean isUnderTouch, byte status, PtrIndicator ptrIndicator) {
         final int offsetToRefresh = frame.getOffsetToRefresh();
         final int currentPos = ptrIndicator.getCurrentPosY();
         final int lastPos = ptrIndicator.getLastPosY();
         LogUtils.i(TAG, "lookPtr onUIPositionChange offsetToRefresh=%d curPos=%d lastPos=%d touch=%b status=%d"
                 , offsetToRefresh, currentPos, lastPos, isUnderTouch, status);
-        mLastLoadingPosTmp = currentPos;
 
         if (currentPos < offsetToRefresh && lastPos >= offsetToRefresh) {
             if (isUnderTouch && status == PtrFrameLayout.PTR_STATUS_PREPARE) {
@@ -178,9 +171,6 @@ public class BasePtrHeader extends FrameLayout {
                 }
 //                changeTextViewAlpha(mTopTextView, alpha);
                 mBkgImageView.setImageAlpha(alpha);
-            } else if (status == PtrFrameLayout.PTR_STATUS_LOADING && currentPos >= offsetToRefresh) {
-                float offsetRatio = 1.0f * (currentPos - offsetToRefresh) / (mLastLoadingPos - offsetToRefresh);
-                mBkgImageView.setTranslationY(HOLDER_VIEW_HEIGHT * offsetRatio - HOLDER_VIEW_HEIGHT);
             }
         }
     }
@@ -212,11 +202,16 @@ public class BasePtrHeader extends FrameLayout {
         }
     }
 
-    public int getCollapseTime() {
-        return mCollapseTime;
-    }
-
     public void setCollapseTime(int collapseTime) {
-        mCollapseTime = collapseTime;
+        ObjectAnimator bkgImgMoveToTopAnimator = ObjectAnimator.ofFloat(mBkgImageView, "translationY", 0, -HOLDER_VIEW_HEIGHT);
+        bkgImgMoveToTopAnimator.setInterpolator(new AccelerateInterpolator());
+        bkgImgMoveToTopAnimator.setDuration(collapseTime);
+
+        ObjectAnimator bottomShowAlphaAnimator = ObjectAnimator.ofFloat(mBottomTextView, "alpha", 0, 1);
+        bottomShowAlphaAnimator.setDuration(ALPHA_ANIMATION_DURATION);
+        bottomShowAlphaAnimator.setStartDelay(collapseTime - (collapseTime >> 2));
+
+        mEnterLoadingAnimatorSet = new AnimatorSet();
+        mEnterLoadingAnimatorSet.playTogether(bkgImgMoveToTopAnimator, bottomShowAlphaAnimator);
     }
 }
