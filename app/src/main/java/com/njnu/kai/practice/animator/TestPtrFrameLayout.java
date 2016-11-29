@@ -32,5 +32,12 @@ public class TestPtrFrameLayout extends PtrFrameLayout {
         mTestPtrHeader = new TestPtrHeader(context);
         setHeaderView(mTestPtrHeader);
         addPtrUIHandler(mTestPtrHeader);
+        mTestPtrHeader.setCollapseTime((int) getDurationToClose());
+    }
+
+    @Override
+    public void setDurationToClose(int duration) {
+        super.setDurationToClose(duration);
+        mTestPtrHeader.setCollapseTime(duration);
     }
 }

@@ -26,6 +26,9 @@ import in.srain.cube.views.ptr.indicator.PtrIndicator;
 public class BasePtrHeader extends FrameLayout {
 
     private static final String TAG = "BasePtrHeader";
+
+    private int mCollapseTime;
+
     private TextView mTopTextView;
     private TextView mBottomTextView;
 
@@ -109,6 +112,7 @@ public class BasePtrHeader extends FrameLayout {
         mTopTextView.setVisibility(View.GONE);
         mBottomTextView.setVisibility(View.GONE);
         mTopTextView.setAlpha(0);
+        mBkgImageView.setTranslationY(0);
     }
 
     protected void onUIRefreshPrepare() {
@@ -121,6 +125,9 @@ public class BasePtrHeader extends FrameLayout {
     }
 
     protected void onUIRefreshBegin() {
+        if (mCollapseTime == 0) {
+            mCollapseTime = 300;
+        }
 //        LogUtils.i(TAG, "lookPtr onUIRefreshBegin");
 //        mTopTextView.setVisibility(View.GONE);
         mTopHideAnimatorSet.start();
@@ -173,7 +180,7 @@ public class BasePtrHeader extends FrameLayout {
                 mBkgImageView.setImageAlpha(alpha);
             } else if (status == PtrFrameLayout.PTR_STATUS_LOADING && currentPos >= offsetToRefresh) {
                 float offsetRatio = 1.0f * (currentPos - offsetToRefresh) / (mLastLoadingPos - offsetToRefresh);
-                mBkgImageView.setTranslationY(-HOLDER_VIEW_HEIGHT * offsetRatio);
+                mBkgImageView.setTranslationY(HOLDER_VIEW_HEIGHT * offsetRatio - HOLDER_VIEW_HEIGHT);
             }
         }
     }
@@ -203,5 +210,13 @@ public class BasePtrHeader extends FrameLayout {
         if (!mTopShowAnimatorSet.isRunning()) {
             mTopShowAnimatorSet.start();
         }
+    }
+
+    public int getCollapseTime() {
+        return mCollapseTime;
+    }
+
+    public void setCollapseTime(int collapseTime) {
+        mCollapseTime = collapseTime;
     }
 }
