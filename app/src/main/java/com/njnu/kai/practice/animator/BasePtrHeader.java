@@ -39,6 +39,13 @@ public class BasePtrHeader extends FrameLayout {
     private AnimatorSet mEnterLoadingAnimatorSet;
 
     private static final int ALPHA_ANIMATION_DURATION = 300;
+    private static final float FACE_UP_RATIO = 0.75f;
+    private static final float FACE_UP_DISTANCE = -DisplayUtils.dp2px(12);
+
+    private static final float FACE_TOP_TRANSLATION = -DisplayUtils.dp2px(6);
+    private static final float FACE_BOTTOM_TRANSLATION = DisplayUtils.dp2px(6);
+    private static final float FACE_LEFT_TRANSLATION = -DisplayUtils.dp2px(6);
+    private static final float FACE_RIGHT_TRANSLATION = DisplayUtils.dp2px(6);
 
     private FrameLayout mBkgLayout;
     private ImageView mBkgImageView;
@@ -173,7 +180,7 @@ public class BasePtrHeader extends FrameLayout {
                 crossRotateLineFromTopUnderTouch();
             }
         }
-        if (isUnderTouch) {
+        if (isUnderTouch && status == PtrFrameLayout.PTR_STATUS_PREPARE) {
             int alpha = 255;
             float offsetRatio = 1.0f;
             if (currentPos < offsetToRefresh) {
@@ -182,6 +189,16 @@ public class BasePtrHeader extends FrameLayout {
             }
 //            mBkgImageView.setImageAlpha(alpha);
             mBkgLayout.setAlpha(offsetRatio);
+
+            float beginFaceUp = FACE_UP_RATIO * offsetToRefresh;
+            if (currentPos < beginFaceUp) {
+                mFaceView.setTranslationY(0);
+            } else if (currentPos <= offsetToRefresh){
+                mFaceView.setTranslationY(FACE_UP_DISTANCE * (currentPos - beginFaceUp) / (offsetToRefresh - beginFaceUp));
+            } else {
+                mFaceView.setTranslationY(FACE_UP_DISTANCE);
+            }
+
         } else {
             if (status == PtrFrameLayout.PTR_STATUS_COMPLETE) {
                 int alpha = 0;
@@ -228,11 +245,14 @@ public class BasePtrHeader extends FrameLayout {
         bkgImgMoveToTopAnimator.setInterpolator(new AccelerateInterpolator(1));
         bkgImgMoveToTopAnimator.setDuration(collapseTime);
 
+        ObjectAnimator faceBottomTranslationY = ObjectAnimator.ofFloat(mFaceView, "translationY", FACE_BOTTOM_TRANSLATION);
+        faceBottomTranslationY.setDuration(collapseTime);
+
         ObjectAnimator bottomShowAlphaAnimator = ObjectAnimator.ofFloat(mBottomTextView, "alpha", 0, 1);
         bottomShowAlphaAnimator.setDuration(ALPHA_ANIMATION_DURATION);
         bottomShowAlphaAnimator.setStartDelay(collapseTime - (collapseTime >> 2));
 
         mEnterLoadingAnimatorSet = new AnimatorSet();
-        mEnterLoadingAnimatorSet.playTogether(bkgImgMoveToTopAnimator, bottomShowAlphaAnimator);
+        mEnterLoadingAnimatorSet.playTogether(bkgImgMoveToTopAnimator, bottomShowAlphaAnimator, faceBottomTranslationY);
     }
 }
