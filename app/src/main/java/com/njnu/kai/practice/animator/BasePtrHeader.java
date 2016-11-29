@@ -29,10 +29,14 @@ public class BasePtrHeader extends FrameLayout {
     private TextView mTopTextView;
     private TextView mBottomTextView;
 
-    private AnimatorSet mTopHideAlphaAnimatorSet;
-    private AnimatorSet mTopShowAlphaAnimatorSet;
+    private AnimatorSet mTopHideAnimatorSet;
+    private AnimatorSet mTopShowAnimatorSet;
+
+    private ObjectAnimator mBottomShowAlphaAnimator;
+    private ObjectAnimator mBottomHideAlphaAnimator;
 
     private static final int ALPHA_ANIMATION_DURATION = 300;
+    private ImageView mBkgImageView;
 
     public BasePtrHeader(Context context) {
         super(context);
@@ -49,23 +53,25 @@ public class BasePtrHeader extends FrameLayout {
         init(context);
     }
 
+    private static final int HOLDER_VIEW_HEIGHT = DisplayUtils.dp2px(32);
+
     private void init(Context context) {
 
 //        setPadding(0, DisplayUtils.dp2px(8), 0, DisplayUtils.dp2px(8));
         setBackgroundColor(Color.parseColor("#400000FF"));
 
-        ImageView bkgImageView = new ImageView(context);
+        mBkgImageView = new ImageView(context);
         LayoutParams bkgParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        bkgParams.topMargin = DisplayUtils.dp2px(12);
-        bkgImageView.setImageResource(R.drawable.ic_ptr_bkg);
-        addView(bkgImageView, bkgParams);
+        bkgParams.topMargin = HOLDER_VIEW_HEIGHT;
+        mBkgImageView.setImageResource(R.drawable.ic_ptr_bkg);
+        addView(mBkgImageView, bkgParams);
 
         mTopTextView = new TextView(context);
         mTopTextView.setText("松手加载");
         mTopTextView.setTextColor(Color.BLACK);
         LayoutParams topTextParams = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         topTextParams.gravity = Gravity.CENTER_HORIZONTAL | Gravity.TOP;
-//        topTextParams.topMargin = DisplayUtils.dp2px(0);
+        topTextParams.topMargin = DisplayUtils.dp2px(12);
         addView(mTopTextView, topTextParams);
 
         mBottomTextView = new TextView(context);
@@ -77,18 +83,23 @@ public class BasePtrHeader extends FrameLayout {
         addView(mBottomTextView, bottomTextParams);
 
 
-        ObjectAnimator topHideAlphaAnimator = ObjectAnimator.ofFloat(mTopTextView, "alpha", 0);
-        ObjectAnimator topHideTranslationYAnimator = ObjectAnimator.ofFloat(mTopTextView, "translationY", 0);
-        mTopHideAlphaAnimatorSet = new AnimatorSet();
-        mTopHideAlphaAnimatorSet.playTogether(topHideAlphaAnimator, topHideTranslationYAnimator);
-        mTopHideAlphaAnimatorSet.setDuration(ALPHA_ANIMATION_DURATION);
+        ObjectAnimator topHideAlphaAnimator = ObjectAnimator.ofFloat(mTopTextView, "alpha", 1, 0);
+//        ObjectAnimator topHideTranslationYAnimator = ObjectAnimator.ofFloat(mTopTextView, "translationY", 0);
+        mTopHideAnimatorSet = new AnimatorSet();
+        mTopHideAnimatorSet.playTogether(topHideAlphaAnimator);
+        mTopHideAnimatorSet.setDuration(ALPHA_ANIMATION_DURATION);
 
+        ObjectAnimator topShowAlphaAnimator = ObjectAnimator.ofFloat(mTopTextView, "alpha", 0, 1);
+//        ObjectAnimator topShowTranslationYAnimator = ObjectAnimator.ofFloat(mTopTextView, "translationY", DisplayUtils.dp2px(8));
+        mTopShowAnimatorSet = new AnimatorSet();
+        mTopShowAnimatorSet.playTogether(topShowAlphaAnimator);
+        mTopShowAnimatorSet.setDuration(ALPHA_ANIMATION_DURATION);
 
-        ObjectAnimator topShowAlphaAnimator = ObjectAnimator.ofFloat(mTopTextView, "alpha", 1);
-        ObjectAnimator topShowTranslationYAnimator = ObjectAnimator.ofFloat(mTopTextView, "translationY", DisplayUtils.dp2px(8));
-        mTopShowAlphaAnimatorSet = new AnimatorSet();
-        mTopShowAlphaAnimatorSet.playTogether(topShowAlphaAnimator, topShowTranslationYAnimator);
-        mTopShowAlphaAnimatorSet.setDuration(ALPHA_ANIMATION_DURATION);
+        mBottomShowAlphaAnimator = ObjectAnimator.ofFloat(mBottomTextView, "alpha", 0, 1);
+        mBottomShowAlphaAnimator.setDuration(ALPHA_ANIMATION_DURATION);
+
+        mBottomHideAlphaAnimator = ObjectAnimator.ofFloat(mBottomTextView, "alpha", 1, 0);
+        mBottomHideAlphaAnimator.setDuration(ALPHA_ANIMATION_DURATION);
 
         onUIReset();
     }
@@ -97,23 +108,29 @@ public class BasePtrHeader extends FrameLayout {
 //        LogUtils.i(TAG, "lookPtr onUIReset");
         mTopTextView.setVisibility(View.GONE);
         mBottomTextView.setVisibility(View.GONE);
+        mTopTextView.setAlpha(0);
     }
 
     protected void onUIRefreshPrepare() {
 //        LogUtils.i(TAG, "lookPtr onUIRefreshPrepare");
+        mBkgImageView.setImageAlpha(0);
         mTopTextView.setVisibility(View.VISIBLE);
-        mTopTextView.setAlpha(0);
+//        mTopTextView.setAlpha(0);
+
+//        changeTextViewAlpha(mTopTextView, 0);
     }
 
     protected void onUIRefreshBegin() {
 //        LogUtils.i(TAG, "lookPtr onUIRefreshBegin");
-        mTopTextView.setVisibility(View.GONE);
+//        mTopTextView.setVisibility(View.GONE);
+        mTopHideAnimatorSet.start();
         mBottomTextView.setVisibility(View.VISIBLE);
+        mBottomShowAlphaAnimator.start();
     }
 
     protected void onUIRefreshComplete() {
         LogUtils.i(TAG, "lookPtr onUIRefreshComplete");
-//        mBottomTextView.startAnimation(mTopHideAlphaAnimator);
+        mBottomHideAlphaAnimator.start();
     }
 
     protected void onUIPositionChange2(PtrFrameLayout frame, boolean isUnderTouch, byte status, PtrIndicator ptrIndicator) {
@@ -132,31 +149,51 @@ public class BasePtrHeader extends FrameLayout {
                 crossRotateLineFromTopUnderTouch();
             }
         }
-        if (!isUnderTouch && status == PtrFrameLayout.PTR_STATUS_COMPLETE && currentPos < mOffsetToRefresh) {
-            mBottomTextView.setAlpha(currentPos / mOffsetToRefresh);
+        if (isUnderTouch) {
+            int alpha = 255;
+            if (currentPos < mOffsetToRefresh) {
+                float offsetRatio = 1.0f * currentPos / mOffsetToRefresh;
+                alpha = (int) (offsetRatio * alpha);
+            }
+//            changeTextViewAlpha(mTopTextView, alpha);
+            mBkgImageView.setImageAlpha(alpha);
+        } else {
+            if (status == PtrFrameLayout.PTR_STATUS_COMPLETE) {
+                int alpha = 0;
+                if (currentPos < mOffsetToRefresh) {
+                    float offsetRatio = 1.0f * currentPos / mOffsetToRefresh;
+                    alpha = (int) (offsetRatio * 255);
+                }
+//                changeTextViewAlpha(mTopTextView, alpha);
+                mBkgImageView.setImageAlpha(alpha);
+            }
         }
+    }
+
+    private void changeTextViewAlpha(TextView textView, int alpha) {
+        textView.setTextColor(textView.getTextColors().withAlpha(alpha));
     }
 
     private void crossRotateLineFromBottomUnderTouch() {
         LogUtils.i(TAG, "lookPtr 跨过 界限 向上 show_ani=%b hide_ani=%b"
-                , mTopShowAlphaAnimatorSet.isRunning(), mTopHideAlphaAnimatorSet.isRunning());
-        if (mTopShowAlphaAnimatorSet.isRunning()) {
-            mTopShowAlphaAnimatorSet.end();
+                , mTopShowAnimatorSet.isRunning(), mTopHideAnimatorSet.isRunning());
+        if (mTopShowAnimatorSet.isRunning()) {
+            mTopShowAnimatorSet.end();
         }
-        if (!mTopHideAlphaAnimatorSet.isRunning()) {
-            mTopHideAlphaAnimatorSet.start();
+        if (!mTopHideAnimatorSet.isRunning()) {
+            mTopHideAnimatorSet.start();
         }
     }
 
 
     private void crossRotateLineFromTopUnderTouch() {
         LogUtils.i(TAG, "lookPtr 跨过 界限 向下 show_ani=%b hide_ani=%b"
-                , mTopHideAlphaAnimatorSet.isRunning(), mTopShowAlphaAnimatorSet.isRunning());
-        if (mTopHideAlphaAnimatorSet.isRunning()) {
-            mTopHideAlphaAnimatorSet.end();
+                , mTopHideAnimatorSet.isRunning(), mTopShowAnimatorSet.isRunning());
+        if (mTopHideAnimatorSet.isRunning()) {
+            mTopHideAnimatorSet.end();
         }
-        if (!mTopShowAlphaAnimatorSet.isRunning()) {
-            mTopShowAlphaAnimatorSet.start();
+        if (!mTopShowAnimatorSet.isRunning()) {
+            mTopShowAnimatorSet.start();
         }
     }
 }
