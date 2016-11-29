@@ -2,6 +2,7 @@ package com.njnu.kai.practice.animator;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Color;
 import android.util.AttributeSet;
@@ -36,7 +37,10 @@ public class BasePtrHeader extends FrameLayout {
 
     private ObjectAnimator mBottomHideAlphaAnimator;
 
-    private AnimatorSet mEnterLoadingAnimatorSet;
+    private AnimatorSet mEnterLoadAnimatorSet;
+    private AnimatorSet mLoadingAnimatorSet;
+
+    private int mCollapseTime;
 
     private static final int ALPHA_ANIMATION_DURATION = 300;
     private static final float FACE_UP_RATIO = 0.75f;
@@ -103,7 +107,7 @@ public class BasePtrHeader extends FrameLayout {
         addView(mTopTextView, topTextParams);
 
         mBottomTextView = new TextView(context);
-        mBottomTextView.setText("加载中");
+        mBottomTextView.setText("正在刷新...");
         mBottomTextView.setTextColor(Color.BLUE);
         LayoutParams bottomTextParams = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         bottomTextParams.gravity = Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM;
@@ -126,7 +130,22 @@ public class BasePtrHeader extends FrameLayout {
         mBottomHideAlphaAnimator = ObjectAnimator.ofFloat(mBottomTextView, "alpha", 1, 0);
         mBottomHideAlphaAnimator.setDuration(ALPHA_ANIMATION_DURATION);
 
+        prepareLoadingAnimator();
+
         onUIReset();
+    }
+
+    private void prepareLoadingAnimator() {
+        ObjectAnimator faceTranslationX = ObjectAnimator.ofFloat(mFaceView, "translationX", 0, FACE_RIGHT_TRANSLATION, FACE_LEFT_TRANSLATION, 0);
+        faceTranslationX.setDuration(2500);
+        faceTranslationX.setRepeatCount(ValueAnimator.INFINITE);
+
+        ObjectAnimator faceTranslationY = ObjectAnimator.ofFloat(mFaceView, "translationY", FACE_BOTTOM_TRANSLATION, FACE_TOP_TRANSLATION, FACE_TOP_TRANSLATION, FACE_BOTTOM_TRANSLATION);
+        faceTranslationY.setDuration(2500);
+        faceTranslationY.setRepeatCount(ValueAnimator.INFINITE);
+
+        mLoadingAnimatorSet = new AnimatorSet();
+        mLoadingAnimatorSet.playTogether(faceTranslationX, faceTranslationY);
     }
 
     protected void onUIReset() {
@@ -135,6 +154,7 @@ public class BasePtrHeader extends FrameLayout {
         mBottomTextView.setVisibility(View.GONE);
         mTopTextView.setAlpha(0);
         mBkgLayout.setTranslationY(0);
+        mLoadingAnimatorSet.end();
     }
 
     protected void onUIRefreshPrepare() {
@@ -148,7 +168,7 @@ public class BasePtrHeader extends FrameLayout {
     }
 
     protected void onUIRefreshBegin() {
-        if (mEnterLoadingAnimatorSet == null) {
+        if (mEnterLoadAnimatorSet == null) {
             setCollapseTime(300);
         }
         LogUtils.i(TAG, "lookPtr onUIRefreshBegin");
@@ -156,12 +176,15 @@ public class BasePtrHeader extends FrameLayout {
         mTopHideAnimatorSet.start();
         mBottomTextView.setVisibility(View.VISIBLE);
         mBottomTextView.setAlpha(0);
-        mEnterLoadingAnimatorSet.start();
+        mEnterLoadAnimatorSet.start();
+        mLoadingAnimatorSet.setStartDelay(mCollapseTime);
+        mLoadingAnimatorSet.start();
     }
 
     protected void onUIRefreshComplete() {
         LogUtils.i(TAG, "lookPtr onUIRefreshComplete");
         mBottomHideAlphaAnimator.start();
+        mLoadingAnimatorSet.end();
     }
 
     protected void onUIPositionChange2(PtrFrameLayout frame, boolean isUnderTouch, byte status, PtrIndicator ptrIndicator) {
@@ -193,7 +216,7 @@ public class BasePtrHeader extends FrameLayout {
             float beginFaceUp = FACE_UP_RATIO * offsetToRefresh;
             if (currentPos < beginFaceUp) {
                 mFaceView.setTranslationY(0);
-            } else if (currentPos <= offsetToRefresh){
+            } else if (currentPos <= offsetToRefresh) {
                 mFaceView.setTranslationY(FACE_UP_DISTANCE * (currentPos - beginFaceUp) / (offsetToRefresh - beginFaceUp));
             } else {
                 mFaceView.setTranslationY(FACE_UP_DISTANCE);
@@ -241,6 +264,8 @@ public class BasePtrHeader extends FrameLayout {
     }
 
     public void setCollapseTime(int collapseTime) {
+        mCollapseTime = collapseTime;
+
         ObjectAnimator bkgImgMoveToTopAnimator = ObjectAnimator.ofFloat(mBkgLayout, "translationY", 0, -HOLDER_VIEW_HEIGHT);
         bkgImgMoveToTopAnimator.setInterpolator(new AccelerateInterpolator(1));
         bkgImgMoveToTopAnimator.setDuration(collapseTime);
@@ -252,7 +277,7 @@ public class BasePtrHeader extends FrameLayout {
         bottomShowAlphaAnimator.setDuration(ALPHA_ANIMATION_DURATION);
         bottomShowAlphaAnimator.setStartDelay(collapseTime - (collapseTime >> 2));
 
-        mEnterLoadingAnimatorSet = new AnimatorSet();
-        mEnterLoadingAnimatorSet.playTogether(bkgImgMoveToTopAnimator, bottomShowAlphaAnimator, faceBottomTranslationY);
+        mEnterLoadAnimatorSet = new AnimatorSet();
+        mEnterLoadAnimatorSet.playTogether(bkgImgMoveToTopAnimator, bottomShowAlphaAnimator, faceBottomTranslationY);
     }
 }

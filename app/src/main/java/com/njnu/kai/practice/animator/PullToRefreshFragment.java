@@ -40,7 +40,7 @@ public class PullToRefreshFragment extends BaseTestFragment {
                     public void run() {
                         frame.refreshComplete();
                     }
-                }, 3000);
+                }, 12000);
             }
         });
     }
