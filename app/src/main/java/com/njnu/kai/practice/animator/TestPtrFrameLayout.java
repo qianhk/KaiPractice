@@ -3,7 +3,6 @@ package com.njnu.kai.practice.animator;
 import android.content.Context;
 import android.util.AttributeSet;
 
-import in.srain.cube.views.ptr.PtrClassicDefaultHeader;
 import in.srain.cube.views.ptr.PtrFrameLayout;
 
 /**

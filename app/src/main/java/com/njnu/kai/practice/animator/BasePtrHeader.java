@@ -1,5 +1,6 @@
 package com.njnu.kai.practice.animator;
 
+import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.graphics.Color;
@@ -28,8 +29,8 @@ public class BasePtrHeader extends FrameLayout {
     private TextView mTopTextView;
     private TextView mBottomTextView;
 
-    private ObjectAnimator mTopHideAlphaAnimator;
-    private ObjectAnimator mTopShowAlphaAnimator;
+    private AnimatorSet mTopHideAlphaAnimatorSet;
+    private AnimatorSet mTopShowAlphaAnimatorSet;
 
     private static final int ALPHA_ANIMATION_DURATION = 300;
 
@@ -50,18 +51,21 @@ public class BasePtrHeader extends FrameLayout {
 
     private void init(Context context) {
 
-        setBackgroundColor(Color.parseColor("#40FF00FF"));
+//        setPadding(0, DisplayUtils.dp2px(8), 0, DisplayUtils.dp2px(8));
+        setBackgroundColor(Color.parseColor("#400000FF"));
 
         ImageView bkgImageView = new ImageView(context);
+        LayoutParams bkgParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        bkgParams.topMargin = DisplayUtils.dp2px(12);
         bkgImageView.setImageResource(R.drawable.ic_ptr_bkg);
-        addView(bkgImageView);
+        addView(bkgImageView, bkgParams);
 
         mTopTextView = new TextView(context);
         mTopTextView.setText("松手加载");
         mTopTextView.setTextColor(Color.BLACK);
         LayoutParams topTextParams = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         topTextParams.gravity = Gravity.CENTER_HORIZONTAL | Gravity.TOP;
-        topTextParams.topMargin = DisplayUtils.dp2px(8);
+//        topTextParams.topMargin = DisplayUtils.dp2px(0);
         addView(mTopTextView, topTextParams);
 
         mBottomTextView = new TextView(context);
@@ -69,15 +73,22 @@ public class BasePtrHeader extends FrameLayout {
         mBottomTextView.setTextColor(Color.BLUE);
         LayoutParams bottomTextParams = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         bottomTextParams.gravity = Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM;
-        bottomTextParams.bottomMargin = DisplayUtils.dp2px(8);
+//        bottomTextParams.bottomMargin = DisplayUtils.dp2px(0);
         addView(mBottomTextView, bottomTextParams);
 
 
-        mTopHideAlphaAnimator = ObjectAnimator.ofFloat(mTopTextView, "alpha", 0);
-        mTopHideAlphaAnimator.setDuration(ALPHA_ANIMATION_DURATION);
+        ObjectAnimator topHideAlphaAnimator = ObjectAnimator.ofFloat(mTopTextView, "alpha", 0);
+        ObjectAnimator topHideTranslationYAnimator = ObjectAnimator.ofFloat(mTopTextView, "translationY", 0);
+        mTopHideAlphaAnimatorSet = new AnimatorSet();
+        mTopHideAlphaAnimatorSet.playTogether(topHideAlphaAnimator, topHideTranslationYAnimator);
+        mTopHideAlphaAnimatorSet.setDuration(ALPHA_ANIMATION_DURATION);
 
-        mTopShowAlphaAnimator = ObjectAnimator.ofFloat(mTopTextView, "alpha", 1);
-        mTopShowAlphaAnimator.setDuration(ALPHA_ANIMATION_DURATION);
+
+        ObjectAnimator topShowAlphaAnimator = ObjectAnimator.ofFloat(mTopTextView, "alpha", 1);
+        ObjectAnimator topShowTranslationYAnimator = ObjectAnimator.ofFloat(mTopTextView, "translationY", DisplayUtils.dp2px(8));
+        mTopShowAlphaAnimatorSet = new AnimatorSet();
+        mTopShowAlphaAnimatorSet.playTogether(topShowAlphaAnimator, topShowTranslationYAnimator);
+        mTopShowAlphaAnimatorSet.setDuration(ALPHA_ANIMATION_DURATION);
 
         onUIReset();
     }
@@ -128,24 +139,24 @@ public class BasePtrHeader extends FrameLayout {
 
     private void crossRotateLineFromBottomUnderTouch() {
         LogUtils.i(TAG, "lookPtr 跨过 界限 向上 show_ani=%b hide_ani=%b"
-                , mTopShowAlphaAnimator.isRunning(), mTopHideAlphaAnimator.isRunning());
-        if (mTopShowAlphaAnimator.isRunning()) {
-            mTopShowAlphaAnimator.end();
+                , mTopShowAlphaAnimatorSet.isRunning(), mTopHideAlphaAnimatorSet.isRunning());
+        if (mTopShowAlphaAnimatorSet.isRunning()) {
+            mTopShowAlphaAnimatorSet.end();
         }
-        if (!mTopHideAlphaAnimator.isRunning()) {
-            mTopHideAlphaAnimator.start();
+        if (!mTopHideAlphaAnimatorSet.isRunning()) {
+            mTopHideAlphaAnimatorSet.start();
         }
     }
 
 
     private void crossRotateLineFromTopUnderTouch() {
         LogUtils.i(TAG, "lookPtr 跨过 界限 向下 show_ani=%b hide_ani=%b"
-                , mTopHideAlphaAnimator.isRunning(), mTopShowAlphaAnimator.isRunning());
-        if (mTopHideAlphaAnimator.isRunning()) {
-            mTopHideAlphaAnimator.end();
+                , mTopHideAlphaAnimatorSet.isRunning(), mTopShowAlphaAnimatorSet.isRunning());
+        if (mTopHideAlphaAnimatorSet.isRunning()) {
+            mTopHideAlphaAnimatorSet.end();
         }
-        if (!mTopShowAlphaAnimator.isRunning()) {
-            mTopShowAlphaAnimator.start();
+        if (!mTopShowAlphaAnimatorSet.isRunning()) {
+            mTopShowAlphaAnimatorSet.start();
         }
     }
 }
