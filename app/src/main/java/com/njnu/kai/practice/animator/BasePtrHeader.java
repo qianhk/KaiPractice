@@ -39,7 +39,10 @@ public class BasePtrHeader extends FrameLayout {
     private AnimatorSet mEnterLoadingAnimatorSet;
 
     private static final int ALPHA_ANIMATION_DURATION = 300;
+
+    private FrameLayout mBkgLayout;
     private ImageView mBkgImageView;
+    private ImageView mFaceView;
 
     public BasePtrHeader(Context context) {
         super(context);
@@ -63,11 +66,26 @@ public class BasePtrHeader extends FrameLayout {
 //        setPadding(0, DisplayUtils.dp2px(8), 0, DisplayUtils.dp2px(8));
         setBackgroundColor(Color.parseColor("#400000FF"));
 
+        mBkgLayout = new FrameLayout(context);
+
         mBkgImageView = new ImageView(context);
+        mBkgImageView.setImageResource(R.drawable.ic_ptr_bkg);
+        mBkgLayout.addView(mBkgImageView);
+
+        ImageView headerView = new ImageView(context);
+        headerView.setImageResource(R.drawable.ic_lo_header);
+        LayoutParams headerParams = new LayoutParams(DisplayUtils.dp2px(60), DisplayUtils.dp2px(60), Gravity.CENTER);
+        mBkgLayout.addView(headerView, headerParams);
+
+        mFaceView = new ImageView(context);
+        mFaceView.setImageResource(R.drawable.ic_lo_eye);
+        LayoutParams faceParams = new LayoutParams(DisplayUtils.dp2px(40), DisplayUtils.dp2px(40), Gravity.CENTER);
+        mBkgLayout.addView(mFaceView, faceParams);
+
         LayoutParams bkgParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         bkgParams.topMargin = HOLDER_VIEW_HEIGHT;
-        mBkgImageView.setImageResource(R.drawable.ic_ptr_bkg);
-        addView(mBkgImageView, bkgParams);
+        addView(mBkgLayout, bkgParams);
+
 
         mTopTextView = new TextView(context);
         mTopTextView.setText("松手加载");
@@ -109,12 +127,13 @@ public class BasePtrHeader extends FrameLayout {
         mTopTextView.setVisibility(View.GONE);
         mBottomTextView.setVisibility(View.GONE);
         mTopTextView.setAlpha(0);
-        mBkgImageView.setTranslationY(0);
+        mBkgLayout.setTranslationY(0);
     }
 
     protected void onUIRefreshPrepare() {
 //        LogUtils.i(TAG, "lookPtr onUIRefreshPrepare");
-        mBkgImageView.setImageAlpha(0);
+//        mBkgImageView.setImageAlpha(0);
+        mBkgLayout.setAlpha(0);
         mTopTextView.setVisibility(View.VISIBLE);
 //        mTopTextView.setAlpha(0);
 
@@ -125,7 +144,7 @@ public class BasePtrHeader extends FrameLayout {
         if (mEnterLoadingAnimatorSet == null) {
             setCollapseTime(300);
         }
-//        LogUtils.i(TAG, "lookPtr onUIRefreshBegin");
+        LogUtils.i(TAG, "lookPtr onUIRefreshBegin");
 //        mTopTextView.setVisibility(View.GONE);
         mTopHideAnimatorSet.start();
         mBottomTextView.setVisibility(View.VISIBLE);
@@ -142,8 +161,8 @@ public class BasePtrHeader extends FrameLayout {
         final int offsetToRefresh = frame.getOffsetToRefresh();
         final int currentPos = ptrIndicator.getCurrentPosY();
         final int lastPos = ptrIndicator.getLastPosY();
-        LogUtils.i(TAG, "lookPtr onUIPositionChange offsetToRefresh=%d curPos=%d lastPos=%d touch=%b status=%d"
-                , offsetToRefresh, currentPos, lastPos, isUnderTouch, status);
+//        LogUtils.i(TAG, "lookPtr onUIPositionChange offsetToRefresh=%d curPos=%d lastPos=%d touch=%b status=%d"
+//                , offsetToRefresh, currentPos, lastPos, isUnderTouch, status);
 
         if (currentPos < offsetToRefresh && lastPos >= offsetToRefresh) {
             if (isUnderTouch && status == PtrFrameLayout.PTR_STATUS_PREPARE) {
@@ -156,21 +175,23 @@ public class BasePtrHeader extends FrameLayout {
         }
         if (isUnderTouch) {
             int alpha = 255;
+            float offsetRatio = 1.0f;
             if (currentPos < offsetToRefresh) {
-                float offsetRatio = 1.0f * currentPos / offsetToRefresh;
-                alpha = (int) (offsetRatio * alpha);
+                offsetRatio = 1.0f * currentPos / offsetToRefresh;
+//                alpha = (int) (offsetRatio * alpha);
             }
-//            changeTextViewAlpha(mTopTextView, alpha);
-            mBkgImageView.setImageAlpha(alpha);
+//            mBkgImageView.setImageAlpha(alpha);
+            mBkgLayout.setAlpha(offsetRatio);
         } else {
             if (status == PtrFrameLayout.PTR_STATUS_COMPLETE) {
                 int alpha = 0;
+                float offsetRatio = 1.0f;
                 if (currentPos < offsetToRefresh) {
-                    float offsetRatio = 1.0f * currentPos / offsetToRefresh;
+                    offsetRatio = 1.0f * currentPos / offsetToRefresh;
                     alpha = (int) (offsetRatio * 255);
                 }
-//                changeTextViewAlpha(mTopTextView, alpha);
-                mBkgImageView.setImageAlpha(alpha);
+//                mBkgImageView.setImageAlpha(alpha);
+                mBkgLayout.setAlpha(offsetRatio);
             }
         }
     }
@@ -203,8 +224,8 @@ public class BasePtrHeader extends FrameLayout {
     }
 
     public void setCollapseTime(int collapseTime) {
-        ObjectAnimator bkgImgMoveToTopAnimator = ObjectAnimator.ofFloat(mBkgImageView, "translationY", 0, -HOLDER_VIEW_HEIGHT);
-        bkgImgMoveToTopAnimator.setInterpolator(new AccelerateInterpolator());
+        ObjectAnimator bkgImgMoveToTopAnimator = ObjectAnimator.ofFloat(mBkgLayout, "translationY", 0, -HOLDER_VIEW_HEIGHT);
+        bkgImgMoveToTopAnimator.setInterpolator(new AccelerateInterpolator(1));
         bkgImgMoveToTopAnimator.setDuration(collapseTime);
 
         ObjectAnimator bottomShowAlphaAnimator = ObjectAnimator.ofFloat(mBottomTextView, "alpha", 0, 1);
