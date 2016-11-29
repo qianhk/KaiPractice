@@ -126,6 +126,7 @@ public class BasePtrHeader extends FrameLayout {
         mTopHideAnimatorSet.start();
         mBottomTextView.setVisibility(View.VISIBLE);
         mBottomShowAlphaAnimator.start();
+        mLastLoadingPos = mLastLoadingPosTmp;
     }
 
     protected void onUIRefreshComplete() {
@@ -133,26 +134,30 @@ public class BasePtrHeader extends FrameLayout {
         mBottomHideAlphaAnimator.start();
     }
 
+    private int mLastLoadingPos;
+    private int mLastLoadingPosTmp;
+
     protected void onUIPositionChange2(PtrFrameLayout frame, boolean isUnderTouch, byte status, PtrIndicator ptrIndicator) {
-        final int mOffsetToRefresh = frame.getOffsetToRefresh();
+        final int offsetToRefresh = frame.getOffsetToRefresh();
         final int currentPos = ptrIndicator.getCurrentPosY();
         final int lastPos = ptrIndicator.getLastPosY();
         LogUtils.i(TAG, "lookPtr onUIPositionChange offsetToRefresh=%d curPos=%d lastPos=%d touch=%b status=%d"
-                , mOffsetToRefresh, currentPos, lastPos, isUnderTouch, status);
+                , offsetToRefresh, currentPos, lastPos, isUnderTouch, status);
+        mLastLoadingPosTmp = currentPos;
 
-        if (currentPos < mOffsetToRefresh && lastPos >= mOffsetToRefresh) {
+        if (currentPos < offsetToRefresh && lastPos >= offsetToRefresh) {
             if (isUnderTouch && status == PtrFrameLayout.PTR_STATUS_PREPARE) {
                 crossRotateLineFromBottomUnderTouch();
             }
-        } else if (currentPos > mOffsetToRefresh && lastPos <= mOffsetToRefresh) {
+        } else if (currentPos > offsetToRefresh && lastPos <= offsetToRefresh) {
             if (isUnderTouch && status == PtrFrameLayout.PTR_STATUS_PREPARE) {
                 crossRotateLineFromTopUnderTouch();
             }
         }
         if (isUnderTouch) {
             int alpha = 255;
-            if (currentPos < mOffsetToRefresh) {
-                float offsetRatio = 1.0f * currentPos / mOffsetToRefresh;
+            if (currentPos < offsetToRefresh) {
+                float offsetRatio = 1.0f * currentPos / offsetToRefresh;
                 alpha = (int) (offsetRatio * alpha);
             }
 //            changeTextViewAlpha(mTopTextView, alpha);
@@ -160,12 +165,15 @@ public class BasePtrHeader extends FrameLayout {
         } else {
             if (status == PtrFrameLayout.PTR_STATUS_COMPLETE) {
                 int alpha = 0;
-                if (currentPos < mOffsetToRefresh) {
-                    float offsetRatio = 1.0f * currentPos / mOffsetToRefresh;
+                if (currentPos < offsetToRefresh) {
+                    float offsetRatio = 1.0f * currentPos / offsetToRefresh;
                     alpha = (int) (offsetRatio * 255);
                 }
 //                changeTextViewAlpha(mTopTextView, alpha);
                 mBkgImageView.setImageAlpha(alpha);
+            } else if (status == PtrFrameLayout.PTR_STATUS_LOADING && currentPos >= offsetToRefresh) {
+                float offsetRatio = 1.0f * (currentPos - offsetToRefresh) / (mLastLoadingPos - offsetToRefresh);
+                mBkgImageView.setTranslationY(-HOLDER_VIEW_HEIGHT * offsetRatio);
             }
         }
     }
