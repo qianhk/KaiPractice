@@ -58,11 +58,11 @@ public class LoadingAnimatorFragment extends BaseTestFragment {
         View haTestView = rootView.findViewById(R.id.tv_ha_test);
 
         final int xTrans = DisplayUtils.dp2px(40);
-        final int yTrans = DisplayUtils.dp2px(40);
+        final int yTrans = DisplayUtils.dp2px(0);
 
         mAnimatorSet = new AnimatorSet();
         ObjectAnimator translationX = ObjectAnimator.ofFloat(haTestView, "translationX", -xTrans, xTrans);
-        translationX.setRepeatCount(ValueAnimator.INFINITE);
+//        translationX.setRepeatCount(ValueAnimator.INFINITE);
         translationX.setInterpolator(new TimeInterpolator() {
             @Override
             public float getInterpolation(float input) {
@@ -72,19 +72,19 @@ public class LoadingAnimatorFragment extends BaseTestFragment {
         });
 
         ObjectAnimator translationY = ObjectAnimator.ofFloat(haTestView, "translationY", -yTrans, yTrans);
-        translationY.setRepeatCount(ValueAnimator.INFINITE);
+//        translationY.setRepeatCount(ValueAnimator.INFINITE);
         translationY.setInterpolator(new TimeInterpolator() {
             @Override
             public float getInterpolation(float input) {
 //                LogUtils.e(TAG, "lookInterpolator translationY:" + input);
-                return (float)(Math.sin(2  * Math.PI * input));
-//                return input;
+//                return (float)(Math.sin(2  * Math.PI * input));
+                return input;
             }
         });
 
         mAnimatorSet.playTogether(translationX, translationY);
         mAnimatorSet.setDuration(3000);
-        mAnimatorSet.setStartDelay(1000);
+        mAnimatorSet.setStartDelay(200);
         mAnimatorSet.start();
 
 //        haTestView.postDelayed(new Runnable() {
@@ -95,6 +95,16 @@ public class LoadingAnimatorFragment extends BaseTestFragment {
 //                haTestView.startAnimation(animation);
 //            }
 //        }, 1000);
+
+        rootView.findViewById(R.id.btn_action_test).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!mAnimatorSet.isRunning()) {
+                    mAnimatorSet.start();
+                }
+            }
+        });
+
         return rootView;
     }
 

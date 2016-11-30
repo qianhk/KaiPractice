@@ -39,6 +39,16 @@
             android:src="@drawable/img_dot"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
+
+        <Button
+            android:id="@+id/btn_action_test"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
+            android:padding="8dp"
+            android:text="动起来"
+            android:textSize="18sp"/>
+
     </FrameLayout>
 
 </LinearLayout>
