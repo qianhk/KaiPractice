@@ -2,6 +2,7 @@ package com.njnu.kai.practice.animator;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.animation.TimeInterpolator;
 import android.animation.ValueAnimator;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -17,12 +18,15 @@ import android.widget.TextView;
 import com.njnu.kai.practice.R;
 import com.njnu.kai.support.BaseTestFragment;
 import com.njnu.kai.support.DisplayUtils;
+import com.njnu.kai.support.LogUtils;
 
 /**
  * Created by kai
  * since 16/11/25
  */
 public class LoadingAnimatorFragment extends BaseTestFragment {
+
+    private static final String TAG = "LoadingAnimatorFragment";
 
     private LoadingView mLoadingView;
     private Button mBtnActionLoading;
@@ -53,12 +57,30 @@ public class LoadingAnimatorFragment extends BaseTestFragment {
         });
         View haTestView = rootView.findViewById(R.id.tv_ha_test);
 
-        mAnimatorSet = new AnimatorSet();
-        ObjectAnimator translationX = ObjectAnimator.ofFloat(haTestView, "translationX", -DisplayUtils.dp2px(80), DisplayUtils.dp2px(80));
-        translationX.setRepeatCount(ValueAnimator.INFINITE);
+        final int xTrans = DisplayUtils.dp2px(40);
+        final int yTrans = DisplayUtils.dp2px(40);
 
-        ObjectAnimator translationY = ObjectAnimator.ofFloat(haTestView, "translationY", -DisplayUtils.dp2px(80), DisplayUtils.dp2px(80));
+        mAnimatorSet = new AnimatorSet();
+        ObjectAnimator translationX = ObjectAnimator.ofFloat(haTestView, "translationX", -xTrans, xTrans);
+        translationX.setRepeatCount(ValueAnimator.INFINITE);
+        translationX.setInterpolator(new TimeInterpolator() {
+            @Override
+            public float getInterpolation(float input) {
+//                LogUtils.e(TAG, "lookInterpolator translationX:" + input);
+                return (float)(Math.sin(2  * Math.PI * input));
+            }
+        });
+
+        ObjectAnimator translationY = ObjectAnimator.ofFloat(haTestView, "translationY", -yTrans, yTrans);
         translationY.setRepeatCount(ValueAnimator.INFINITE);
+        translationY.setInterpolator(new TimeInterpolator() {
+            @Override
+            public float getInterpolation(float input) {
+//                LogUtils.e(TAG, "lookInterpolator translationY:" + input);
+                return (float)(Math.sin(2  * Math.PI * input));
+//                return input;
+            }
+        });
 
         mAnimatorSet.playTogether(translationX, translationY);
         mAnimatorSet.setDuration(3000);
