@@ -29,4 +29,16 @@
             android:textSize="18sp"/>
     </LinearLayout>
 
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:background="#1000"
+        android:layout_height="200dp">
+        <TextView
+            android:id="@+id/tv_ha_test"
+            android:layout_gravity="center"
+            android:text="哈, 试试"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </FrameLayout>
+
 </LinearLayout>
