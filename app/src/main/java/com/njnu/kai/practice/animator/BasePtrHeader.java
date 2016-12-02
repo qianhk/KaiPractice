@@ -54,6 +54,7 @@ public class BasePtrHeader extends FrameLayout {
     private FrameLayout mBkgLayout;
     private ImageView mBkgImageView;
     private ImageView mFaceView;
+    private ClipImageView mHeaderView;
 
     public BasePtrHeader(Context context) {
         super(context);
@@ -83,10 +84,10 @@ public class BasePtrHeader extends FrameLayout {
         mBkgImageView.setImageResource(R.drawable.ic_ptr_bkg);
         mBkgLayout.addView(mBkgImageView);
 
-        ImageView headerView = new ImageView(context);
-        headerView.setImageResource(R.drawable.ic_lo_header);
+        mHeaderView = new ClipImageView(context);
+        mHeaderView.setImageResource(R.drawable.ic_lo_header);
         LayoutParams headerParams = new LayoutParams(DisplayUtils.dp2px(60), DisplayUtils.dp2px(60), Gravity.CENTER);
-        mBkgLayout.addView(headerView, headerParams);
+        mBkgLayout.addView(mHeaderView, headerParams);
 
         mFaceView = new ImageView(context);
         mFaceView.setImageResource(R.drawable.ic_lo_eye);

@@ -28,6 +28,12 @@
             android:gravity="center"
             android:text="这儿是纯文本1"/>
 
+        <com.njnu.kai.practice.animator.ClipImageView
+            android:src="@drawable/icon_share_sns_friend"
+            android:layout_gravity="center"
+            android:layout_width="100dp"
+            android:layout_height="100dp"/>
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="100dp"
@@ -39,6 +45,7 @@
             android:layout_height="100dp"
             android:gravity="center"
             android:text="这儿是纯文本3"/>
+
 
     </LinearLayout>
 
