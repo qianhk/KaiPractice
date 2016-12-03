@@ -91,12 +91,12 @@ public class XfermodeFragment extends BaseTestFragment {
             Paint paint = new Paint();
             paint.setFilterBitmap(false);
 
-            canvas.drawText("先画Dst", DisplayUtils.dp2px(100), DisplayUtils.dp2px(6), labelP);
+            canvas.drawText("先画Dst", DisplayUtils.dp2px(100), DisplayUtils.dp2px(24), labelP);
 
             canvas.translate(DisplayUtils.dp2px(15), DisplayUtils.dp2px(35));
 
             int x = 0;
-            int y = DisplayUtils.dp2px(20);
+            int y = DisplayUtils.dp2px(30);
             for (int i = 0; i < sModes.length; i++) {
                 // draw the border
                 paint.setStyle(Paint.Style.STROKE);

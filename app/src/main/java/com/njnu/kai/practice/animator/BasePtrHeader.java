@@ -85,7 +85,7 @@ public class BasePtrHeader extends FrameLayout {
         mBkgLayout.addView(mBkgImageView);
 
         mHeaderView = new ClipImageView(context);
-        mHeaderView.setImageResource(R.drawable.ic_lo_header);
+//        mHeaderView.setImageResource(R.drawable.ic_lo_header);
         LayoutParams headerParams = new LayoutParams(DisplayUtils.dp2px(60), DisplayUtils.dp2px(60), Gravity.CENTER);
         mBkgLayout.addView(mHeaderView, headerParams);
 

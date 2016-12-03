@@ -29,12 +29,13 @@
             android:text="这儿是纯文本1"/>
 
         <FrameLayout
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
             android:layout_gravity="center"
             android:background="#4000">
 
             <com.njnu.kai.practice.animator.ClipImageView
+                android:layout_margin="6dp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:src="@drawable/icon_share_sns_friend"/>
