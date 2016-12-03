@@ -44,7 +44,7 @@ public class ClipImageView extends ImageView {
     }
 
     private void init(Context context) {
-        setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+//        setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         mEdgePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 //        mEdgePaint.setStyle(Paint.Style.FILL_AND_STROKE);
 //        mEdgePaint.setColor(Color.RED);
