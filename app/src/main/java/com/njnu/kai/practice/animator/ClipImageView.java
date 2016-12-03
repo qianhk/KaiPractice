@@ -3,26 +3,21 @@ package com.njnu.kai.practice.animator;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.njnu.kai.practice.R;
 import com.njnu.kai.support.DisplayUtils;
 
 /**
  * Created by kai
  * since 16/12/2
  */
-public class ClipImageView extends View {
+public class ClipImageView extends ImageView {
 
     private int mShowHeight = 1;
 
@@ -54,11 +49,11 @@ public class ClipImageView extends View {
 //        mEdgePaint.setStyle(Paint.Style.FILL_AND_STROKE);
 //        mEdgePaint.setColor(Color.RED);
         mEdgePaint.setFilterBitmap(false);
-        mXfermode = new PorterDuffXfermode(PorterDuff.Mode.SRC_IN);
+        mXfermode = new PorterDuffXfermode(PorterDuff.Mode.CLEAR);
 //        mBitmap = ((BitmapDrawable) context.getResources().getDrawable(R.drawable.img_artist)).getBitmap();
-        mBitmap = makeDst(DisplayUtils.dp2px(100), DisplayUtils.dp2px(100));
+//        mBitmap = makeDst(DisplayUtils.dp2px(100), DisplayUtils.dp2px(100));
 //        mBitmapMask = ((BitmapDrawable) context.getResources().getDrawable(R.drawable.icon_share_sns_friend)).getBitmap();
-        mBitmapMask = makeSrc(DisplayUtils.dp2px(80), DisplayUtils.dp2px(80));
+        mBitmapMask = makeSrc(DisplayUtils.dp2px(100), DisplayUtils.dp2px(80));
     }
 
     public void setShowHeight(int height) {
@@ -73,12 +68,12 @@ public class ClipImageView extends View {
             return;
         }
         int saveCount = canvas.saveLayer(0, 0, getWidth(), getHeight(), null, Canvas.ALL_SAVE_FLAG);
-        canvas.drawBitmap(mBitmap, 0, 0, mEdgePaint);
-//        super.onDraw(canvas);
+//        canvas.drawBitmap(mBitmap, 0, 0, mEdgePaint);
+        super.onDraw(canvas);
         mEdgePaint.setXfermode(mXfermode);
 //        canvas.clipRect(getWidth() / 2, getHeight() / 2, getWidth(), getHeight());
 //        canvas.drawBitmap(mBitmapMask, (getWidth() - mBitmapMask.getWidth()) / 2, (getHeight() - mBitmapMask.getHeight()) / 2, mEdgePaint);
-        canvas.drawBitmap(mBitmapMask, mBitmap.getWidth() / 2, DisplayUtils.dp2px(10), mEdgePaint);
+        canvas.drawBitmap(mBitmapMask, DisplayUtils.dp2px(60), DisplayUtils.dp2px(10), mEdgePaint);
         mEdgePaint.setXfermode(null);
         canvas.restoreToCount(saveCount);
     }
