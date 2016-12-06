@@ -3,22 +3,15 @@ package com.njnu.kai.practice.animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.TimeInterpolator;
-import android.animation.ValueAnimator;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.view.animation.CycleInterpolator;
-import android.view.animation.TranslateAnimation;
 import android.widget.Button;
-import android.widget.TextView;
 
 import com.njnu.kai.practice.R;
 import com.njnu.kai.support.BaseTestFragment;
 import com.njnu.kai.support.DisplayUtils;
-import com.njnu.kai.support.LogUtils;
 
 /**
  * Created by kai
@@ -55,13 +48,14 @@ public class LoadingAnimatorFragment extends BaseTestFragment {
                 flushLoadingActionText();
             }
         });
-        View haTestView = rootView.findViewById(R.id.tv_ha_test);
+        View pointView = rootView.findViewById(R.id.iv_point);
+        View pointView2 = rootView.findViewById(R.id.iv_point2);
 
         final int xTrans = DisplayUtils.dp2px(40);
-        final int yTrans = DisplayUtils.dp2px(0);
+        final int yTrans = DisplayUtils.dp2px(100);
 
         mAnimatorSet = new AnimatorSet();
-        ObjectAnimator translationX = ObjectAnimator.ofFloat(haTestView, "translationX", -xTrans, xTrans);
+        ObjectAnimator translationX = ObjectAnimator.ofFloat(pointView, "translationX", -xTrans, xTrans);
 //        translationX.setRepeatCount(ValueAnimator.INFINITE);
         translationX.setInterpolator(new TimeInterpolator() {
             @Override
@@ -71,7 +65,7 @@ public class LoadingAnimatorFragment extends BaseTestFragment {
             }
         });
 
-        ObjectAnimator translationY = ObjectAnimator.ofFloat(haTestView, "translationY", -yTrans, yTrans);
+        ObjectAnimator translationY = ObjectAnimator.ofFloat(pointView2, "translationY", -yTrans, yTrans);
 //        translationY.setRepeatCount(ValueAnimator.INFINITE);
         translationY.setInterpolator(new TimeInterpolator() {
             @Override
@@ -87,12 +81,12 @@ public class LoadingAnimatorFragment extends BaseTestFragment {
         mAnimatorSet.setStartDelay(200);
         mAnimatorSet.start();
 
-//        haTestView.postDelayed(new Runnable() {
+//        pointView.postDelayed(new Runnable() {
 //            @Override
 //            public void run() {
 //                Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.shake1);
 //                animation.setInterpolator(new CycleInterpolator(3));
-//                haTestView.startAnimation(animation);
+//                pointView.startAnimation(animation);
 //            }
 //        }, 1000);
 
