@@ -3,10 +3,14 @@ package com.njnu.kai.practice.animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.TimeInterpolator;
+import android.annotation.TargetApi;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.BaseInterpolator;
+import android.view.animation.Interpolator;
 import android.widget.Button;
 
 import com.njnu.kai.practice.R;
@@ -57,24 +61,11 @@ public class LoadingAnimatorFragment extends BaseTestFragment {
         mAnimatorSet = new AnimatorSet();
         ObjectAnimator translationX = ObjectAnimator.ofFloat(pointView, "translationX", -xTrans, xTrans);
 //        translationX.setRepeatCount(ValueAnimator.INFINITE);
-        translationX.setInterpolator(new TimeInterpolator() {
-            @Override
-            public float getInterpolation(float input) {
-//                LogUtils.e(TAG, "lookInterpolator translationX:" + input);
-                return (float)(Math.sin(2  * Math.PI * input));
-            }
-        });
+        translationX.setInterpolator(new CircleInterpolator());
 
         ObjectAnimator translationY = ObjectAnimator.ofFloat(pointView2, "translationY", -yTrans, yTrans);
 //        translationY.setRepeatCount(ValueAnimator.INFINITE);
-        translationY.setInterpolator(new TimeInterpolator() {
-            @Override
-            public float getInterpolation(float input) {
-//                LogUtils.e(TAG, "lookInterpolator translationY:" + input);
-//                return (float)(Math.sin(2  * Math.PI * input));
-                return input;
-            }
-        });
+        translationY.setInterpolator(new CircleInterpolator());
 
         mAnimatorSet.playTogether(translationX, translationY);
         mAnimatorSet.setDuration(3000);
@@ -109,5 +100,13 @@ public class LoadingAnimatorFragment extends BaseTestFragment {
             mAnimatorSet.end();
         }
         super.onDestroyView();
+    }
+
+    public static class CircleInterpolator implements Interpolator {
+
+        @Override
+        public float getInterpolation(float input) {
+            return 0;
+        }
     }
 }
