@@ -2,14 +2,10 @@ package com.njnu.kai.practice.animator;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
-import android.animation.TimeInterpolator;
-import android.annotation.TargetApi;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.BaseInterpolator;
 import android.view.animation.Interpolator;
 import android.widget.Button;
 
@@ -106,7 +102,8 @@ public class LoadingAnimatorFragment extends BaseTestFragment {
 
         @Override
         public float getInterpolation(float input) {
-            return 0;
+//            return 0;
+            return (float)(Math.sin(2  * Math.PI * input)); //like CycleInterpolator
         }
     }
 }
