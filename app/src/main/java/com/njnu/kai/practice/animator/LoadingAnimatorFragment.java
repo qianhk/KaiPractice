@@ -51,7 +51,7 @@ public class LoadingAnimatorFragment extends BaseTestFragment {
         View pointView = rootView.findViewById(R.id.iv_point);
         View pointView2 = rootView.findViewById(R.id.iv_point2);
 
-        final int xTrans = DisplayUtils.dp2px(40);
+        final int xTrans = DisplayUtils.dp2px(100);
         final int yTrans = DisplayUtils.dp2px(100);
 
         mAnimatorSet = new AnimatorSet();
@@ -59,11 +59,13 @@ public class LoadingAnimatorFragment extends BaseTestFragment {
 //        translationX.setRepeatCount(ValueAnimator.INFINITE);
         translationX.setInterpolator(new CircleInterpolator());
 
+        ObjectAnimator translationX2 = translationX.clone();
+        translationX2.setTarget(pointView2);
         ObjectAnimator translationY = ObjectAnimator.ofFloat(pointView2, "translationY", -yTrans, yTrans);
 //        translationY.setRepeatCount(ValueAnimator.INFINITE);
         translationY.setInterpolator(new CircleInterpolator());
 
-        mAnimatorSet.playTogether(translationX, translationY);
+        mAnimatorSet.playTogether(translationX, translationY, translationX2);
         mAnimatorSet.setDuration(3000);
         mAnimatorSet.setStartDelay(200);
         mAnimatorSet.start();
