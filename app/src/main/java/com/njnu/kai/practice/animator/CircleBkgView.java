@@ -22,6 +22,7 @@ public class CircleBkgView extends View {
     private int mDurationMs;
     private int mCurMs;
 
+    private boolean mErrorMethod;
 
     Handler mHandler = new Handler() {
         @Override
@@ -49,6 +50,9 @@ public class CircleBkgView extends View {
         invalidate();
     }
 
+    public void setErrorMethod(boolean errorMethod) {
+        mErrorMethod = errorMethod;
+    }
 
     @Override
     protected void onDraw(Canvas canvas) {
@@ -64,22 +68,24 @@ public class CircleBkgView extends View {
         canvas.drawCircle(cx, cy, mRadius, mPaint);
         mPaint.setColor(0xFFfa7829);
 
-        int scx, scy;
-        float xRatio;
-        float halfDuration = mDurationMs / 2;
-        if (mCurMs <= halfDuration) {
-            xRatio = mCurMs / halfDuration;
-        } else {
-            xRatio = 1.0f - (mCurMs - halfDuration) / halfDuration;
+        if (mErrorMethod) {
+            int scx, scy;
+            float xRatio;
+            float halfDuration = mDurationMs / 2;
+            if (mCurMs <= halfDuration) {
+                xRatio = mCurMs / halfDuration;
+            } else {
+                xRatio = 1.0f - (mCurMs - halfDuration) / halfDuration;
+            }
+            scx = (int) (cx - mRadius + 2 * mRadius * xRatio);
+            double sqrt = Math.sqrt(mRadius * mRadius - (scx - cx) * (scx - cx));
+            if (mCurMs <= halfDuration) {
+                sqrt = -sqrt;
+            }
+            scy = (int) (sqrt + cy);
+            canvas.drawCircle(scx, scy, DisplayUtils.dp2px(4), mPaint);
         }
-        scx = (int) (cx - mRadius + 2 * mRadius * xRatio);
-        double sqrt = Math.sqrt(mRadius * mRadius - (scx - cx) * (scx - cx));
-        if (mCurMs <= halfDuration) {
-            sqrt = -sqrt;
-        }
-        scy = (int) (sqrt + cy);
-        canvas.drawCircle(scx, scy, DisplayUtils.dp2px(4), mPaint);
-}
+    }
 
     public void start(int durationMs) {
         mDurationMs = durationMs;

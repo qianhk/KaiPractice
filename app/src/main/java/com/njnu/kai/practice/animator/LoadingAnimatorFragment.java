@@ -24,6 +24,7 @@ public class LoadingAnimatorFragment extends BaseTestFragment {
     private LoadingView mLoadingView;
     private Button mBtnActionLoading;
     private CircleBkgView mCircleBkgView;
+    private CircleBkgView mCircleBkgViewSmall;
 
     private AnimatorSet mAnimatorSet;
 
@@ -54,6 +55,11 @@ public class LoadingAnimatorFragment extends BaseTestFragment {
 
         final int xTrans = DisplayUtils.dp2px(100);
         final int yTrans = DisplayUtils.dp2px(100);
+
+        mCircleBkgViewSmall = (CircleBkgView) rootView.findViewById(R.id.circle_bkg_view_small);
+        mCircleBkgViewSmall.setRadius(DisplayUtils.dp2px(30));
+        mCircleBkgViewSmall.setErrorMethod(true);
+        mCircleBkgViewSmall.start(6000);
 
         mCircleBkgView = (CircleBkgView) rootView.findViewById(R.id.circle_bkg_view);
         mCircleBkgView.setRadius(DisplayUtils.dp2px(100));
@@ -98,6 +104,7 @@ public class LoadingAnimatorFragment extends BaseTestFragment {
 
     @Override
     public void onDestroyView() {
+        mCircleBkgViewSmall.stop();
         mCircleBkgView.stop();
         mLoadingView.stop();
         if (mAnimatorSet != null) {

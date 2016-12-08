@@ -28,7 +28,10 @@
             android:text="停止"
             android:textSize="18sp"/>
 
-
+        <com.njnu.kai.practice.animator.CircleBkgView
+            android:id="@+id/circle_bkg_view_small"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
 
     </LinearLayout>
 
