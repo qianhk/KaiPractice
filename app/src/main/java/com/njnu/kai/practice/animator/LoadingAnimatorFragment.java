@@ -23,6 +23,7 @@ public class LoadingAnimatorFragment extends BaseTestFragment {
 
     private LoadingView mLoadingView;
     private Button mBtnActionLoading;
+    private CircleBkgView mCircleBkgView;
 
     private AnimatorSet mAnimatorSet;
 
@@ -54,16 +55,20 @@ public class LoadingAnimatorFragment extends BaseTestFragment {
         final int xTrans = DisplayUtils.dp2px(100);
         final int yTrans = DisplayUtils.dp2px(100);
 
+        mCircleBkgView = (CircleBkgView) rootView.findViewById(R.id.circle_bkg_view);
+        mCircleBkgView.setRadius(DisplayUtils.dp2px(100));
+        mCircleBkgView.start(6000);
+
         mAnimatorSet = new AnimatorSet();
         ObjectAnimator translationX = ObjectAnimator.ofFloat(pointView, "translationX", -xTrans, xTrans);
 //        translationX.setRepeatCount(ValueAnimator.INFINITE);
-        translationX.setInterpolator(new CircleInterpolator());
+        translationX.setInterpolator(new XCircleInterpolator());
 
         ObjectAnimator translationX2 = translationX.clone();
         translationX2.setTarget(pointView2);
         ObjectAnimator translationY = ObjectAnimator.ofFloat(pointView2, "translationY", -yTrans, yTrans);
 //        translationY.setRepeatCount(ValueAnimator.INFINITE);
-        translationY.setInterpolator(new CircleInterpolator());
+        translationY.setInterpolator(new YCircleInterpolator());
 
         mAnimatorSet.playTogether(translationX, translationY, translationX2);
         mAnimatorSet.setDuration(3000);
@@ -93,6 +98,7 @@ public class LoadingAnimatorFragment extends BaseTestFragment {
 
     @Override
     public void onDestroyView() {
+        mCircleBkgView.stop();
         mLoadingView.stop();
         if (mAnimatorSet != null) {
             mAnimatorSet.end();
@@ -100,7 +106,7 @@ public class LoadingAnimatorFragment extends BaseTestFragment {
         super.onDestroyView();
     }
 
-    public static class CircleInterpolator implements Interpolator {
+    public static class XCircleInterpolator implements Interpolator {
 
         @Override
         public float getInterpolation(float input) {
@@ -109,4 +115,15 @@ public class LoadingAnimatorFragment extends BaseTestFragment {
             return (float) (2 * Math.sqrt(0.5 * 0.5 - (input - 0.5) * (input - 0.5)));
         }
     }
+
+    public static class YCircleInterpolator implements Interpolator {
+
+        @Override
+        public float getInterpolation(float input) {
+//            return 0;
+//            return (float)(Math.sin(2  * Math.PI * input)); //like CycleInterpolator
+            return (float) (2 * Math.sqrt(0.5 * 0.5 - (input - 0.5) * (input - 0.5)));
+        }
+    }
+
 }

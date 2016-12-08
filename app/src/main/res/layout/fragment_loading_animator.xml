@@ -27,6 +27,9 @@
             android:padding="8dp"
             android:text="停止"
             android:textSize="18sp"/>
+
+
+
     </LinearLayout>
 
     <FrameLayout
@@ -56,6 +59,11 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:src="@drawable/img_dot"/>
+
+        <com.njnu.kai.practice.animator.CircleBkgView
+            android:id="@+id/circle_bkg_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
 
         <Button
             android:id="@+id/btn_action_test"
