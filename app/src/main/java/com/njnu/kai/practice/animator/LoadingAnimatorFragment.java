@@ -103,7 +103,8 @@ public class LoadingAnimatorFragment extends BaseTestFragment {
         @Override
         public float getInterpolation(float input) {
 //            return 0;
-            return (float)(Math.sin(2  * Math.PI * input)); //like CycleInterpolator
+//            return (float)(Math.sin(2  * Math.PI * input)); //like CycleInterpolator
+            return (float) (2 * Math.sqrt(0.5 * 0.5 - (input - 0.5) * (input - 0.5)));
         }
     }
 }
