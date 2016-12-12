@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
         android:gravity="center"
-        android:text="供测试Shortcut"/>
+        android:text="供测试的Shortcut Activity"/>
 
     <TextView
         android:id="@+id/tv_result"

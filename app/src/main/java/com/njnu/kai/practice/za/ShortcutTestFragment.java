@@ -22,6 +22,15 @@ public class ShortcutTestFragment extends BaseTestListFragment {
         addShortcut(getContext(), "ClassName", intent, R.drawable.icon_favorite, true);
     }
 
+    @TestFunction("通过隐式action添加")
+    public void onAddShortcutByAction() {
+        Intent intent = new Intent();
+        intent.setAction("com.njnu.kai.practice.ACTION_SHORTCUT_PAGE");
+        intent.putExtra(ShortcutTestActivity.KEY_ID, 2L);
+        intent.putExtra(ShortcutTestActivity.KEY_TWEET, "通过隐式action添加");
+        addShortcut(getContext(), "隐式Action", intent, R.drawable.icon_favorite, true);
+    }
+
     private static void addShortcut(Context context, String shortcutName, Intent actionIntent
             , int iconResId, boolean allowRepeat) {
         Intent shortcutIntent = new Intent("com.android.launcher.action.INSTALL_SHORTCUT");
