@@ -3,6 +3,7 @@ package com.njnu.kai.practice.za;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 
 import com.njnu.kai.practice.R;
 import com.njnu.kai.support.BaseTestListFragment;
@@ -15,7 +16,7 @@ import com.njnu.kai.support.TestFunction;
 public class ShortcutTestFragment extends BaseTestListFragment {
 
     @TestFunction("通过 class name 添加")
-    public void onAddShortcutByClassName() {
+    public void onTest1() {
         Intent intent = new Intent(getContext(), ShortcutTestActivity.class);
         intent.putExtra(ShortcutTestActivity.KEY_ID, 1L);
         intent.putExtra(ShortcutTestActivity.KEY_TWEET, "通过 class name 添加");
@@ -23,12 +24,39 @@ public class ShortcutTestFragment extends BaseTestListFragment {
     }
 
     @TestFunction("通过隐式action添加")
-    public void onAddShortcutByAction() {
+    public void onTest2() {
         Intent intent = new Intent();
         intent.setAction("com.njnu.kai.practice.ACTION_SHORTCUT_PAGE");
         intent.putExtra(ShortcutTestActivity.KEY_ID, 2L);
         intent.putExtra(ShortcutTestActivity.KEY_TWEET, "通过隐式action添加");
         addShortcut(getContext(), "隐式Action", intent, R.drawable.icon_favorite, true);
+    }
+
+    @TestFunction("通过Scheme添加")
+    public void onTest3() {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse("kaiPractice://page/shortcut"));
+        intent.putExtra(ShortcutTestActivity.KEY_ID, 3L);
+        intent.putExtra(ShortcutTestActivity.KEY_TWEET, "通过Scheme添加");
+        addShortcut(getContext(), "Scheme", intent, R.drawable.icon_favorite, true);
+    }
+
+    @TestFunction("通过Scheme添加1")
+    public void onTest4() {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse("kaiPractice://page/shortcut1"));
+        intent.putExtra(ShortcutTestActivity.KEY_ID, 3L);
+        intent.putExtra(ShortcutTestActivity.KEY_TWEET, "通过Scheme1添加");
+        addShortcut(getContext(), "Scheme1", intent, R.drawable.icon_favorite, true);
+    }
+
+    @TestFunction("通过Scheme添加2")
+    public void onTest5() {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse("kaiPractice://page/shortcut2"));
+        intent.putExtra(ShortcutTestActivity.KEY_ID, 3L);
+        intent.putExtra(ShortcutTestActivity.KEY_TWEET, "通过Scheme1添加");
+        addShortcut(getContext(), "Scheme2", intent, R.drawable.icon_favorite, true);
     }
 
     private static void addShortcut(Context context, String shortcutName, Intent actionIntent
