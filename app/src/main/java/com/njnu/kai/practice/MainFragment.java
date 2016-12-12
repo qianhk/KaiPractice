@@ -32,6 +32,7 @@ import com.njnu.kai.practice.splash.SplashActivity;
 import com.njnu.kai.practice.wave.PeriscopeAnimatorFragment;
 import com.njnu.kai.practice.za.EditTextOutputFragment;
 import com.njnu.kai.practice.za.EditTextStatusFragment;
+import com.njnu.kai.practice.za.ShortcutTestFragment;
 import com.njnu.kai.practice.za.WebSocketTestFragment;
 import com.njnu.kai.support.ConstantUtils;
 import com.njnu.kai.support.FunctionItem;
@@ -60,6 +61,7 @@ public class MainFragment extends ActionBarLayoutFragment implements AdapterView
         FUNCTIONS.add(new FunctionItem("Loading Animator", LoadingAnimatorFragment.class, false));
         FUNCTIONS.add(new FunctionItem("Pull To Refresh", PullToRefreshFragment.class, false));
         FUNCTIONS.add(new FunctionItem("Xfermode", XfermodeFragment.class, false));
+        FUNCTIONS.add(new FunctionItem("ShortCut", ShortcutTestFragment.class, false));
         FUNCTIONS.add(new FunctionItem("EditText output", EditTextOutputFragment.class, false));
         FUNCTIONS.add(new FunctionItem("Data Binding", BindTestEntryFragment.class, false));
         FUNCTIONS.add(new FunctionItem("Dagger2", TestDaggerFragment.class, false));
