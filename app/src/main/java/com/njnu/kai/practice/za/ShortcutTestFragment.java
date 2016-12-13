@@ -2,16 +2,20 @@ package com.njnu.kai.practice.za;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 
 import com.njnu.kai.practice.R;
+import com.njnu.kai.practice.util.LauncherUtils;
 import com.njnu.kai.support.AppRuntime;
 import com.njnu.kai.support.BaseTestListFragment;
 import com.njnu.kai.support.FileUtils;
 import com.njnu.kai.support.HttpUtils;
 import com.njnu.kai.support.LogUtils;
+import com.njnu.kai.support.SDKVersionUtils;
 import com.njnu.kai.support.SecurityUtils;
+import com.njnu.kai.support.StringUtils;
 import com.njnu.kai.support.TestFunction;
 import com.njnu.kai.support.ToastUtils;
 import com.njnu.kai.support.image.BitmapUtils;
@@ -110,6 +114,57 @@ public class ShortcutTestFragment extends BaseTestListFragment {
             ToastUtils.showToast("添加快捷方式发生错误: " + error.toString());
             LogUtils.e(TAG, "lookShortcut " + error.toString());
         });
+    }
+
+    @TestFunction("是否已创建快捷方式")
+    public void onTest8() {
+        Context context = getContext();
+        StringBuilder builder = new StringBuilder();
+        builder.append("ClassName: " + isShortcutExist(context, "ClassName"));
+        builder.append("\n隐式Action: " + isShortcutExist(context, "隐式Action"));
+        builder.append("\nScheme: " + isShortcutExist(context, "Scheme"));
+        builder.append("\nScheme1: " + isShortcutExist(context, "Scheme1"));
+        builder.append("\nScheme2: " + isShortcutExist(context, "Scheme2"));
+        builder.append("\n隐式A在线图: " + isShortcutExist(context, "隐式A在线图"));
+        builder.append("\nScheme在线图: " + isShortcutExist(context, "Scheme在线图"));
+        setResult(builder.toString());
+    }
+
+    /**
+     * 不一定所有的手机都有效，因为国内大部分手机的桌面不是系统原生的<br/>
+     * 桌面有两种，系统桌面(ROM自带)与第三方桌面，一般只考虑系统自带<br/>
+     * 第三方桌面如果没有实现系统响应的方法是无法判断的，比如GO桌面<br/>
+     * 此处需要在AndroidManifest.xml中配置相关的桌面权限信息<br/>
+     * 错误信息已捕获<br/>
+     */
+    public static boolean isShortcutExist(Context context, String title) {
+        boolean isInstallShortcut = false;
+        try {
+            String authority = LauncherUtils.getAuthorityFromPermissionDefault(context);
+            if (StringUtils.isEmpty(authority)) {
+                authority = LauncherUtils.getAuthorityFromPermission(context, LauncherUtils.getCurrentLauncherPackageName(context) + ".permission.READ_SETTINGS");
+            }
+            if (StringUtils.isEmpty(authority)) {
+                if (SDKVersionUtils.hasKitKat()) { // 4.4及以上
+                    authority = "com.android.launcher3.settings";
+                } else if (SDKVersionUtils.hasFroyo()) { //2.2及以上
+                    authority = "com.android.launcher2.settings";
+                } else {
+                    authority = "com.android.launcher.settings";
+                }
+            }
+            final Uri CONTENT_URI = Uri.parse("content://" + authority + "/favorites?notify=true");
+            Cursor cursor = context.getContentResolver().query(CONTENT_URI, new String[]{"title", "iconResource"}, "title=?", new String[]{title}, null);
+            if (cursor != null) {
+                if (cursor.getCount() > 0) {
+                    isInstallShortcut = true;
+                }
+                cursor.close();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return isInstallShortcut;
     }
 
     private Observable<Bitmap> getBitmapObservable(String url) {
