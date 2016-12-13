@@ -8,6 +8,8 @@ import android.content.pm.ProviderInfo;
 import android.content.pm.ResolveInfo;
 import android.text.TextUtils;
 
+import com.njnu.kai.support.LogUtils;
+
 import java.util.List;
 
 /**
@@ -16,6 +18,7 @@ import java.util.List;
  */
 public class LauncherUtils {
 
+    private static final String TAG = "LauncherUtils";
     private static String mBufferedValue = null;
 
     /**
@@ -51,6 +54,9 @@ public class LauncherUtils {
 
     /**
      * be cautious to use this, it will cost about 500ms 此函数为费时函数，大概占用500ms左右的时间<br/>
+     *
+     * kai 可针对小米、魅族写好Authority省的查
+     *
      * android系统桌面的基本信息由一个launcher.db的Sqlite数据库管理，里面有三张表<br/>
      * 其中一张表就是favorites。这个db文件一般放在data/data/com.android.launcher(launcher2)文件的databases下<br/>
      * 但是对于不同的rom会放在不同的地方<br/>
@@ -66,6 +72,8 @@ public class LauncherUtils {
             return "";
         }
 
+        LogUtils.i(TAG, "lookKa getAuthorityFromPermission begin");
+
         try {
             List<PackageInfo> packs = context.getPackageManager().getInstalledPackages(PackageManager.GET_PROVIDERS);
             if (packs == null) {
@@ -76,6 +84,7 @@ public class LauncherUtils {
                 if (providers != null) {
                     for (ProviderInfo provider : providers) {
                         if (permission.equals(provider.readPermission) || permission.equals(provider.writePermission)) {
+                            LogUtils.i(TAG, "lookKa getAuthorityFromPermission end (has result)");
                             return provider.authority;
                         }
                     }
@@ -84,6 +93,7 @@ public class LauncherUtils {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        LogUtils.i(TAG, "lookKa getAuthorityFromPermission end (no result)");
         return "";
     }
 
