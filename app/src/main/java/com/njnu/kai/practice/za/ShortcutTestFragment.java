@@ -76,7 +76,7 @@ public class ShortcutTestFragment extends BaseTestListFragment {
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(Uri.parse("kaiPractice://page/shortcut2"));
         intent.putExtra(ShortcutTestActivity.KEY_ID, 5L);
-        intent.putExtra(ShortcutTestActivity.KEY_TWEET, "通过Scheme1添加");
+        intent.putExtra(ShortcutTestActivity.KEY_TWEET, "通过Scheme2添加");
         addShortcut(getContext(), "Scheme2", intent, R.drawable.icon_favorite, true);
     }
 
@@ -134,7 +134,7 @@ public class ShortcutTestFragment extends BaseTestListFragment {
         setResult(builder.toString());
     }
 
-    @TestFunction("更新Scheme添加1的图标")
+    @TestFunction("更新'通过Scheme添加1'的图标")
     public void onTest9() {
         final String picUrl = "http://am.zdmimg.com/201609/29/57eca38a15436.jpg_e600.jpg";
         getBitmapObservable(picUrl).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(bitmap -> {
@@ -152,6 +152,24 @@ public class ShortcutTestFragment extends BaseTestListFragment {
             ToastUtils.showToast("更新快捷方式发生错误: " + error.toString());
             LogUtils.e(TAG, "lookShortcut " + error.toString());
         });
+    }
+
+    @TestFunction("删除'通过Scheme添加1'的图标")
+    public void onTestA() {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse("kaiPractice://page/shortcut1"));
+        intent.putExtra(ShortcutTestActivity.KEY_ID, 4L);
+        intent.putExtra(ShortcutTestActivity.KEY_TWEET, "通过Scheme1添加");
+        deleteShortcut(getContext(), "Scheme1", intent, true, R.drawable.icon_favorite);
+    }
+
+    public static void deleteShortcut(Context context, String title, Intent intent, boolean duplicate, int iconResId) {
+        Intent shortcutIntent = new Intent("com.android.launcher.action.UNINSTALL_SHORTCUT");
+        shortcutIntent.putExtra("duplicate", duplicate);
+        shortcutIntent.putExtra(Intent.EXTRA_SHORTCUT_NAME, title);
+        shortcutIntent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, intent);
+        shortcutIntent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, Intent.ShortcutIconResource.fromContext(context, iconResId));
+        context.sendBroadcast(shortcutIntent);
     }
 
     /**
@@ -193,6 +211,7 @@ public class ShortcutTestFragment extends BaseTestListFragment {
             //java.lang.SecurityException: Permission Denial: writing com.miui.home.launcher.LauncherProvider uri content://com.miui.home.launcher.settings/favorites/125?notify=true
             // from pid=6751, uid=10130 requires com.android.launcher.permission.WRITE_SETTINGS, or grantUriPermission()
             LogUtils.i(TAG, "update shortcut icon, get errors:" + ex.getMessage());
+            ToastUtils.showToast(ex.getMessage());
         }
     }
 
