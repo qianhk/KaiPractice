@@ -52,9 +52,11 @@ public class LoadingAnimatorFragment extends BaseTestFragment {
         });
         View pointView = rootView.findViewById(R.id.iv_point);
         View pointView2 = rootView.findViewById(R.id.iv_point2);
+        View pointView3 = rootView.findViewById(R.id.iv_point3);
 
         final int xTrans = DisplayUtils.dp2px(100);
         final int yTrans = DisplayUtils.dp2px(100);
+        final int yTrans3 = DisplayUtils.dp2px(100 / 3);
 
         mCircleBkgViewSmall = (CircleBkgView) rootView.findViewById(R.id.circle_bkg_view_small);
         mCircleBkgViewSmall.setRadius(DisplayUtils.dp2px(30));
@@ -76,7 +78,12 @@ public class LoadingAnimatorFragment extends BaseTestFragment {
 //        translationY.setRepeatCount(ValueAnimator.INFINITE);
         translationY2.setInterpolator(new YCircleInterpolator());
 
-        mAnimatorSet.playTogether(translationX, translationY2, translationX2);
+        ObjectAnimator translationX3 = translationX.clone();
+        translationX3.setTarget(pointView3);
+        ObjectAnimator translationY3 = ObjectAnimator.ofFloat(pointView3, "translationY", -yTrans3, yTrans3);
+        translationY3.setInterpolator(new YCircleInterpolator());
+
+        mAnimatorSet.playTogether(translationX, translationY2, translationX2, translationX3, translationY3);
         mAnimatorSet.setDuration(3000);
         mAnimatorSet.setStartDelay(200);
         mAnimatorSet.start();
