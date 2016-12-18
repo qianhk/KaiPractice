@@ -72,11 +72,11 @@ public class LoadingAnimatorFragment extends BaseTestFragment {
 
         ObjectAnimator translationX2 = translationX.clone();
         translationX2.setTarget(pointView2);
-        ObjectAnimator translationY = ObjectAnimator.ofFloat(pointView2, "translationY", -yTrans, yTrans);
+        ObjectAnimator translationY2 = ObjectAnimator.ofFloat(pointView2, "translationY", -yTrans, yTrans);
 //        translationY.setRepeatCount(ValueAnimator.INFINITE);
-        translationY.setInterpolator(new YCircleInterpolator());
+        translationY2.setInterpolator(new YCircleInterpolator());
 
-        mAnimatorSet.playTogether(translationX, translationY, translationX2);
+        mAnimatorSet.playTogether(translationX, translationY2, translationX2);
         mAnimatorSet.setDuration(3000);
         mAnimatorSet.setStartDelay(200);
         mAnimatorSet.start();
@@ -117,9 +117,9 @@ public class LoadingAnimatorFragment extends BaseTestFragment {
 
         @Override
         public float getInterpolation(float input) {
-//            return 0;
-//            return (float)(Math.sin(2  * Math.PI * input)); //like CycleInterpolator
-            return (float) (2 * Math.sqrt(0.5 * 0.5 - (input - 0.5) * (input - 0.5)));
+            double output = Math.cos(2 * Math.PI * input + Math.PI) / 2 + 0.5;
+//            LogUtils.d(TAG, "lookInterpolator X input=%.4f output=%.4f", input, output);
+            return (float) output;
         }
     }
 
@@ -127,9 +127,7 @@ public class LoadingAnimatorFragment extends BaseTestFragment {
 
         @Override
         public float getInterpolation(float input) {
-//            return 0;
-//            return (float)(Math.sin(2  * Math.PI * input)); //like CycleInterpolator
-            return (float) (2 * Math.sqrt(0.5 * 0.5 - (input - 0.5) * (input - 0.5)));
+            return (float) (Math.sin(2 * Math.PI * input - Math.PI) / 2 + 0.5);
         }
     }
 
