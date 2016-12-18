@@ -4,6 +4,7 @@ package com.njnu.kai.practice.retrofit;
 import android.os.Bundle;
 import android.support.v4.util.ArrayMap;
 import android.view.View;
+
 import com.njnu.kai.practice.retrofit.data.MovieEntity;
 import com.njnu.kai.practice.retrofit.data.UserInfo;
 import com.njnu.kai.support.BaseTestListFragment;
@@ -134,5 +135,18 @@ public class RetrofitEntryFragment extends BaseTestListFragment {
         RequestBody description = RequestBody.create(null, descriptionString);
         Observable<MovieEntity> topMovieObservable = mMovieService.uploadWithPart(requestBody, description);
         RxExecutor.execute(topMovieObservable, this::setResult);
+    }
+
+    @TestFunction("https")
+    private void on11() {
+        Observable<String> objectObservable = Observable.create(subscriber -> {
+            if (subscriber.isUnsubscribed()) {
+                return;
+            }
+            String str = HttpUtils.getStringFromUrlSync("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=-33.8670,151.1957&radius=500");
+            subscriber.onNext(str);
+            subscriber.onCompleted();
+        });
+        RxExecutor.execute(objectObservable, this::setResult);
     }
 }
