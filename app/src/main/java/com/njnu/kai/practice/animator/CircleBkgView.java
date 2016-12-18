@@ -3,6 +3,7 @@ package com.njnu.kai.practice.animator;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.RectF;
 import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
@@ -17,6 +18,8 @@ import com.njnu.kai.support.DisplayUtils;
 public class CircleBkgView extends View {
 
     private float mRadius;
+    private float mRadiusY;
+    private RectF mOvalRectF;
     private Paint mPaint;
 
     private int mDurationMs;
@@ -47,6 +50,7 @@ public class CircleBkgView extends View {
 
     public void setRadius(float radius) {
         mRadius = radius;
+        mRadiusY = radius / 3;
         invalidate();
     }
 
@@ -64,12 +68,20 @@ public class CircleBkgView extends View {
         }
         int cx = getWidth() / 2;
         int cy = getHeight() / 2;
-        mPaint.setColor(0xFFBBBBBB);
+        mPaint.setColor(0xFFBBCCDD);
         canvas.drawCircle(cx, cy, mRadius, mPaint);
-        mPaint.setColor(0xFFfa7829);
 
+        if (mOvalRectF == null) {
+            mOvalRectF = new RectF(cx - mRadius, cy - mRadiusY, cx + mRadius, cy + mRadiusY);
+        }
+        mPaint.setColor(0xFFDDCCBB);
+        canvas.drawOval(mOvalRectF, mPaint);
+
+        mPaint.setColor(0xFF2222FF);
+
+        int scx, scy;
+        double step = 1.0 * mCurMs / mDurationMs * 2 * Math.PI;
         if (mErrorMethod) {
-            int scx, scy;
             float xRatio;
             float halfDuration = mDurationMs / 2;
             if (mCurMs <= halfDuration) {
@@ -83,8 +95,16 @@ public class CircleBkgView extends View {
                 sqrt = -sqrt;
             }
             scy = (int) (sqrt + cy);
-            canvas.drawCircle(scx, scy, DisplayUtils.dp2px(4), mPaint);
+        } else {
+            scx = (int) (cx - Math.cos(step) * mRadius);
+            scy = (int) (cy - Math.sin(step) * mRadius);
         }
+        canvas.drawCircle(scx, scy, DisplayUtils.dp2px(4), mPaint);
+
+        mPaint.setColor(0xFFFF2222);
+        scx = (int) (cx - Math.cos(step) * mRadius);
+        scy = (int) (cy - Math.sin(step) * mRadiusY);
+        canvas.drawCircle(scx, scy, DisplayUtils.dp2px(4), mPaint);
     }
 
     public void start(int durationMs) {
