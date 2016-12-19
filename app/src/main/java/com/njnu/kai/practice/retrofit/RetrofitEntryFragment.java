@@ -143,7 +143,7 @@ public class RetrofitEntryFragment extends BaseTestListFragment {
             if (subscriber.isUnsubscribed()) {
                 return;
             }
-            String str = HttpUtils.getStringFromUrlSync("http://maps.googleapis.com/maps/api/place/nearbysearch/json?location=-33.8670,151.1957&radius=500");
+            String str = HttpUtils.getStringFromUrlSync("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=-33.8670,151.1957&radius=500");
             subscriber.onNext(str);
             subscriber.onCompleted();
         });
