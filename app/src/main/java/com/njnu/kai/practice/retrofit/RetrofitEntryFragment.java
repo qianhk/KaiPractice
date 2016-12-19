@@ -137,13 +137,26 @@ public class RetrofitEntryFragment extends BaseTestListFragment {
         RxExecutor.execute(topMovieObservable, this::setResult);
     }
 
-    @TestFunction("https")
+    @TestFunction("https(google apis)")
     private void on11() {
         Observable<String> objectObservable = Observable.create(subscriber -> {
             if (subscriber.isUnsubscribed()) {
                 return;
             }
-            String str = HttpUtils.getStringFromUrlSync("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=-33.8670,151.1957&radius=500");
+            String str = HttpUtils.getStringFromUrlSync("http://maps.googleapis.com/maps/api/place/nearbysearch/json?location=-33.8670,151.1957&radius=500");
+            subscriber.onNext(str);
+            subscriber.onCompleted();
+        });
+        RxExecutor.execute(objectObservable, this::setResult);
+    }
+
+    @TestFunction("https(github apis)")
+    private void on12() {
+        Observable<String> objectObservable = Observable.create(subscriber -> {
+            if (subscriber.isUnsubscribed()) {
+                return;
+            }
+            String str = HttpUtils.getStringFromUrlSync("https://api.github.com");
             subscriber.onNext(str);
             subscriber.onCompleted();
         });
