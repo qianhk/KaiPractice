@@ -1,5 +1,6 @@
 package com.njnu.kai.practice.animator;
 
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -8,8 +9,11 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.animation.LinearInterpolator;
 
 import com.njnu.kai.support.DisplayUtils;
+import com.njnu.kai.support.LogUtils;
+import com.njnu.kai.support.SDKVersionUtils;
 
 /**
  * Created by kai
@@ -17,6 +21,7 @@ import com.njnu.kai.support.DisplayUtils;
  */
 public class CircleBkgView extends View {
 
+    private static final String TAG = "CircleBkgView";
     private float mRadius;
     private float mRadiusY;
     private RectF mOvalRectF;
@@ -27,12 +32,16 @@ public class CircleBkgView extends View {
 
     private boolean mErrorMethod;
 
-    Handler mHandler = new Handler() {
+    private ValueAnimator mDurationValueAnimator;
+
+    private static final boolean USE_HANDLER = false;
+
+    private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             mCurMs = msg.arg1;
             invalidate();
-            nextMs();
+            nextMsUseHandler();
         }
     };
 
@@ -61,6 +70,7 @@ public class CircleBkgView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+//        LogUtils.i(TAG, "look onDraw");
         if (mPaint == null) {
             mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
             mPaint.setStrokeWidth(DisplayUtils.dp2px(1));
@@ -111,11 +121,15 @@ public class CircleBkgView extends View {
         mDurationMs = durationMs;
         mCurMs = 0;
         invalidate();
-        nextMs();
+        if (USE_HANDLER) {
+            nextMsUseHandler();
+        } else {
+            nextMsUseAnimator();
+        }
     }
 
-    private void nextMs() {
-        final int delayTime = 50;
+    private void nextMsUseHandler() {
+        final int delayTime = 15;
         int newMs = mCurMs + delayTime;
         if (newMs > mDurationMs) {
             newMs = newMs - mDurationMs;
@@ -125,6 +139,38 @@ public class CircleBkgView extends View {
     }
 
     public void stop() {
-        mHandler.removeCallbacksAndMessages(null);
+        if (USE_HANDLER) {
+            mHandler.removeCallbacksAndMessages(null);
+        } else {
+            if (mDurationValueAnimator != null && mDurationValueAnimator.isRunning()) {
+                mDurationValueAnimator.cancel();
+                mDurationValueAnimator = null;
+            }
+        }
+    }
+
+    private void nextMsUseAnimator() {
+        stop();
+
+        final ValueAnimator valueAnimator = ValueAnimator.ofInt(0, mDurationMs);
+        valueAnimator.addUpdateListener(valueAnimator1 -> {
+            mCurMs = (int) valueAnimator1.getAnimatedValue();
+            postInvalidateOnAnimationCompat();
+        });
+        valueAnimator.setInterpolator(new LinearInterpolator());
+        valueAnimator.setDuration(mDurationMs);
+        valueAnimator.setRepeatCount(ValueAnimator.INFINITE);
+        valueAnimator.start();
+
+        mDurationValueAnimator = valueAnimator;
+    }
+
+    private void postInvalidateOnAnimationCompat() {
+        final long fakeFrameTime = 10;
+        if (SDKVersionUtils.hasJellyBean()) {
+            postInvalidateOnAnimation();
+        } else {
+            postInvalidateDelayed(fakeFrameTime);
+        }
     }
 }
