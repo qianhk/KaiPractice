@@ -36,27 +36,31 @@ public class MultiTypeAdapter extends RecyclerView.Adapter<ViewHolder> implement
     @Nullable private FlatTypeAdapter mProvidedFlatTypeAdapter;
 
 
-    public MultiTypeAdapter(@NonNull List<?> items) {
+    public MultiTypeAdapter() {
+        this(null, new MultiTypePool(), null);
+    }
+
+    public MultiTypeAdapter(List<?> items) {
         this(items, new MultiTypePool(), null);
     }
 
 
-    public MultiTypeAdapter(@NonNull List<?> items, int initialCapacity) {
+    public MultiTypeAdapter(List<?> items, int initialCapacity) {
         this(items, new MultiTypePool(initialCapacity), null);
     }
 
 
-    public MultiTypeAdapter(@NonNull List<?> items, TypePool pool) {
+    public MultiTypeAdapter(List<?> items, TypePool pool) {
         this(items, pool, null);
     }
 
 
-    public MultiTypeAdapter(
-        @NonNull List<?> items, @NonNull TypePool delegate,
-        @Nullable FlatTypeAdapter providedFlatTypeAdapter) {
+    public MultiTypeAdapter(List<?> items, @NonNull TypePool delegate, @Nullable FlatTypeAdapter providedFlatTypeAdapter) {
         this.mDelegate = delegate;
         this.mProvidedFlatTypeAdapter = providedFlatTypeAdapter;
-        flushData(items);
+        if (items != null) {
+            flushData(items);
+        }
     }
 
     public void clearData() {

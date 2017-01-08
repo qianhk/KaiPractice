@@ -1,19 +1,12 @@
 package com.njnu.kai.practice.recycler;
 
-import android.os.Bundle;
-import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
-import com.njnu.kai.practice.R;
 import com.njnu.kai.practice.recycler.modal.Category;
 import com.njnu.kai.practice.recycler.modal.Text;
 import com.njnu.kai.practice.recycler.provider.TextItemViewProvider;
-import com.njnu.kai.support.BaseTestFragment;
-import com.njnu.kai.support.base.ActionBarLayout;
+import com.njnu.kai.support.StateView;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import me.drakeet.multitype.MultiTypeAdapter;
 
@@ -21,35 +14,26 @@ import me.drakeet.multitype.MultiTypeAdapter;
  * @author kai
  * @since 17/1/8
  */
-public class RecyclerViewFragment extends BaseTestFragment {
+public class RecyclerViewFragment extends PagingListFragment {
 
-    private RecyclerView mRecyclerView;
-    private MultiTypeAdapter mAdapter;
+    private Random mRandom = new Random(System.currentTimeMillis());
 
-    private int mSeed;
-
-    @Override
-    protected void onInitActionBar() {
-        super.onInitActionBar();
-        addImageAction(0, R.drawable.ic_launcher);
-    }
-
-    @Override
-    protected void onActionClick(int actionId, ActionBarLayout.Action action) {
-        super.onActionClick(actionId, action);
-        ++mSeed;
-        mAdapter.appendData(makeACategory("from Action " + mSeed, mSeed));
-    }
+//    @Override
+//    protected void onInitActionBar() {
+//        super.onInitActionBar();
+//        addImageAction(0, R.drawable.ic_launcher);
+//    }
+//
+//    @Override
+//    protected void onActionClick(int actionId, ActionBarLayout.Action action) {
+//        super.onActionClick(actionId, action);
+//        ++mSeed;
+//        mAdapter.appendData(makeACategory("from Action " + mSeed, mSeed));
+//    }
 
     @Override
-    protected View onCreateContentView(LayoutInflater layoutInflater, ViewGroup viewGroup, Bundle bundle) {
-        View view = layoutInflater.inflate(R.layout.fragment_recyclerview, viewGroup, false);
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.list);
-        mAdapter = new MultiTypeAdapter(makeDataList());
-        mAdapter.applyGlobalMultiTypePool();
-        mAdapter.register(Text.class, new TextItemViewProvider());
-        mRecyclerView.setAdapter(mAdapter);
-        return view;
+    protected void onAdapterCreated(MultiTypeAdapter adapter) {
+        adapter.register(Text.class, new TextItemViewProvider());
     }
 
     public static ArrayList<Object> makeDataList() {
@@ -66,5 +50,16 @@ public class RecyclerViewFragment extends BaseTestFragment {
             dataList.add(new Text(title.hashCode() + "_" + idx));
         }
         return dataList;
+    }
+
+    @Override
+    protected void onReloadData(int page) {
+        if (page == 1) {
+            updateListData(makeACategory("from first load " + page, mRandom.nextInt(10)));
+            setState(StateView.State.SUCCESS);
+            refreshComplete();
+        } else {
+            makeACategory("from load " + page, mRandom.nextInt(10));
+        }
     }
 }
