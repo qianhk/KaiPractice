@@ -28,13 +28,12 @@ import java.util.List;
 /**
  * @author drakeet
  */
-public class MultiTypeAdapter extends RecyclerView.Adapter<ViewHolder>
-    implements FlatTypeAdapter, TypePool {
+public class MultiTypeAdapter extends RecyclerView.Adapter<ViewHolder> implements FlatTypeAdapter, TypePool {
 
-    @NonNull protected final List<?> items;
-    @NonNull protected TypePool delegate;
-    @Nullable protected LayoutInflater inflater;
-    @Nullable private FlatTypeAdapter providedFlatTypeAdapter;
+    private ArrayList<Object> mDataList;
+    @NonNull private TypePool mDelegate;
+    @Nullable private LayoutInflater mInflater;
+    @Nullable private FlatTypeAdapter mProvidedFlatTypeAdapter;
 
 
     public MultiTypeAdapter(@NonNull List<?> items) {
@@ -55,51 +54,85 @@ public class MultiTypeAdapter extends RecyclerView.Adapter<ViewHolder>
     public MultiTypeAdapter(
         @NonNull List<?> items, @NonNull TypePool delegate,
         @Nullable FlatTypeAdapter providedFlatTypeAdapter) {
-        this.items = items;
-        this.delegate = delegate;
-        this.providedFlatTypeAdapter = providedFlatTypeAdapter;
+        this.mDelegate = delegate;
+        this.mProvidedFlatTypeAdapter = providedFlatTypeAdapter;
+        flushData(items);
     }
 
+    public void clearData() {
+        if (mDataList != null) {
+            mDataList.clear();
+            notifyDataSetChanged();
+        }
+    }
+
+    public void flushData(List<?> data) {
+        clearData();
+        if (data != null) {
+            if (mDataList == null) {
+                mDataList = new ArrayList<>(data);
+            } else {
+                mDataList.addAll(data);
+            }
+        }
+        notifyDataSetChanged();
+    }
+
+    public void appendData(List<?> data) {
+        if (mDataList == null) {
+            flushData(data);
+        } else {
+            mDataList.addAll(data);
+            notifyDataSetChanged();
+        }
+    }
+
+    public void removeData(Object data) {
+        if (mDataList != null) {
+            mDataList.remove(data);
+            notifyDataSetChanged();
+        }
+    }
 
     @SuppressWarnings("unchecked") @Override
     public int getItemViewType(int position) {
-        Object item = items.get(position);
+        Object item = mDataList.get(position);
         return indexOf(flattenClass(item));
     }
 
 
     @Override public ViewHolder onCreateViewHolder(ViewGroup parent, int indexViewType) {
-        if (inflater == null) {
-            inflater = LayoutInflater.from(parent.getContext());
+        if (mInflater == null) {
+            mInflater = LayoutInflater.from(parent.getContext());
         }
         ItemViewProvider provider = getProviderByIndex(indexViewType);
         provider.adapter = MultiTypeAdapter.this;
-        return provider.onCreateViewHolder(inflater, parent);
+        return provider.onCreateViewHolder(mInflater, parent);
     }
 
 
     @SuppressWarnings("unchecked") @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        Object item = items.get(position);
+        Object item = mDataList.get(position);
         ItemViewProvider provider = getProviderByClass(flattenClass(item));
         provider.onBindViewHolder(holder, flattenItem(item));
     }
 
 
     @Override public int getItemCount() {
-        return items.size();
+        return mDataList.size();
     }
 
 
     @Override
     public void register(@NonNull Class<?> clazz, @NonNull ItemViewProvider provider) {
-        delegate.register(clazz, provider);
+        mDelegate.register(clazz, provider);
     }
 
 
     public void registerAll(@NonNull final MultiTypePool pool) {
         for (int i = 0; i < pool.getContents().size(); i++) {
-            delegate.register(pool.getContents().get(i), pool.getProviders().get(i));
+            mDelegate.register(pool.getContents().get(i), pool.getProviders().get(i));
         }
     }
 
@@ -117,7 +150,7 @@ public class MultiTypeAdapter extends RecyclerView.Adapter<ViewHolder>
 
     @Override public int indexOf(@NonNull Class<?> clazz)
         throws ProviderNotFoundException {
-        int index = delegate.indexOf(clazz);
+        int index = mDelegate.indexOf(clazz);
         if (index >= 0) {
             return index;
         }
@@ -135,14 +168,14 @@ public class MultiTypeAdapter extends RecyclerView.Adapter<ViewHolder>
      * @since v2.3.2
      */
     public void setFlatTypeAdapter(@NonNull FlatTypeAdapter flatTypeAdapter) {
-        this.providedFlatTypeAdapter = flatTypeAdapter;
+        this.mProvidedFlatTypeAdapter = flatTypeAdapter;
     }
 
 
     @NonNull @SuppressWarnings("deprecation")
     Class flattenClass(@NonNull final Object item) {
-        if (providedFlatTypeAdapter != null) {
-            return providedFlatTypeAdapter.onFlattenClass(item);
+        if (mProvidedFlatTypeAdapter != null) {
+            return mProvidedFlatTypeAdapter.onFlattenClass(item);
         }
         return onFlattenClass(item);
     }
@@ -150,8 +183,8 @@ public class MultiTypeAdapter extends RecyclerView.Adapter<ViewHolder>
 
     @NonNull @SuppressWarnings("deprecation")
     Object flattenItem(@NonNull final Object item) {
-        if (providedFlatTypeAdapter != null) {
-            return providedFlatTypeAdapter.onFlattenItem(item);
+        if (mProvidedFlatTypeAdapter != null) {
+            return mProvidedFlatTypeAdapter.onFlattenItem(item);
         }
         return onFlattenItem(item);
     }
@@ -176,22 +209,22 @@ public class MultiTypeAdapter extends RecyclerView.Adapter<ViewHolder>
 
 
     @NonNull @Override public ArrayList<Class<?>> getContents() {
-        return delegate.getContents();
+        return mDelegate.getContents();
     }
 
 
     @NonNull @Override public ArrayList<ItemViewProvider> getProviders() {
-        return delegate.getProviders();
+        return mDelegate.getProviders();
     }
 
 
     @NonNull @Override public ItemViewProvider getProviderByIndex(int index) {
-        return delegate.getProviderByIndex(index);
+        return mDelegate.getProviderByIndex(index);
     }
 
 
     @NonNull @Override
     public <T extends ItemViewProvider> T getProviderByClass(@NonNull Class<?> clazz) {
-        return delegate.getProviderByClass(clazz);
+        return mDelegate.getProviderByClass(clazz);
     }
 }
