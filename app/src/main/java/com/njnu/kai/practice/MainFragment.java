@@ -24,6 +24,7 @@ import com.njnu.kai.practice.material.CoordinatorLayoutActivity;
 import com.njnu.kai.practice.material.VectorDrawableActivity;
 import com.njnu.kai.practice.material.composite.MaterialCompositeActivity;
 import com.njnu.kai.practice.material.reveal.RevealActivity;
+import com.njnu.kai.practice.recycler.RecyclerViewFragment;
 import com.njnu.kai.practice.retrofit.RetrofitEntryFragment;
 import com.njnu.kai.practice.rxjava.RxJavaTestFragment;
 import com.njnu.kai.practice.scroll.ManageTwoScrollFragment;
@@ -62,6 +63,7 @@ public class MainFragment extends ActionBarLayoutFragment implements AdapterView
         FUNCTIONS.add(new FunctionItem("Pull To Refresh", PullToRefreshFragment.class, false));
         FUNCTIONS.add(new FunctionItem("Xfermode", XfermodeFragment.class, false));
         FUNCTIONS.add(new FunctionItem("ShortCut", ShortcutTestFragment.class, false));
+        FUNCTIONS.add(new FunctionItem("RecyclerView", RecyclerViewFragment.class, false));
         FUNCTIONS.add(new FunctionItem("EditText output", EditTextOutputFragment.class, false));
         FUNCTIONS.add(new FunctionItem("Data Binding", BindTestEntryFragment.class, false));
         FUNCTIONS.add(new FunctionItem("Dagger2", TestDaggerFragment.class, false));

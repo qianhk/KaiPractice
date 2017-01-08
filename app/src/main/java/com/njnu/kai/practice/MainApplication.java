@@ -2,6 +2,7 @@ package com.njnu.kai.practice;
 
 
 import com.jakewharton.threetenabp.AndroidThreeTen;
+import com.njnu.kai.practice.recycler.MultiTypeInstaller;
 import com.njnu.kai.support.AppRuntime;
 import com.njnu.kai.support.BaseApplication;
 import com.njnu.kai.support.image.ImageLoader;
@@ -21,5 +22,6 @@ public class MainApplication extends BaseApplication {
         ImageLoader.init(AppRuntime.Storage.getCachePath(this) + File.separator + "imageTest");
 //        Stetho.initializeWithDefaults(this);
         AndroidThreeTen.init(this);
+        MultiTypeInstaller.start();
     }
 }
