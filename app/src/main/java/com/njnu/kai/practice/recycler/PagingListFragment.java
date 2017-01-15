@@ -34,12 +34,12 @@ abstract public class PagingListFragment extends StateViewFragment implements Lo
 
     private MultiTypeAdapter mAdapter;
 
-
     private LoadStateCallback mCallback = this;
     private Pager mPager = new Pager();
     private boolean mLoading = true;
     private boolean mErrorFromSecondPage = false;
-    private HeaderAndFooterRecyclerViewAdapter mAdapterWithFooter;
+    private WrapperAdapter mAdapterWithFooter;
+    private LoadingFooterView mFooterView;
 
     protected int listViewLayoutId() {
         return R.layout.common_recyclerview;
@@ -61,7 +61,8 @@ abstract public class PagingListFragment extends StateViewFragment implements Lo
         mAdapter.applyGlobalMultiTypePool();
         onAdapterCreated(mAdapter);
 
-        mAdapterWithFooter = new HeaderAndFooterRecyclerViewAdapter(mAdapter);
+        mFooterView = new LoadingFooterView(layoutInflater.getContext());
+        mAdapterWithFooter = new WrapperAdapter(mAdapter, mFooterView);
         mRecyclerView.setAdapter(mAdapterWithFooter);
 
         mPtrFrameLayout.setPtrHandler(new PtrHandler() {
@@ -90,7 +91,7 @@ abstract public class PagingListFragment extends StateViewFragment implements Lo
                         mCallback.onNoMoreData();
                         LogUtils.d(TAG, "lookLoad no more data");
                         ToastUtils.showToast("没有更多数据了");
-                        RecyclerViewStateUtils.setFooterViewState(getActivity(), mRecyclerView, 20, LoadingFooterView.State.TheEnd, null);
+                        mFooterView.setState(LoadingFooterView.State.TheEnd);
                         return;
                     }
 
@@ -101,7 +102,7 @@ abstract public class PagingListFragment extends StateViewFragment implements Lo
                         return;
                     }
 
-                    RecyclerViewStateUtils.setFooterViewState(getActivity(), mRecyclerView, 20, LoadingFooterView.State.Loading, null);
+                    mFooterView.setState(LoadingFooterView.State.Loading);
                     prepareReloadData(mPager.next(), true);
                 }
             }
@@ -202,9 +203,7 @@ abstract public class PagingListFragment extends StateViewFragment implements Lo
         //尾巴如何显示
         mLoading = false;
         mPtrFrameLayout.refreshComplete();
-        RecyclerViewStateUtils.setFooterViewState(getActivity(), mRecyclerView, 20
-                , success ? LoadingFooterView.State.Normal : LoadingFooterView.State.NetWorkError
-                , null);
+        mFooterView.setState(success ? LoadingFooterView.State.Normal : LoadingFooterView.State.NetWorkError);
     }
 
     @Override

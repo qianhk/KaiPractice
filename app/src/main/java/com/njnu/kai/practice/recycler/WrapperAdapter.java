@@ -9,13 +9,14 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 /**
- * Created by aspsine on 16/3/12.
+ * Created by aspsine
+ * on 16/3/12.
  */
 public class WrapperAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    protected static final int LOAD_MORE_FOOTER = Integer.MAX_VALUE;
+    private static final int LOAD_MORE_FOOTER = Integer.MAX_VALUE;
+    private static final int HEADER_VIEW_COUNT = 0;
 
     private final RecyclerView.Adapter mAdapter;
-
 
     private final FrameLayout mLoadMoreFooterContainer;
 
@@ -27,27 +28,28 @@ public class WrapperAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         @Override
         public void onItemRangeChanged(int positionStart, int itemCount) {
-            WrapperAdapter.this.notifyItemRangeChanged(positionStart + 2, itemCount);
+            WrapperAdapter.this.notifyItemRangeChanged(positionStart + HEADER_VIEW_COUNT, itemCount);
         }
 
         @Override
         public void onItemRangeChanged(int positionStart, int itemCount, Object payload) {
-            WrapperAdapter.this.notifyItemRangeChanged(positionStart + 2, itemCount, payload);
+            WrapperAdapter.this.notifyItemRangeChanged(positionStart + HEADER_VIEW_COUNT, itemCount, payload);
         }
 
         @Override
         public void onItemRangeInserted(int positionStart, int itemCount) {
-            WrapperAdapter.this.notifyItemRangeInserted(positionStart + 2, itemCount);
+            WrapperAdapter.this.notifyItemRangeInserted(positionStart + HEADER_VIEW_COUNT, itemCount);
         }
 
         @Override
         public void onItemRangeRemoved(int positionStart, int itemCount) {
-            WrapperAdapter.this.notifyItemRangeRemoved(positionStart + 2, itemCount);
+            WrapperAdapter.this.notifyItemRangeRemoved(positionStart + HEADER_VIEW_COUNT, itemCount);
         }
 
         @Override
         public void onItemRangeMoved(int fromPosition, int toPosition, int itemCount) {
-            WrapperAdapter.this.notifyDataSetChanged();
+//            WrapperAdapter.this.notifyDataSetChanged();
+            notifyItemRangeChanged(fromPosition + HEADER_VIEW_COUNT, toPosition + HEADER_VIEW_COUNT + itemCount);
         }
     };
 
@@ -75,7 +77,7 @@ public class WrapperAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     if (isFullSpanType(wrapperAdapter.getItemViewType(position))) {
                         return gridLayoutManager.getSpanCount();
                     } else if (spanSizeLookup != null) {
-                        return spanSizeLookup.getSpanSize(position - 2);
+                        return spanSizeLookup.getSpanSize(position - HEADER_VIEW_COUNT);
                     }
                     return 1;
                 }
@@ -126,8 +128,8 @@ public class WrapperAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        if (1 < position && position < mAdapter.getItemCount() + 2) {
-            mAdapter.onBindViewHolder(holder, position - 2);
+        if (position < mAdapter.getItemCount() - 1) {
+            mAdapter.onBindViewHolder(holder, position - HEADER_VIEW_COUNT);
         }
     }
 
