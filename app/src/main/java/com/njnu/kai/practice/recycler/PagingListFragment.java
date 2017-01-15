@@ -39,6 +39,7 @@ abstract public class PagingListFragment extends StateViewFragment implements Lo
     private Pager mPager = new Pager();
     private boolean mLoading = true;
     private boolean mErrorFromSecondPage = false;
+    private HeaderAndFooterRecyclerViewAdapter mAdapterWithFooter;
 
     protected int listViewLayoutId() {
         return R.layout.common_recyclerview;
@@ -60,7 +61,8 @@ abstract public class PagingListFragment extends StateViewFragment implements Lo
         mAdapter.applyGlobalMultiTypePool();
         onAdapterCreated(mAdapter);
 
-        mRecyclerView.setAdapter(mAdapter);
+        mAdapterWithFooter = new HeaderAndFooterRecyclerViewAdapter(mAdapter);
+        mRecyclerView.setAdapter(mAdapterWithFooter);
 
         mPtrFrameLayout.setPtrHandler(new PtrHandler() {
 
@@ -88,6 +90,7 @@ abstract public class PagingListFragment extends StateViewFragment implements Lo
                         mCallback.onNoMoreData();
                         LogUtils.d(TAG, "lookLoad no more data");
                         ToastUtils.showToast("没有更多数据了");
+                        RecyclerViewStateUtils.setFooterViewState(getActivity(), mRecyclerView, 20, LoadingFooterView.State.TheEnd, null);
                         return;
                     }
 
@@ -98,6 +101,7 @@ abstract public class PagingListFragment extends StateViewFragment implements Lo
                         return;
                     }
 
+                    RecyclerViewStateUtils.setFooterViewState(getActivity(), mRecyclerView, 20, LoadingFooterView.State.Loading, null);
                     prepareReloadData(mPager.next(), true);
                 }
             }
@@ -157,8 +161,7 @@ abstract public class PagingListFragment extends StateViewFragment implements Lo
         if (!isAdded()) {
             return;
         }
-        mLoading = false;
-        mPtrFrameLayout.refreshComplete();
+        onLoadDataComplete(totalPage, true);
         int dataCount = data != null ? data.size() : 0;
         if (dataCount == 0) {
             if (mAdapter.isEmpty()) {
@@ -182,8 +185,7 @@ abstract public class PagingListFragment extends StateViewFragment implements Lo
         if (!isAdded()) {
             return;
         }
-        mLoading = false;
-        mPtrFrameLayout.refreshComplete();
+        onLoadDataComplete(0, false);
         if (mAdapter.isEmpty()) {
             mCallback.onStateChanged(StateView.State.FAILED, 0);
         } else {
@@ -198,6 +200,11 @@ abstract public class PagingListFragment extends StateViewFragment implements Lo
     @Override
     public void onLoadDataComplete(int page, boolean success) {
         //尾巴如何显示
+        mLoading = false;
+        mPtrFrameLayout.refreshComplete();
+        RecyclerViewStateUtils.setFooterViewState(getActivity(), mRecyclerView, 20
+                , success ? LoadingFooterView.State.Normal : LoadingFooterView.State.NetWorkError
+                , null);
     }
 
     @Override

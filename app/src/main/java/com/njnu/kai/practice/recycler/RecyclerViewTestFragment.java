@@ -53,11 +53,16 @@ public class RecyclerViewTestFragment extends PagingListFragment {
 
     @Override
     public void onReloadData(final int page, final boolean auto) {
-        if (page == Pager.DEFAULT_PAGE_START) {
-            handleLoadDataSuccess(makeACategory("from first load " + page, mRandom.nextInt(10)), 5);
-        } else {
-            handleLoadDataSuccess(makeACategory("from load " + page, mRandom.nextInt(10)), 0);
-        }
+        getView().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (page == Pager.DEFAULT_PAGE_START) {
+                    handleLoadDataSuccess(makeACategory("from first load " + page, 16), 5);
+                } else {
+                    handleLoadDataSuccess(makeACategory("from load " + page, 8), 0);
+                }
+            }
+        }, 2000);
     }
 
 }
