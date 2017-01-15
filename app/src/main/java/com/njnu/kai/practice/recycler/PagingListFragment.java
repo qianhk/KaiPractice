@@ -62,6 +62,8 @@ abstract public class PagingListFragment extends StateViewFragment implements Lo
         onAdapterCreated(mAdapter);
 
         mFooterView = new LoadingFooterView(layoutInflater.getContext());
+        mFooterView.setLayoutParams(new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT
+                , RecyclerView.LayoutParams.WRAP_CONTENT));
         mAdapterWithFooter = new WrapperAdapter(mAdapter, mFooterView);
         mRecyclerView.setAdapter(mAdapterWithFooter);
 
@@ -209,6 +211,7 @@ abstract public class PagingListFragment extends StateViewFragment implements Lo
     @Override
     public void onNoMoreData() {
         //尾巴如何显示
+        mFooterView.setState(LoadingFooterView.State.TheEnd);
     }
 
     @Override

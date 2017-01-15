@@ -67,7 +67,7 @@ public class LoadingFooterView extends FrameLayout {
     public void showLoadingAnim() {
         mTextView.setVisibility(VISIBLE);
         setText(R.string.loading);
-        mTextView.setCompoundDrawablesWithIntrinsicBounds(null, mDrawable, null, null);
+        mTextView.setCompoundDrawablesWithIntrinsicBounds(mDrawable, null, null, null);
         mObjectAnimator.start();
     }
 
@@ -173,7 +173,7 @@ public class LoadingFooterView extends FrameLayout {
                 showLoadFailText();
                 break;
             case Normal:
-                hide();
+                showLastPageText("松开刷新^_^");
                 break;
         }
     }

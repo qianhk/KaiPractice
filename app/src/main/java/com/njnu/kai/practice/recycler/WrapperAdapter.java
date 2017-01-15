@@ -48,8 +48,8 @@ public class WrapperAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         @Override
         public void onItemRangeMoved(int fromPosition, int toPosition, int itemCount) {
-//            WrapperAdapter.this.notifyDataSetChanged();
-            notifyItemRangeChanged(fromPosition + HEADER_VIEW_COUNT, toPosition + HEADER_VIEW_COUNT + itemCount);
+            WrapperAdapter.this.notifyDataSetChanged();
+//            notifyItemRangeChanged(fromPosition + HEADER_VIEW_COUNT, toPosition + HEADER_VIEW_COUNT + itemCount);
         }
     };
 
@@ -128,7 +128,7 @@ public class WrapperAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        if (position < mAdapter.getItemCount() - 1) {
+        if (position < mAdapter.getItemCount()) {
             mAdapter.onBindViewHolder(holder, position - HEADER_VIEW_COUNT);
         }
     }
