@@ -124,9 +124,13 @@ public class MultiTypeAdapter extends RecyclerView.Adapter<ViewHolder> implement
 
 
     @Override public int getItemCount() {
-        return mDataList.size();
+        return mDataList != null ? mDataList.size() : 0;
     }
 
+
+    public boolean isEmpty() {
+        return mDataList == null || mDataList.isEmpty();
+    }
 
     @Override
     public void register(@NonNull Class<?> clazz, @NonNull ItemViewProvider provider) {

@@ -3,7 +3,6 @@ package com.njnu.kai.practice.recycler;
 import com.njnu.kai.practice.recycler.modal.Category;
 import com.njnu.kai.practice.recycler.modal.Text;
 import com.njnu.kai.practice.recycler.provider.TextItemViewProvider;
-import com.njnu.kai.support.StateView;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -14,7 +13,7 @@ import me.drakeet.multitype.MultiTypeAdapter;
  * @author kai
  * @since 17/1/8
  */
-public class RecyclerViewFragment extends PagingListFragment {
+public class RecyclerViewTestFragment extends PagingListFragment {
 
     private Random mRandom = new Random(System.currentTimeMillis());
 
@@ -53,13 +52,12 @@ public class RecyclerViewFragment extends PagingListFragment {
     }
 
     @Override
-    protected void onReloadData(int page) {
-        if (page == 1) {
-            updateListData(makeACategory("from first load " + page, mRandom.nextInt(10)));
-            setState(StateView.State.SUCCESS);
-            refreshComplete();
+    public void onReloadData(final int page, final boolean auto) {
+        if (page == Pager.DEFAULT_PAGE_START) {
+            handleLoadDataSuccess(makeACategory("from first load " + page, mRandom.nextInt(10)), 5);
         } else {
-            makeACategory("from load " + page, mRandom.nextInt(10));
+            handleLoadDataSuccess(makeACategory("from load " + page, mRandom.nextInt(10)), 0);
         }
     }
+
 }
