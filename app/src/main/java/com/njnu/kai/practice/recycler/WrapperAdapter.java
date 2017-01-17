@@ -18,7 +18,7 @@ public class WrapperAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     private final RecyclerView.Adapter mAdapter;
 
-    private final FrameLayout mLoadMoreFooterContainer;
+    private final ViewGroup mLoadMoreFooterContainer;
 
     private RecyclerView.AdapterDataObserver mObserver = new RecyclerView.AdapterDataObserver() {
         @Override
@@ -53,7 +53,7 @@ public class WrapperAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         }
     };
 
-    public WrapperAdapter(RecyclerView.Adapter adapter, FrameLayout loadMoreFooterContainer) {
+    public WrapperAdapter(RecyclerView.Adapter adapter, ViewGroup loadMoreFooterContainer) {
         this.mAdapter = adapter;
         this.mLoadMoreFooterContainer = loadMoreFooterContainer;
 

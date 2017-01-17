@@ -10,14 +10,15 @@ import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.ViewGroup;
 import android.view.animation.LinearInterpolator;
-import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.njnu.kai.practice.R;
+import com.njnu.kai.support.DisplayUtils;
 
 /**
  */
-public class LoadingFooterView extends FrameLayout {
+public class LoadingFooterView extends LinearLayout {
 
     protected State mState = State.Normal;
 
@@ -26,28 +27,31 @@ public class LoadingFooterView extends FrameLayout {
     private ObjectAnimator mObjectAnimator;
 
     public LoadingFooterView(Context context) {
-        this(context, null);
+        super(context);
+        initView(context);
     }
 
     public LoadingFooterView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        initViews(context);
+        initView(context);
     }
 
     public LoadingFooterView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs);
-        initViews(context);
+        initView(context);
     }
 
     public TextView getTextView() {
         return mTextView;
     }
 
-    private void initViews(Context context) {
+    private void initView(Context context) {
+        setOrientation(HORIZONTAL);
+        setGravity(Gravity.CENTER);
         mTextView = new TextView(context);
         mTextView.setPadding(0, (int) getResources().getDimension(R.dimen.footer_padding)
                 , 0, (int) getResources().getDimension(R.dimen.footer_padding));
-        final LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        final LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         addView(mTextView, layoutParams);
         setTextColor(getResources().getColor(R.color.normal_subtitle));
         setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
@@ -55,6 +59,7 @@ public class LoadingFooterView extends FrameLayout {
         mDrawable.setBounds(0, 0, mDrawable.getIntrinsicWidth(), mDrawable.getIntrinsicHeight());
         mTextView.setGravity(Gravity.CENTER);
         mTextView.setVisibility(GONE);
+        mTextView.setCompoundDrawablePadding(DisplayUtils.dp2px(6));
 
         final int duration = 1000;
         final int maxDegree = 10000;
