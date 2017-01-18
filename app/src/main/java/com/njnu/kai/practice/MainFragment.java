@@ -75,7 +75,7 @@ public class MainFragment extends ActionBarLayoutFragment implements AdapterView
         FUNCTIONS.add(new FunctionItem("FrameAnimation", FrameAnimationActivity.class, true));
         FUNCTIONS.add(new FunctionItem("PropertyAnimation", PropertyAnimationActivity.class, true));
         FUNCTIONS.add(new FunctionItem("Chicken Animator", AnimatorActivity.class, true));
-        FUNCTIONS.add(new FunctionItem("WebView", WebViewActivity.class, true));
+        FUNCTIONS.add(new FunctionItem("WebView Test", WebViewFragment.class, false));
         FUNCTIONS.add(new FunctionItem("SplashTest", SplashActivity.class, true));
         FUNCTIONS.add(new FunctionItem("EntryAnimator", EntryAnimatorActivity.class, true));
         FUNCTIONS.add(new FunctionItem("RevealActivity", RevealActivity.class, true));

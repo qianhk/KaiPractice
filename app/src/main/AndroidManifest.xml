@@ -61,7 +61,7 @@
             android:name="com.njnu.kai.practice.PropertyAnimationActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"/>
         <activity
-            android:name="com.njnu.kai.practice.WebViewActivity"
+            android:name="com.njnu.kai.practice.WebViewFragment"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"/>
         <activity
             android:name="com.njnu.kai.practice.splash.SplashActivity"
