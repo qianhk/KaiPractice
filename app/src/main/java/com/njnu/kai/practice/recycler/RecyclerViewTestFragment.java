@@ -13,7 +13,7 @@ import me.drakeet.multitype.MultiTypeAdapter;
  * @author kai
  * @since 17/1/8
  */
-public class RecyclerViewTestFragment extends PagingListFragment {
+public class RecyclerViewTestFragment extends RecyclerViewListFragment {
 
     private Random mRandom = new Random(System.currentTimeMillis());
 

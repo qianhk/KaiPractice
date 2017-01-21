@@ -24,9 +24,8 @@ import me.drakeet.multitype.MultiTypeAdapter;
  * @author kai
  * @since 17/1/8
  */
-abstract public class PagingListFragment extends StateViewFragment implements LoadStateCallback {
-
-    private static final String TAG = "PagingListFragment";
+abstract public class RecyclerViewListFragment extends StateViewFragment implements LoadStateCallback {
+    private static final String TAG = "RecyclerViewListFragment";
 
     private PtrFrameLayout mPtrFrameLayout;
 
@@ -38,17 +37,24 @@ abstract public class PagingListFragment extends StateViewFragment implements Lo
     private Pager mPager = new Pager();
     private boolean mLoading = true;
     private boolean mErrorFromSecondPage = false;
-    private WrapperAdapter mAdapterWithFooter;
     private LoadingFooterView mFooterView;
 
     protected int listViewLayoutId() {
-        return R.layout.common_recyclerview;
+        return needPtrAndLoadNextFeature() ? R.layout.common_recyclerview_with_ptr : R.layout.common_recyclerview_without_ptr;
     }
 
     protected void onContentViewInflated(View contentView) {
     }
 
     abstract protected void onAdapterCreated(MultiTypeAdapter adapter);
+
+    protected boolean needPtrAndLoadNextFeature() {
+        return true;
+    }
+
+//    protected boolean needLoadNextPageFeature() {
+//        return true;
+//    }
 
     @Override
     protected View onCreateContentView(LayoutInflater layoutInflater, ViewGroup viewGroup, Bundle bundle) {
@@ -61,54 +67,61 @@ abstract public class PagingListFragment extends StateViewFragment implements Lo
         mAdapter.applyGlobalMultiTypePool();
         onAdapterCreated(mAdapter);
 
-        mFooterView = new LoadingFooterView(layoutInflater.getContext());
-        mFooterView.setLayoutParams(new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT
-                , RecyclerView.LayoutParams.WRAP_CONTENT));
-        mAdapterWithFooter = new WrapperAdapter(mAdapter, mFooterView);
-        mRecyclerView.setAdapter(mAdapterWithFooter);
+        if (mPtrFrameLayout != null) {
+            mFooterView = new LoadingFooterView(layoutInflater.getContext());
+            mFooterView.setLayoutParams(new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT
+                    , RecyclerView.LayoutParams.WRAP_CONTENT));
+            mRecyclerView.setAdapter(new WrapperAdapter(mAdapter, mFooterView));
 
-        mPtrFrameLayout.setPtrHandler(new PtrHandler() {
+            mRecyclerView.addOnScrollListener(new OnLoadMoreScrollListener() {
+                @Override
+                public void onLoadMore(RecyclerView recyclerView) {
+                    if (!mLoading) {
+                        if (!mPager.hasNext()) {
+                            mCallback.onNoMoreData();
+                            LogUtils.d(TAG, "lookLoad no more data");
+                            ToastUtils.showToast("没有更多数据了");
+                            mFooterView.setState(LoadingFooterView.State.TheEnd);
+                            return;
+                        }
 
-            @Override
-            public void onRefreshBegin(PtrFrameLayout ptrFrameLayout) {
-                if (!AppRuntime.Network.isNetWorkAvailable()) {
-                    ToastUtils.showToast(R.string.network_unavailable);
-                    ptrFrameLayout.refreshComplete();
-                    return;
-                }
-                mPager = new Pager();
-                prepareReloadData(Pager.DEFAULT_PAGE_START, false);
-            }
-
-            @Override
-            public boolean checkCanDoRefresh(PtrFrameLayout ptrFrameLayout, View content, View header) {
-                return PtrDefaultHandler.checkContentCanBePulledDown(ptrFrameLayout, content, header);
-            }
-        });
-        mRecyclerView.addOnScrollListener(new OnLoadMoreScrollListener() {
-            @Override
-            public void onLoadMore(RecyclerView recyclerView) {
-                if (!mLoading) {
-                    if (!mPager.hasNext()) {
-                        mCallback.onNoMoreData();
-                        LogUtils.d(TAG, "lookLoad no more data");
-                        ToastUtils.showToast("没有更多数据了");
-                        mFooterView.setState(LoadingFooterView.State.TheEnd);
-                        return;
-                    }
-
-                    if (mErrorFromSecondPage) {
+                        if (mErrorFromSecondPage) {
 //                        mCallback.onLoadDataComplete(mPager.getCurrent(), false);
-                        LogUtils.d(TAG, "lookLoad load failed from second page");
-                        ToastUtils.showToast("非第一页加载失败");
+                            LogUtils.d(TAG, "lookLoad load failed from second page");
+                            ToastUtils.showToast("非第一页加载失败");
+                            return;
+                        }
+
+                        mFooterView.setState(LoadingFooterView.State.Loading);
+                        prepareReloadData(mPager.next(), true);
+                    }
+                }
+            });
+
+        } else {
+            mRecyclerView.setAdapter(mAdapter);
+        }
+
+        if (mPtrFrameLayout != null) {
+            mPtrFrameLayout.setPtrHandler(new PtrHandler() {
+
+                @Override
+                public void onRefreshBegin(PtrFrameLayout ptrFrameLayout) {
+                    if (!AppRuntime.Network.isNetWorkAvailable()) {
+                        ToastUtils.showToast(R.string.network_unavailable);
+                        ptrFrameLayout.refreshComplete();
                         return;
                     }
-
-                    mFooterView.setState(LoadingFooterView.State.Loading);
-                    prepareReloadData(mPager.next(), true);
+                    mPager = new Pager();
+                    prepareReloadData(Pager.DEFAULT_PAGE_START, false);
                 }
-            }
-        });
+
+                @Override
+                public boolean checkCanDoRefresh(PtrFrameLayout ptrFrameLayout, View content, View header) {
+                    return PtrDefaultHandler.checkContentCanBePulledDown(ptrFrameLayout, content, header);
+                }
+            });
+        }
 
         return mainView;
     }
@@ -133,11 +146,6 @@ abstract public class PagingListFragment extends StateViewFragment implements Lo
 //            mPagingHelper.prepareReloadData(Pager.DEFAULT_PAGE_START, true);
             prepareReloadData(Pager.DEFAULT_PAGE_START, true);
         }
-    }
-
-    @Override
-    protected void onRetryRequested() {
-
     }
 
     protected boolean enterAutoLoading() {
@@ -184,6 +192,12 @@ abstract public class PagingListFragment extends StateViewFragment implements Lo
         }
     }
 
+    @Override
+    protected void onRetryRequested() {
+        setState(StateView.State.LOADING);
+        prepareReloadData(Pager.DEFAULT_PAGE_START, false);
+    }
+
     public void handleLoadDataFailed() {
         if (!isAdded()) {
             return;
@@ -197,21 +211,27 @@ abstract public class PagingListFragment extends StateViewFragment implements Lo
     }
 
     protected void refreshComplete() {
-        mPtrFrameLayout.refreshComplete();
+        if (mPtrFrameLayout != null) {
+            mPtrFrameLayout.refreshComplete();
+        }
     }
 
     @Override
     public void onLoadDataComplete(int page, boolean success) {
         //尾巴如何显示
         mLoading = false;
-        mPtrFrameLayout.refreshComplete();
-        mFooterView.setState(success ? LoadingFooterView.State.Normal : LoadingFooterView.State.NetWorkError);
+        refreshComplete();
+        if (mFooterView != null) {
+            mFooterView.setState(success ? LoadingFooterView.State.Normal : LoadingFooterView.State.NetWorkError);
+        }
     }
 
     @Override
     public void onNoMoreData() {
         //尾巴如何显示
-        mFooterView.setState(LoadingFooterView.State.TheEnd);
+        if (mFooterView != null) {
+            mFooterView.setState(LoadingFooterView.State.TheEnd);
+        }
     }
 
     @Override
