@@ -1,7 +1,6 @@
 package com.njnu.kai.practice.recycler.provider;
 
 import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +9,7 @@ import android.widget.TextView;
 import com.njnu.kai.practice.R;
 import com.njnu.kai.practice.recycler.modal.Category;
 
+import me.drakeet.multitype.BaseViewHolder;
 import me.drakeet.multitype.ItemViewProvider;
 
 public class CategoryItemViewProvider extends ItemViewProvider<Category, CategoryItemViewProvider.ViewHolder> {
@@ -25,7 +25,7 @@ public class CategoryItemViewProvider extends ItemViewProvider<Category, Categor
         holder.flushView(category);
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
+    static class ViewHolder extends BaseViewHolder {
 
         private final TextView mTvTitle;
 

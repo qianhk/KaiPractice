@@ -1,6 +1,8 @@
 package com.njnu.kai.practice.recycler.modal;
 
-public class Category {
+import me.drakeet.multitype.BaseVO;
+
+public class Category extends BaseVO {
 
     public String mTitle;
 

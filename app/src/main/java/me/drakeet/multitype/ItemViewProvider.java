@@ -25,7 +25,7 @@ import android.view.ViewGroup;
 /***
  * @author drakeet
  */
-public abstract class ItemViewProvider<T, V extends ViewHolder> {
+public abstract class ItemViewProvider<T, V extends BaseViewHolder> {
 
     /* internal */ RecyclerView.Adapter adapter;
 
