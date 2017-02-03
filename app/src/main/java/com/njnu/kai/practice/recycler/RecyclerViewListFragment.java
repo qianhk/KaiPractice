@@ -247,6 +247,10 @@ abstract public class RecyclerViewListFragment extends StateViewFragment impleme
 
     }
 
+    public BaseVO getItemDataByVoId(String voId) {
+        return mAdapter != null ? mAdapter.getItemDataByVoId(voId) : null;
+    }
+
     @Override
     public void onMultiTypeViewClicked(BaseVO data, String action) {
         ToastUtils.showToast("click button: " + data.getClass().getSimpleName());

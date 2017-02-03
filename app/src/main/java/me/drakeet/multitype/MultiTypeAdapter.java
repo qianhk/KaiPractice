@@ -18,7 +18,9 @@ package me.drakeet.multitype;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.util.ArrayMap;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -37,6 +39,8 @@ public class MultiTypeAdapter extends RecyclerView.Adapter<BaseViewHolder> imple
     private LayoutInflater mInflater;
     @Nullable
     private FlatTypeAdapter mProvidedFlatTypeAdapter;
+
+    private ArrayMap<String, BaseVO> mVoIdMap;
 
     private OnMultiTypeViewListener mMultiTypeViewListener;
 
@@ -72,6 +76,10 @@ public class MultiTypeAdapter extends RecyclerView.Adapter<BaseViewHolder> imple
             mDataList.clear();
             notifyDataSetChanged();
         }
+        if (mVoIdMap != null) {
+            mVoIdMap.clear();
+            mVoIdMap = null;
+        }
     }
 
     public void flushData(List<?> data) {
@@ -93,12 +101,24 @@ public class MultiTypeAdapter extends RecyclerView.Adapter<BaseViewHolder> imple
             mDataList.addAll(data);
             notifyDataSetChanged();
         }
+        if (mVoIdMap != null) {
+            generalVoIdMap(data);
+        }
     }
 
     public void removeData(Object data) {
         if (mDataList != null) {
-            mDataList.remove(data);
-            notifyDataSetChanged();
+            int pos = mDataList.indexOf(data);
+            if (pos >= 0) {
+                mDataList.remove(pos);
+                notifyItemRemoved(pos);
+                if (mVoIdMap != null && data instanceof BaseVO) {
+                    BaseVO baseVO = (BaseVO) data;
+                    if (!TextUtils.isEmpty(baseVO.mVoId)) {
+                        mVoIdMap.remove(baseVO.mVoId);
+                    }
+                }
+            }
         }
     }
 
@@ -258,6 +278,29 @@ public class MultiTypeAdapter extends RecyclerView.Adapter<BaseViewHolder> imple
     @Override
     public <T extends ItemViewProvider> T getProviderByClass(@NonNull Class<?> clazz) {
         return mDelegate.getProviderByClass(clazz);
+    }
+
+    public BaseVO getItemDataByVoId(String voId) {
+        if (mVoIdMap == null) {
+            generalVoIdMap(mDataList);
+        }
+        return mVoIdMap.get(voId);
+    }
+
+    private void generalVoIdMap(List list) {
+        if (mVoIdMap == null) {
+            mVoIdMap = new ArrayMap<>();
+        }
+        if (list != null) {
+            for (Object obj : list) {
+                if (obj instanceof BaseVO) {
+                    BaseVO baseVO = (BaseVO) obj;
+                    if (!TextUtils.isEmpty(baseVO.mVoId)) {
+                        mVoIdMap.put(baseVO.mVoId, baseVO);
+                    }
+                }
+            }
+        }
     }
 
     public OnMultiTypeViewListener getMultiTypeViewListener() {

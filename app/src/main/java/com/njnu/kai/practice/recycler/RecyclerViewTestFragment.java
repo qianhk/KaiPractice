@@ -8,9 +8,11 @@ import com.njnu.kai.practice.recycler.provider.TextItemViewProvider;
 import java.util.ArrayList;
 import java.util.Random;
 
+import me.drakeet.multitype.BaseVO;
 import me.drakeet.multitype.MultiTypeAdapter;
 
 import com.njnu.kai.practice.R;
+import com.njnu.kai.support.ToastUtils;
 
 /**
  * @author kai
@@ -38,16 +40,11 @@ public class RecyclerViewTestFragment extends RecyclerViewListFragment {
         adapter.register(Text.class, new TextItemViewProvider());
     }
 
-    public static ArrayList<Object> makeDataList() {
+    public static ArrayList<Object> makeACategory(int page, String title, int subCount) {
         ArrayList<Object> dataList = new ArrayList<>();
-        dataList.addAll(makeACategory("First Category", 5));
-        dataList.addAll(makeACategory("Second Category", 3));
-        return dataList;
-    }
-
-    public static ArrayList<Object> makeACategory(String title, int subCount) {
-        ArrayList<Object> dataList = new ArrayList<>();
-        dataList.add(new Category(title));
+        Category category = new Category(title);
+        category.mVoId = "category" + page;
+        dataList.add(category);
         for (int idx = 1; idx <= subCount; ++idx) {
             dataList.add(new Text(title.hashCode() + "_" + idx));
         }
@@ -61,12 +58,18 @@ public class RecyclerViewTestFragment extends RecyclerViewListFragment {
             @Override
             public void run() {
                 if (page == Pager.DEFAULT_PAGE_START) {
-                    handleLoadDataSuccess(makeACategory("from first load " + page, 16), 5);
+                    handleLoadDataSuccess(makeACategory(page, "from first load " + page, 16), 5);
                 } else {
-                    handleLoadDataSuccess(makeACategory("from load " + page, 8), 0);
+                    handleLoadDataSuccess(makeACategory(page, "from load " + page, 8), 0);
                 }
             }
         }, 2000);
     }
 
+    @Override
+    public void onMultiTypeViewClicked(BaseVO data, String action) {
+        super.onMultiTypeViewClicked(data, action);
+        BaseVO vo = getItemDataByVoId("category" + 2);
+        ToastUtils.showToast("click button: category2=" + (vo != null ? vo.getClass().getSimpleName() : null));
+    }
 }
