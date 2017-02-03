@@ -18,13 +18,15 @@ import java.util.List;
 import in.srain.cube.views.ptr.PtrDefaultHandler;
 import in.srain.cube.views.ptr.PtrFrameLayout;
 import in.srain.cube.views.ptr.PtrHandler;
+import me.drakeet.multitype.BaseVO;
 import me.drakeet.multitype.MultiTypeAdapter;
+import me.drakeet.multitype.OnMultiTypeViewListener;
 
 /**
  * @author kai
  * @since 17/1/8
  */
-abstract public class RecyclerViewListFragment extends StateViewFragment implements LoadStateCallback {
+abstract public class RecyclerViewListFragment extends StateViewFragment implements LoadStateCallback, OnMultiTypeViewListener {
     private static final String TAG = "RecyclerViewListFragment";
 
     private PtrFrameLayout mPtrFrameLayout;
@@ -64,6 +66,7 @@ abstract public class RecyclerViewListFragment extends StateViewFragment impleme
         onContentViewInflated(mainView);
 
         mAdapter = new MultiTypeAdapter();
+        mAdapter.setMultiTypeViewListener(this);
         mAdapter.applyGlobalMultiTypePool();
         onAdapterCreated(mAdapter);
 
@@ -237,5 +240,15 @@ abstract public class RecyclerViewListFragment extends StateViewFragment impleme
     @Override
     public void onStateChanged(StateView.State state, int code) {
         setState(state);
+    }
+
+    @Override
+    public void onMultiTypeValueChanged(BaseVO data, String action) {
+
+    }
+
+    @Override
+    public void onMultiTypeViewClicked(BaseVO data, String action) {
+        ToastUtils.showToast("click button: " + data.getClass().getSimpleName());
     }
 }

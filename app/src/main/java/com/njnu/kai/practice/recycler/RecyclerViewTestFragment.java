@@ -1,5 +1,6 @@
 package com.njnu.kai.practice.recycler;
 
+import com.njnu.kai.practice.recycler.modal.ButtonVO;
 import com.njnu.kai.practice.recycler.modal.Category;
 import com.njnu.kai.practice.recycler.modal.Text;
 import com.njnu.kai.practice.recycler.provider.TextItemViewProvider;
@@ -8,6 +9,8 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import me.drakeet.multitype.MultiTypeAdapter;
+
+import com.njnu.kai.practice.R;
 
 /**
  * @author kai
@@ -48,6 +51,7 @@ public class RecyclerViewTestFragment extends RecyclerViewListFragment {
         for (int idx = 1; idx <= subCount; ++idx) {
             dataList.add(new Text(title.hashCode() + "_" + idx));
         }
+        dataList.add(new ButtonVO("测试按钮", 0xFFFF8000, R.drawable.ic_ptr_bkg));
         return dataList;
     }
 
