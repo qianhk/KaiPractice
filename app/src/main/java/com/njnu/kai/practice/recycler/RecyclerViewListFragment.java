@@ -188,6 +188,10 @@ abstract public class RecyclerViewListFragment extends StateViewFragment impleme
                 mPager.setTotal(totalPage);
                 mAdapter.flushData(data);
                 mCallback.onStateChanged(StateView.State.SUCCESS, 0);
+                if (totalPage == 1 && mFooterView != null) {
+                    mCallback.onNoMoreData();
+                    mFooterView.setState(LoadingFooterView.State.TheEnd);
+                }
             } else {
                 mPager.moveToNext();
                 mAdapter.appendData(data);
