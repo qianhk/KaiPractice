@@ -263,4 +263,12 @@ abstract public class RecyclerViewListFragment extends StateViewFragment impleme
     public void handleVoRemoved(BaseVO baseVO) {
         mAdapter.removeData(baseVO);
     }
+
+    public void handleVoUpdated(BaseVO baseVO) {
+        if (baseVO == null) {
+            mAdapter.notifyDataSetChanged();
+        } else {
+            mAdapter.dataUpdated(baseVO);
+        }
+    }
 }

@@ -311,4 +311,12 @@ public class MultiTypeAdapter extends RecyclerView.Adapter<BaseViewHolder> imple
         mMultiTypeViewListener = multiTypeViewListener;
     }
 
+    public void dataUpdated(Object data) {
+        if (mDataList != null) {
+            int pos = mDataList.indexOf(data);
+            if (pos >= 0) {
+                notifyItemChanged(pos);
+            }
+        }
+    }
 }

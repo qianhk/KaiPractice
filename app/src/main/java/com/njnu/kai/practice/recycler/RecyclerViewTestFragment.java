@@ -75,6 +75,10 @@ public class RecyclerViewTestFragment extends RecyclerViewListFragment {
         ToastUtils.showToast("click button: category2=" + (vo != null ? vo.getClass().getSimpleName() : null));
         if ("button1".equals(data.mVoId)) {
             handleVoRemoved(data);
+        } else if ("button2".equals(data.mVoId)) {
+            ButtonVO buttonVO = (ButtonVO) data;
+            buttonVO.mText += "*";
+            handleVoUpdated(data);
         }
     }
 }
