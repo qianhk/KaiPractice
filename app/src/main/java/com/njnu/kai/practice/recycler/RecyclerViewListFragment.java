@@ -259,4 +259,8 @@ abstract public class RecyclerViewListFragment extends StateViewFragment impleme
     public void onMultiTypeViewClicked(BaseVO data, String action) {
         ToastUtils.showToast("click button: " + data.getClass().getSimpleName());
     }
+
+    public void handleVoRemoved(BaseVO baseVO) {
+        mAdapter.removeData(baseVO);
+    }
 }
