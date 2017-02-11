@@ -175,22 +175,26 @@ abstract public class RecyclerViewListFragment extends StateViewFragment impleme
         if (!isAdded()) {
             return;
         }
+        mErrorFromSecondPage = false;
         onLoadDataComplete(totalPage, true);
-        int dataCount = data != null ? data.size() : 0;
-        if (dataCount == 0) {
+        if (mPager.isStartPage()) {
+            mPager.setTotal(totalPage);
+            mAdapter.flushData(data);
             if (mAdapter.isEmpty()) {
                 mCallback.onStateChanged(StateView.State.NO_DATA, 0);
             } else {
-                mPager.moveToNext();
+                mCallback.onStateChanged(StateView.State.SUCCESS, 0);
+            }
+            if (totalPage == 1) {
+                mCallback.onNoMoreData();
             }
         } else {
-            if (mPager.isStartPage()) {
-                mPager.setTotal(totalPage);
-                mAdapter.flushData(data);
-                mCallback.onStateChanged(StateView.State.SUCCESS, 0);
-                if (totalPage == 1 && mFooterView != null) {
-                    mCallback.onNoMoreData();
-                    mFooterView.setState(LoadingFooterView.State.TheEnd);
+            int dataCount = data != null ? data.size() : 0;
+            if (dataCount == 0) {
+                if (mAdapter.isEmpty()) {
+                    mCallback.onStateChanged(StateView.State.NO_DATA, 0);
+                } else {
+                    mPager.moveToNext();
                 }
             } else {
                 mPager.moveToNext();
@@ -210,10 +214,15 @@ abstract public class RecyclerViewListFragment extends StateViewFragment impleme
             return;
         }
         onLoadDataComplete(0, false);
-        if (mAdapter.isEmpty()) {
+        if (mPager.isStartPage()) {
+            mAdapter.flushData(null);
             mCallback.onStateChanged(StateView.State.FAILED, 0);
         } else {
-            mErrorFromSecondPage = true;
+            if (mAdapter.isEmpty()) {
+                mCallback.onStateChanged(StateView.State.FAILED, 0);
+            } else {
+                mErrorFromSecondPage = true;
+            }
         }
     }
 
