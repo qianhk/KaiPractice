@@ -48,6 +48,7 @@ public class LoadingFooterView extends LinearLayout {
     private void initView(Context context) {
         setOrientation(HORIZONTAL);
         setGravity(Gravity.CENTER);
+        setMinimumHeight(DisplayUtils.dp2px(36));
         mTextView = new TextView(context);
         mTextView.setPadding(0, (int) getResources().getDimension(R.dimen.footer_padding)
                 , 0, (int) getResources().getDimension(R.dimen.footer_padding));
