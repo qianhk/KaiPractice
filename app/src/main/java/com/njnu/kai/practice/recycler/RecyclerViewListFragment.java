@@ -79,8 +79,10 @@ abstract public class RecyclerViewListFragment extends StateViewFragment impleme
             mFooterView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mFooterView.setState(LoadingFooterView.State.Loading);
-                    prepareReloadData(mPager.next(), false);
+                    if (!mLoading) {
+                        mFooterView.setState(LoadingFooterView.State.Loading);
+                        prepareReloadData(mPager.next(), false);
+                    }
                 }
             });
 
