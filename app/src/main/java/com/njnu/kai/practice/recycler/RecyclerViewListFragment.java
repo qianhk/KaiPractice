@@ -58,6 +58,11 @@ abstract public class RecyclerViewListFragment extends StateViewFragment impleme
 //        return true;
 //    }
 
+
+    public RecyclerView getRecyclerView() {
+        return mRecyclerView;
+    }
+
     @Override
     protected View onCreateContentView(LayoutInflater layoutInflater, ViewGroup viewGroup, Bundle bundle) {
         View mainView = layoutInflater.inflate(listViewLayoutId(), viewGroup, false);

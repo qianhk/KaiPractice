@@ -1,5 +1,9 @@
 package com.njnu.kai.practice.recycler;
 
+import android.graphics.Color;
+import android.support.v7.widget.RecyclerView;
+import android.view.View;
+
 import com.njnu.kai.practice.recycler.modal.ButtonVO;
 import com.njnu.kai.practice.recycler.modal.Category;
 import com.njnu.kai.practice.recycler.modal.Text;
@@ -12,6 +16,7 @@ import me.drakeet.multitype.BaseVO;
 import me.drakeet.multitype.MultiTypeAdapter;
 
 import com.njnu.kai.practice.R;
+import com.njnu.kai.support.DisplayUtils;
 import com.njnu.kai.support.ToastUtils;
 
 /**
@@ -34,6 +39,13 @@ public class RecyclerViewTestFragment extends RecyclerViewListFragment {
 //        ++mSeed;
 //        mAdapter.appendData(makeACategory("from Action " + mSeed, mSeed));
 //    }
+
+
+    @Override
+    protected void onContentViewInflated(View contentView) {
+        super.onContentViewInflated(contentView);
+        getRecyclerView().addItemDecoration(new ColorDividerItemDecoration(Color.MAGENTA, DisplayUtils.dp2px(2), RecyclerView.VERTICAL));
+    }
 
     @Override
     protected void onAdapterCreated(MultiTypeAdapter adapter) {
