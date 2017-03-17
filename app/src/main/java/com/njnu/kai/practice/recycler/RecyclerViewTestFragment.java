@@ -60,7 +60,7 @@ public class RecyclerViewTestFragment extends RecyclerViewListFragment {
         for (int idx = 1; idx <= subCount; ++idx) {
             dataList.add(new Text(title.hashCode() + "_" + idx));
         }
-        ButtonVO buttonVO = new ButtonVO("测试按钮", 0xFFFF8000, R.drawable.ic_ptr_bkg);
+        ButtonVO buttonVO =  new ButtonVO("测试按钮", 0xFFFF8000, R.drawable.ic_ptr_bkg);
         dataList.add(buttonVO);
         buttonVO.mVoId = "button" + page;
         return dataList;

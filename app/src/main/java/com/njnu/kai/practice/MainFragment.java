@@ -24,6 +24,7 @@ import com.njnu.kai.practice.material.CoordinatorLayoutActivity;
 import com.njnu.kai.practice.material.VectorDrawableActivity;
 import com.njnu.kai.practice.material.composite.MaterialCompositeActivity;
 import com.njnu.kai.practice.material.reveal.RevealActivity;
+import com.njnu.kai.practice.memory.MemoryLeakFragment;
 import com.njnu.kai.practice.recycler.RecyclerViewTestFragment;
 import com.njnu.kai.practice.retrofit.RetrofitEntryFragment;
 import com.njnu.kai.practice.rxjava.RxJavaTestFragment;
@@ -59,6 +60,7 @@ public class MainFragment extends ActionBarLayoutFragment implements AdapterView
         FUNCTIONS.add(new FunctionItem("Nested Scroll2", ManageTwoScrollFragment.class, false));
         FUNCTIONS.add(new FunctionItem("AMap Location", AMapLocationTestFragment.class, false));
         FUNCTIONS.add(new FunctionItem("AMap 2D", AMap2DTestFragment.class, false));
+        FUNCTIONS.add(new FunctionItem("Memory Leak", MemoryLeakFragment.class, false));
         FUNCTIONS.add(new FunctionItem("Loading Animator", LoadingAnimatorFragment.class, false));
         FUNCTIONS.add(new FunctionItem("Pull To Refresh", PullToRefreshFragment.class, false));
         FUNCTIONS.add(new FunctionItem("Xfermode", XfermodeFragment.class, false));
