@@ -33,6 +33,7 @@ android {
         versionCode rootProject.ext.versionCode
         versionName rootProject.ext.versionName
         multiDexEnabled false
+        resConfigs "zh","en"
         jackOptions {
             enabled rootProject.ext.useJack
         }
@@ -52,6 +53,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles 'proguard-rules.pro'
+            shrinkResources true
         }
     }
 
