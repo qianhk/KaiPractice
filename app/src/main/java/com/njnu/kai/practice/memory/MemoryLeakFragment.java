@@ -1,16 +1,20 @@
 package com.njnu.kai.practice.memory;
 
 
+import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
 import android.widget.ImageView;
 
 import com.njnu.kai.support.BaseTestListFragment;
 import com.njnu.kai.support.TestFunction;
+
+import java.util.Locale;
 
 /**
  * @author hongkai.qian
@@ -41,6 +45,18 @@ public class MemoryLeakFragment extends BaseTestListFragment {
         LocalBroadcastManager.getInstance(getContext()).registerReceiver(new TestBroadcastReceiver(), new IntentFilter("xxxxAction"));
         //如果TestBroadcastReceiver是静态类,不会泄露MemoryLeakFragment本身,receiveRecord持有TestBroadcastReceiver
         //但如果不是静态类, 则不会泄露MemoryLeakFragment也会被receiver持有
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        ActivityManager activityManager = (ActivityManager) getContext().getSystemService(Context.ACTIVITY_SERVICE);
+
+        int memoryClass = activityManager.getMemoryClass();
+        int largeMemoryClass = activityManager.getLargeMemoryClass();
+        setResult(String.format(Locale.getDefault(), "memory=%d largeMemory=%d", memoryClass, largeMemoryClass));
+        //mi 3s : 192 384
+
     }
 
     private class TestBroadcastReceiver extends BroadcastReceiver {
