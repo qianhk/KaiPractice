@@ -33,7 +33,7 @@ android {
         versionCode rootProject.ext.versionCode
         versionName rootProject.ext.versionName
         multiDexEnabled false
-        resConfigs "zh","en"
+        resConfigs "zh", "en"  //, "xxhdpi" 加了xxhdpi就无法编译  failed to execute aapt，可能这个目录资源不全
         jackOptions {
             enabled rootProject.ext.useJack
         }

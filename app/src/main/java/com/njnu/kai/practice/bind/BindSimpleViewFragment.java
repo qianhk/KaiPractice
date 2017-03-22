@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 
 import com.njnu.kai.practice.R;
 import com.njnu.kai.practice.bind.vm.UserModel;
+import com.njnu.kai.practice.binding.SimpleViewBinding;
 import com.njnu.kai.support.base.BaseFragment;
 
 /**
@@ -18,7 +19,7 @@ import com.njnu.kai.support.base.BaseFragment;
  */
 public class BindSimpleViewFragment extends BaseFragment {
 
-    private com.njnu.kai.practice.binding.SimpleViewBinding mBinding;
+    private SimpleViewBinding mBinding;
     private UserModel mUserModel;
 
     @Nullable
