@@ -1,5 +1,7 @@
 package com.njnu.kai.practice.rxjava;
 
+import android.os.SystemClock;
+
 import com.njnu.kai.support.BaseTestListFragment;
 import com.njnu.kai.support.TestFunction;
 
@@ -9,6 +11,7 @@ import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * @author hongkai.qian
@@ -19,8 +22,50 @@ public class RxJavaTestFragment extends BaseTestListFragment {
 
     private Subscription mTestSubscribe;
 
+
+    @TestFunction("throttleWithTimeout")
+    public void onTestPosition80() {
+        Observable.create(new Observable.OnSubscribe<Integer>() {
+            @Override
+            public void call(Subscriber<? super Integer> subscriber) {
+                next(subscriber, 1, 0);  //0ms
+                next(subscriber, 2, 500); //50ms
+                next(subscriber, 3, 500); //100ms
+                next(subscriber, 4, 300); //130ms
+                next(subscriber, 5, 400); //170ms
+                next(subscriber, 6, 1300); //300ms
+                subscriber.onCompleted();
+            }
+        })
+                .subscribeOn(Schedulers.newThread())
+                .throttleWithTimeout(1000, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<Integer>() {
+                    @Override
+                    public void onCompleted() {
+                        appendResult("onCompleted");
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        appendResult("onError: " + e.getMessage());
+                    }
+
+                    @Override
+                    public void onNext(Integer index) {
+                        System.out.println("== onNext index=" + index + " thread=" + Thread.currentThread().getId());
+                        appendResult("onNext index=" + index);
+                    }
+                });
+    }
+
+    private void next(Subscriber<? super Integer> subscriber, int value, int millis) {
+        SystemClock.sleep(millis);
+        subscriber.onNext(value);
+    }
+
     @TestFunction("interval with take, 预期后面的不执行")
-    public void onTestPosition07() {
+    public void onTestPosition70() {
         Observable.interval(1000, TimeUnit.MILLISECONDS).take(5).observeOn(AndroidSchedulers.mainThread()).subscribe(new Subscriber<Long>() {
             @Override
             public void onCompleted() {
@@ -40,7 +85,7 @@ public class RxJavaTestFragment extends BaseTestListFragment {
     }
 
     @TestFunction("flatMap")
-    protected void onTestPosition04() {
+    protected void onTestPosition60() {
         //flatMap操作符的运行结果
         Observable.just(8, 20, 30).flatMap(integer -> {
             //10的延迟执行时间为200毫秒、20和30的延迟执行时间为180毫秒
@@ -56,7 +101,7 @@ public class RxJavaTestFragment extends BaseTestListFragment {
     }
 
     @TestFunction("concatMap")
-    protected void onTestPosition05() {
+    protected void onTestPosition50() {
         //concatMap
         Observable.just(8, 20, 30).concatMap(integer -> {
             //10的延迟执行时间为200毫秒、20和30的延迟执行时间为180毫秒
@@ -72,7 +117,7 @@ public class RxJavaTestFragment extends BaseTestListFragment {
     }
 
     @TestFunction("switchMap")
-    protected void onTestPosition06() {
+    protected void onTestPosition40() {
         //switchMap
         Observable.just(8, 20, 30).switchMap(integer -> {
             //10的延迟执行时间为200毫秒、20和30的延迟执行时间为180毫秒
@@ -88,13 +133,13 @@ public class RxJavaTestFragment extends BaseTestListFragment {
     }
 
     @TestFunction("timer然后map")
-    protected void onTestPosition03() {
+    protected void onTestPosition30() {
         mTestSubscribe = Observable.timer(2000, TimeUnit.MILLISECONDS).map(aLong -> "\nnumber=" + aLong)
                 .observeOn(AndroidSchedulers.mainThread()).subscribe(this::appendResult);
     }
 
     @TestFunction("zip(interval range) 每隔1秒输出一个数字")
-    protected void onTestPosition02() {
+    protected void onTestPosition20() {
         Observable.zip(
                 Observable.interval(1, TimeUnit.SECONDS),
                 Observable.range(101, 10), (aLong, integer) -> integer)
@@ -117,7 +162,7 @@ public class RxJavaTestFragment extends BaseTestListFragment {
     }
 
     @TestFunction("interval并主动取消")
-    protected void onTestPosition01() {
+    protected void onTestPosition10() {
         mTestSubscribe = Observable.interval(1, TimeUnit.SECONDS).map(aLong -> {
             if (aLong < 10) {
                 return "next=" + aLong;
@@ -147,7 +192,7 @@ public class RxJavaTestFragment extends BaseTestListFragment {
     }
 
     @TestFunction("just filter map")
-    private void onTestPosition00() {
+    private void onTestPosition01() {
         Observable.just("Hello world", "hello2", "hello3")
 //                .map(s -> s.hashCode())
 //                .map(s -> String.valueOf(s))
