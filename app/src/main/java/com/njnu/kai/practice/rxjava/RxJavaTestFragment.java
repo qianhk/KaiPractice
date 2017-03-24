@@ -28,17 +28,89 @@ public class RxJavaTestFragment extends BaseTestListFragment {
         Observable.create(new Observable.OnSubscribe<Integer>() {
             @Override
             public void call(Subscriber<? super Integer> subscriber) {
-                next(subscriber, 1, 0);  //0ms
-                next(subscriber, 2, 500); //50ms
-                next(subscriber, 3, 500); //100ms
-                next(subscriber, 4, 300); //130ms
-                next(subscriber, 5, 400); //170ms
-                next(subscriber, 6, 1300); //300ms
+                next(subscriber, 1, 0);
+                next(subscriber, 2, 50);
+                next(subscriber, 3, 100);
+                next(subscriber, 4, 30);
+                next(subscriber, 5, 40);
+                next(subscriber, 6, 130);
                 subscriber.onCompleted();
             }
         })
                 .subscribeOn(Schedulers.newThread())
-                .throttleWithTimeout(1000, TimeUnit.MILLISECONDS)
+                .throttleWithTimeout(100, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<Integer>() {
+                    @Override
+                    public void onCompleted() {
+                        appendResult("onCompleted");
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        appendResult("onError: " + e.getMessage());
+                    }
+
+                    @Override
+                    public void onNext(Integer index) {
+                        System.out.println("== onNext index=" + index + " thread=" + Thread.currentThread().getId());
+                        appendResult("onNext index=" + index);
+                    }
+                });
+    }
+
+    @TestFunction("throttleFirst")
+    public void onTestPosition81() {
+        Observable.create(new Observable.OnSubscribe<Integer>() {
+            @Override
+            public void call(Subscriber<? super Integer> subscriber) {
+                next(subscriber, 1, 0);
+                next(subscriber, 2, 50);
+                next(subscriber, 3, 50);
+                next(subscriber, 4, 30);
+                next(subscriber, 5, 40);
+                next(subscriber, 6, 130);
+                subscriber.onCompleted();
+            }
+        })
+                .subscribeOn(Schedulers.newThread())
+                .throttleFirst(100, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<Integer>() {
+                    @Override
+                    public void onCompleted() {
+                        appendResult("onCompleted");
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        appendResult("onError: " + e.getMessage());
+                    }
+
+                    @Override
+                    public void onNext(Integer index) {
+                        System.out.println("== onNext index=" + index + " thread=" + Thread.currentThread().getId());
+                        appendResult("onNext index=" + index);
+                    }
+                });
+    }
+
+    @TestFunction("throttleLast")
+    public void onTestPosition82() {
+        Observable.create(new Observable.OnSubscribe<Integer>() {
+            @Override
+            public void call(Subscriber<? super Integer> subscriber) {
+                next(subscriber, 1, 0);
+                next(subscriber, 2, 50);
+                next(subscriber, 3, 50);
+                next(subscriber, 4, 30);
+                next(subscriber, 5, 40);
+                next(subscriber, 6, 130);
+                subscriber.onCompleted();
+            }
+        })
+                .subscribeOn(Schedulers.newThread())
+                .throttleLast(100, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<Integer>() {
                     @Override
