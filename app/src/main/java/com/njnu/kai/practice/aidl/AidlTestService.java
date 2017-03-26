@@ -22,6 +22,12 @@ public class AidlTestService extends Service {
     }
 
     @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        LogUtils.e(TAG, "lookaidl onStartCommand");
+        return START_STICKY;
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
         LogUtils.e(TAG, "lookaidl onDestroy at service");
