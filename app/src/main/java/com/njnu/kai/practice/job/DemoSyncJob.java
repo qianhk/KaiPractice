@@ -22,9 +22,13 @@ public class DemoSyncJob extends Job {
         return Result.SUCCESS;
     }
 
-    public static void scheduleJob() {
-        new JobRequest.Builder(DemoSyncJob.TAG)
+    public static int scheduleJob() {
+        LogUtils.d(TAG, "scheduleJob tid=%d", Thread.currentThread().getId());
+        return new JobRequest.Builder(DemoSyncJob.TAG)
                 .setExecutionWindow(30_000L, 40_000L)
+                .setRequiredNetworkType(JobRequest.NetworkType.CONNECTED)
+//                .setRequiresCharging(true)
+//                .setRequiresDeviceIdle(true)
                 .build()
                 .schedule();
     }
