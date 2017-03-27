@@ -5,9 +5,11 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.SystemClock;
 
+import com.evernote.android.job.JobManager;
 import com.jakewharton.threetenabp.AndroidThreeTen;
 import com.njnu.kai.practice.aidl.AidlTestFragment;
 import com.njnu.kai.practice.aidl.AidlTestService;
+import com.njnu.kai.practice.job.DemoJobCreator;
 import com.njnu.kai.practice.recycler.MultiTypeInstaller;
 import com.njnu.kai.support.AppRuntime;
 import com.njnu.kai.support.BaseApplication;
@@ -32,6 +34,7 @@ public class MainApplication extends BaseApplication {
         AndroidThreeTen.init(this);
         MultiTypeInstaller.start();
 
+        JobManager.create(this).addJobCreator(new DemoJobCreator());
 
         if (TEST_CONTINUE_CRASH) {
             Intent intent = new Intent(getApplicationContext(), AidlTestService.class);

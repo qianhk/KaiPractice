@@ -1,5 +1,6 @@
 package com.njnu.kai.practice.image;
 
+import com.njnu.kai.practice.job.DemoSyncJob;
 import com.njnu.kai.support.BaseTestListFragment;
 import com.njnu.kai.support.TestFunction;
 
@@ -33,6 +34,11 @@ public class ImageTestEntryFragment extends BaseTestListFragment {
     @TestFunction("bitmap加载")
     private void test25() {
         launchFragment(new NormalImageTestFragment());
+    }
+
+    @TestFunction("job test")
+    private void test40() {
+        DemoSyncJob.scheduleJob();
     }
 
     @Override
