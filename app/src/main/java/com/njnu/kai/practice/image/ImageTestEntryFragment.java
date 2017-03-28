@@ -1,5 +1,6 @@
 package com.njnu.kai.practice.image;
 
+import com.evernote.android.job.JobManager;
 import com.njnu.kai.practice.job.DemoSyncJob;
 import com.njnu.kai.support.BaseTestListFragment;
 import com.njnu.kai.support.TestFunction;
@@ -10,6 +11,8 @@ import com.njnu.kai.support.TestFunction;
  * @since 16-5-9
  */
 public class ImageTestEntryFragment extends BaseTestListFragment {
+
+    private int mJobId;
 
     @TestFunction("空view不加载")
     private void test00() {
@@ -38,11 +41,12 @@ public class ImageTestEntryFragment extends BaseTestListFragment {
 
     @TestFunction("job test")
     private void test40() {
-        DemoSyncJob.scheduleJob();
+        mJobId = DemoSyncJob.scheduleJob();
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        JobManager.instance().cancel(mJobId);
     }
 }
