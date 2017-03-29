@@ -1,4 +1,4 @@
-package com.njnu.kai.practice;
+package com.njnu.kai.practice.animator;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -13,6 +13,8 @@ import android.view.animation.*;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+
+import com.njnu.kai.practice.R;
 import com.njnu.kai.practice.guideanimator.GuideAnimatorShapeView;
 import com.njnu.kai.practice.guideanimator.GuideAnimatorView;
 import com.njnu.kai.support.ProxyActivity;

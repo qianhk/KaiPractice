@@ -1,4 +1,4 @@
-package com.njnu.kai.practice;
+package com.njnu.kai.practice.animator;
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -6,6 +6,8 @@ import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+
+import com.njnu.kai.practice.R;
 import com.njnu.kai.support.ProxyActivity;
 
 import java.util.Random;

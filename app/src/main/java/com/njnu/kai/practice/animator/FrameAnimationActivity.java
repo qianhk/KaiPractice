@@ -1,4 +1,4 @@
-package com.njnu.kai.practice;
+package com.njnu.kai.practice.animator;
 
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.Drawable;
@@ -7,6 +7,8 @@ import android.view.Gravity;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+
+import com.njnu.kai.practice.R;
 import com.njnu.kai.support.ProxyActivity;
 
 /**

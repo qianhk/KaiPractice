@@ -1,4 +1,4 @@
-package com.njnu.kai.practice;
+package com.njnu.kai.practice.animator;
 
 import android.animation.*;
 import android.annotation.TargetApi;
@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.animation.*;
 import android.widget.TextView;
+
+import com.njnu.kai.practice.R;
 import com.njnu.kai.support.ProxyActivity;
 import com.njnu.kai.support.DisplayUtils;
 

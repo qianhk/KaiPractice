@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import com.njnu.kai.practice.AnimatorActivity;
+import com.njnu.kai.practice.animator.AnimatorActivity;
 import com.njnu.kai.support.ProxyActivity;
 
 /**

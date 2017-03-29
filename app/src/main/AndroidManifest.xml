@@ -63,16 +63,16 @@
         </activity>
 
         <activity
-            android:name="com.njnu.kai.practice.AnimatorActivity"
+            android:name="com.njnu.kai.practice.animator.AnimatorActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"/>
         <activity
-            android:name="com.njnu.kai.practice.TweenAnimationActivity"
+            android:name="com.njnu.kai.practice.animator.TweenAnimationActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"/>
         <activity
-            android:name="com.njnu.kai.practice.FrameAnimationActivity"
+            android:name="com.njnu.kai.practice.animator.FrameAnimationActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"/>
         <activity
-            android:name="com.njnu.kai.practice.PropertyAnimationActivity"
+            android:name="com.njnu.kai.practice.animator.PropertyAnimationActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"/>
         <activity
             android:name="com.njnu.kai.practice.WebViewFragment"
