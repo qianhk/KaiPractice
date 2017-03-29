@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.njnu.kai.practice.R;
 import com.njnu.kai.support.AppRuntime;
@@ -40,6 +41,7 @@ abstract public class RecyclerViewListFragment extends StateViewFragment impleme
     private boolean mLoading = true;
     private boolean mErrorFromSecondPage = false;
     private LoadingFooterView mFooterView;
+    private WrapperAdapter mWrapperAdapter;
 
     protected int listViewLayoutId() {
         return needPtrAndLoadNextFeature() ? R.layout.common_recyclerview_with_ptr : R.layout.common_recyclerview_without_ptr;
@@ -79,7 +81,8 @@ abstract public class RecyclerViewListFragment extends StateViewFragment impleme
             mFooterView = new LoadingFooterView(layoutInflater.getContext());
             mFooterView.setLayoutParams(new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT
                     , RecyclerView.LayoutParams.WRAP_CONTENT));
-            mRecyclerView.setAdapter(new WrapperAdapter(mAdapter, mFooterView));
+            mWrapperAdapter = new WrapperAdapter(mAdapter, mFooterView);
+            mRecyclerView.setAdapter(mWrapperAdapter);
 
             mFooterView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -293,6 +296,43 @@ abstract public class RecyclerViewListFragment extends StateViewFragment impleme
             mAdapter.notifyDataSetChanged();
         } else {
             mAdapter.dataUpdated(baseVO);
+        }
+    }
+
+
+    private LinearLayout mHeaderViewContainer;
+
+    private LinearLayout mFooterViewContainer;
+
+    public void addHeaderView(View headerView) {
+        ensureHeaderViewContainer();
+        mHeaderViewContainer.addView(headerView);
+        if (mWrapperAdapter != null) {
+            mWrapperAdapter.notifyItemChanged(1);
+        }
+    }
+
+    public void addFooterView(View footerView) {
+        ensureFooterViewContainer();
+        mFooterViewContainer.addView(footerView);
+        if (mWrapperAdapter != null) {
+            mWrapperAdapter.notifyItemChanged(mWrapperAdapter.getItemCount() - 2);
+        }
+    }
+
+    private void ensureHeaderViewContainer() {
+        if (mHeaderViewContainer == null) {
+            mHeaderViewContainer = new LinearLayout(getContext());
+            mHeaderViewContainer.setOrientation(LinearLayout.VERTICAL);
+            mHeaderViewContainer.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        }
+    }
+
+    private void ensureFooterViewContainer() {
+        if (mFooterViewContainer == null) {
+            mFooterViewContainer = new LinearLayout(getContext());
+            mFooterViewContainer.setOrientation(LinearLayout.VERTICAL);
+            mFooterViewContainer.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         }
     }
 }
