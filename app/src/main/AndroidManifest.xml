@@ -63,7 +63,7 @@
         </activity>
 
         <activity
-            android:name="com.njnu.kai.practice.animator.AnimatorActivity"
+            android:name="com.njnu.kai.practice.guideanimator.ChickenAnimatorActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"/>
         <activity
             android:name="com.njnu.kai.practice.animator.TweenAnimationActivity"

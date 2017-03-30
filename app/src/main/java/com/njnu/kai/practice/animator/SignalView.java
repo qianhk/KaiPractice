@@ -9,6 +9,7 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.Xfermode;
 import android.util.AttributeSet;
 import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 import android.view.View;
 
 import com.njnu.kai.support.DisplayUtils;
@@ -20,24 +21,24 @@ import java.util.TimerTask;
  * @version 1.0.0
  * @since 14-4-15
  */
-public class SignalView extends View {
+public class SignalView extends SurfaceView {
 
     private SurfaceHolder mSurfaceHolder;
     private boolean mLoop;
     private final int mStrokeWidth = 2;
     private int mColor = Color.parseColor("#7ccded");
-    private int mBkgColor = Color.parseColor("#05FDFD");
+    private int mBkgColor = Color.WHITE;
     private final int mCircleCount = 4;
     private final static int MIN_RADIUS = 60;
     private int mMinRadius;
     private final static int FLUSH_INTERVAL = 50;
     private final static int SECTION_TIME = 1000;
-    private int []mSteps;
+    private int[] mSteps;
     private final static float MAX_ALPHA = 255.0f;
     private int mTotalStep;
     private int mCx;
     private int mCy;
-    private final static boolean USE_NORMAL_VIEW = true;
+    private static boolean USE_NORMAL_VIEW;
     private TimerTask mTimerTask;
     private Timer mTimer;
 
@@ -58,7 +59,7 @@ public class SignalView extends View {
 
     /**
      * @param context context
-     * @param attrs attrs
+     * @param attrs   attrs
      */
     public SignalView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -66,8 +67,8 @@ public class SignalView extends View {
     }
 
     /**
-     * @param context context
-     * @param attrs attrs
+     * @param context  context
+     * @param attrs    attrs
      * @param defStyle defStyle
      */
     public SignalView(Context context, AttributeSet attrs, int defStyle) {
@@ -91,6 +92,7 @@ public class SignalView extends View {
     }
 
     private void init(Context context) {
+        USE_NORMAL_VIEW = !(this instanceof SurfaceView);
         mMinRadius = DisplayUtils.dp2px(MIN_RADIUS);
         mTotalStep = SECTION_TIME / FLUSH_INTERVAL;
         mSteps = new int[mCircleCount];
@@ -99,7 +101,7 @@ public class SignalView extends View {
         if (USE_NORMAL_VIEW) {
             initTimerSchedule();
         } else {
-//            mSurfaceHolder = getHolder();
+            mSurfaceHolder = getHolder();
             mSurfaceHolder.addCallback(new SurfaceHolder.Callback() {
 
                 @Override
@@ -208,9 +210,9 @@ public class SignalView extends View {
             int alpha;
             int halfStep = mTotalStep >> 1;
             if (step <= halfStep) {
-                alpha = (int)(MAX_ALPHA * step / halfStep);
+                alpha = (int) (MAX_ALPHA * step / halfStep);
             } else {
-                alpha = (int)(MAX_ALPHA * (mTotalStep - step) / halfStep);
+                alpha = (int) (MAX_ALPHA * (mTotalStep - step) / halfStep);
             }
             paint.setAlpha(alpha);
             canvas.drawCircle(mCx, mCy, curRadius, paint);

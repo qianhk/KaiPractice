@@ -9,7 +9,7 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 
 import com.njnu.kai.practice.aidl.AidlTestFragment;
-import com.njnu.kai.practice.animator.AnimatorActivity;
+import com.njnu.kai.practice.guideanimator.ChickenAnimatorActivity;
 import com.njnu.kai.practice.animator.FrameAnimationActivity;
 import com.njnu.kai.practice.animator.PropertyAnimationActivity;
 import com.njnu.kai.practice.animator.SignalViewFragment;
@@ -81,7 +81,7 @@ public class MainFragment extends ActionBarLayoutFragment implements AdapterView
         FUNCTIONS.add(new FunctionItem("TweenAnimation", TweenAnimationActivity.class, true));
         FUNCTIONS.add(new FunctionItem("FrameAnimation", FrameAnimationActivity.class, true));
         FUNCTIONS.add(new FunctionItem("PropertyAnimation", PropertyAnimationActivity.class, true));
-        FUNCTIONS.add(new FunctionItem("Chicken Animator", AnimatorActivity.class, true));
+        FUNCTIONS.add(new FunctionItem("Chicken Animator", ChickenAnimatorActivity.class, true));
         FUNCTIONS.add(new FunctionItem("Draw View", SignalViewFragment.class, false));
         FUNCTIONS.add(new FunctionItem("WebView Test", WebViewFragment.class, false));
         FUNCTIONS.add(new FunctionItem("SplashTest", SplashActivity.class, true));

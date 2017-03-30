@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import com.njnu.kai.practice.animator.AnimatorActivity;
+import com.njnu.kai.practice.guideanimator.ChickenAnimatorActivity;
 import com.njnu.kai.support.ProxyActivity;
 
 /**
@@ -47,7 +47,7 @@ public class GuestActivity extends ProxyActivity {
         });
 
         Button button2 = new Button(context);
-        button2.setText("at 1, invoke AnimatorActivity ball");
+        button2.setText("at 1, invoke ChickenAnimatorActivity ball");
         layout.addView(button2, LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT);
         button2.setOnClickListener(new View.OnClickListener() {
@@ -56,12 +56,12 @@ public class GuestActivity extends ProxyActivity {
 //                ToastUtils.showToast(context, "in guest 1");
                 final Bundle bundle = new Bundle();
                 bundle.putInt("key_function", 1);
-                startActivityByProxy("AnimatorActivity", bundle);
+                startActivityByProxy("ChickenAnimatorActivity", bundle);
             }
         });
 
         Button button3 = new Button(context);
-        button3.setText("at 1, invoke AnimatorActivity chicken");
+        button3.setText("at 1, invoke ChickenAnimatorActivity chicken");
         layout.addView(button3, LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT);
         button3.setOnClickListener(new View.OnClickListener() {
@@ -69,8 +69,8 @@ public class GuestActivity extends ProxyActivity {
             public void onClick(View v) {
 //                ToastUtils.showToast(context, "in guest 1");
                 final Bundle bundle = new Bundle();
-                bundle.putInt(AnimatorActivity.KEY_FUNCTION, 2);
-                startActivityByProxy("AnimatorActivity", bundle);
+                bundle.putInt(ChickenAnimatorActivity.KEY_FUNCTION, 2);
+                startActivityByProxy("ChickenAnimatorActivity", bundle);
             }
         });
         return layout;

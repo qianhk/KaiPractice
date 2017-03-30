@@ -1,4 +1,4 @@
-package com.njnu.kai.practice.animator;
+package com.njnu.kai.practice.guideanimator;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -15,8 +15,6 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.njnu.kai.practice.R;
-import com.njnu.kai.practice.guideanimator.GuideAnimatorShapeView;
-import com.njnu.kai.practice.guideanimator.GuideAnimatorView;
 import com.njnu.kai.support.ProxyActivity;
 import com.njnu.kai.support.DisplayUtils;
 import com.njnu.kai.support.SDKVersionUtils;
@@ -26,7 +24,7 @@ import com.njnu.kai.support.SDKVersionUtils;
  * @version 1.0.0
  * @since 14-8-14
  */
-public class AnimatorActivity extends ProxyActivity {
+public class ChickenAnimatorActivity extends ProxyActivity {
 
     public static final String KEY_FUNCTION = "key_function";
 
@@ -109,7 +107,7 @@ public class AnimatorActivity extends ProxyActivity {
         @Override
         public void onClick(View v) {
             Number tag = (Number)v.getTag();
-            Intent intent = new Intent(AnimatorActivity.this, AnimatorActivity.class);
+            Intent intent = new Intent(ChickenAnimatorActivity.this, ChickenAnimatorActivity.class);
             intent.putExtra(KEY_FUNCTION, tag.intValue());
             startActivity(intent);
         }
