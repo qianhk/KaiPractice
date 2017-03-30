@@ -6,8 +6,44 @@
               android:orientation="vertical">
 
     <com.njnu.kai.practice.animator.SignalView
-        android:layout_marginTop="12dp"
         android:layout_width="200dp"
-        android:layout_height="200dp"/>
+        android:layout_height="200dp"
+        android:layout_marginTop="12dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_add_500"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="level加500"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <View
+            android:id="@+id/view_drawable"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            />
+
+        <View
+            android:id="@+id/view_drawable2"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_marginLeft="32dp"
+            />
+
+    </LinearLayout>
+
 
 </LinearLayout>
