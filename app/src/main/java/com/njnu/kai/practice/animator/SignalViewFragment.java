@@ -20,6 +20,7 @@ import com.njnu.kai.support.LogUtils;
 import net.vidageek.mirror.dsl.AccessorsController;
 import net.vidageek.mirror.dsl.Mirror;
 
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -95,7 +96,10 @@ public class SignalViewFragment extends BaseTestFragment implements View.OnClick
         mObjectAnimator2.cancel();
     }
 
-    private static long mBeginUptime;
+    private long mTotalBeginUptime;
+    private long mBeginUptime;
+
+    private int mPostCallbackTimes;
 
     @Override
     public void onClick(View v) {
@@ -110,9 +114,11 @@ public class SignalViewFragment extends BaseTestFragment implements View.OnClick
             if (mFrameCallback == null) {
                 mFrameCallback = new TestFrameCallback();
             }
+            mPostCallbackTimes = 0;
             Choreographer instance = Choreographer.getInstance();
             mBeginUptime = SystemClock.uptimeMillis();
-            LogUtils.d(TAG, "lookFrame postFrameCallback uptimeMs=%d", mBeginUptime);
+            mTotalBeginUptime = mBeginUptime;
+            LogUtils.d(TAG, "lookFrame postFrameCallback uptimeMs=%d %d", mBeginUptime, System.nanoTime());
             instance.postFrameCallback(mFrameCallback);
         } else if (viewId == R.id.btn_frame_delay) {
             AccessorsController controller = new Mirror().on(Choreographer.getInstance());
@@ -122,12 +128,26 @@ public class SignalViewFragment extends BaseTestFragment implements View.OnClick
         }
     }
 
-    private static class TestFrameCallback implements Choreographer.FrameCallback {
+    private class TestFrameCallback implements Choreographer.FrameCallback {
+
+        private Random mRandom = new Random(System.currentTimeMillis());
 
         @Override
         public void doFrame(long frameTimeNanos) {
             long endUptime = TimeUnit.NANOSECONDS.toMillis(frameTimeNanos);
             LogUtils.d(TAG, "lookFrame FrameCallback doFrame msTime=%d interval=%d", endUptime, endUptime - mBeginUptime);
+
+            SystemClock.sleep(mRandom.nextInt(30));
+
+            ++mPostCallbackTimes;
+            if (mPostCallbackTimes < 1) {
+                Choreographer instance = Choreographer.getInstance();
+                mBeginUptime = SystemClock.uptimeMillis();
+                LogUtils.d(TAG, "lookFrame again postFrameCallback uptimeMs=%d", mBeginUptime);
+                instance.postFrameCallback(mFrameCallback);
+            } else {
+                LogUtils.d(TAG, "lookFrame FrameCallback totalInterval=%d", endUptime - mTotalBeginUptime);
+            }
         }
     }
 }
