@@ -4,6 +4,8 @@ import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.graphics.drawable.RotateDrawable;
 import android.os.Bundle;
+import android.os.SystemClock;
+import android.view.Choreographer;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,13 +14,18 @@ import android.view.animation.LinearInterpolator;
 
 import com.njnu.kai.practice.R;
 import com.njnu.kai.support.BaseTestFragment;
+import com.njnu.kai.support.LogUtils;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author hongkai.qian
  * @version 1.0.0
  * @since 17/3/29
  */
-public class SignalViewFragment extends BaseTestFragment {
+public class SignalViewFragment extends BaseTestFragment implements View.OnClickListener {
+
+    private static final String TAG = "SignalViewFragment";
 
     private ObjectAnimator mObjectAnimator;
     private ObjectAnimator mObjectAnimator2;
@@ -27,20 +34,7 @@ public class SignalViewFragment extends BaseTestFragment {
     private int mLevel = 0;
 
     public static final int DURATION = 2000;
-
-    private View.OnClickListener mOnClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            int viewId = v.getId();
-            if (viewId == R.id.btn_add_500) {
-                mLevel += 500;
-                if (mLevel > 10000) {
-                    mLevel = 0;
-                }
-                mDrawable.setLevel(mLevel);
-            }
-        }
-    };
+    private TestFrameCallback mFrameCallback;
 
     @Override
     protected View onCreateContentView(LayoutInflater layoutInflater, ViewGroup viewGroup, Bundle bundle) {
@@ -49,7 +43,7 @@ public class SignalViewFragment extends BaseTestFragment {
         View drawableView = signalView.findViewById(R.id.view_drawable);
         mDrawable = (RotateDrawable) layoutInflater.getContext().getResources().getDrawable(R.drawable.xml_footer_refresh);
         drawableView.setBackgroundDrawable(mDrawable);
-//        signalView.findViewById(R.id.btn_add_500).setOnClickListener(mOnClickListener);
+//        signalView.findViewById(R.id.btn_add_500).setOnClickListener(this);
         mObjectAnimator = ObjectAnimator.ofInt(mDrawable, "level", 0, 10000);
         mObjectAnimator.setDuration(DURATION);
         mObjectAnimator.setInterpolator(new LinearInterpolator());
@@ -68,6 +62,8 @@ public class SignalViewFragment extends BaseTestFragment {
                 return (float) ((int) ((input * 360) / 30) * 30) / 360;
             }
         });
+
+        signalView.findViewById(R.id.btn_frame_callback).setOnClickListener(this);
         return signalView;
     }
 
@@ -84,4 +80,46 @@ public class SignalViewFragment extends BaseTestFragment {
         mObjectAnimator.cancel();
         mObjectAnimator2.cancel();
     }
+
+    private static long mBeginUptime;
+
+    @Override
+    public void onClick(View v) {
+        int viewId = v.getId();
+        if (viewId == R.id.btn_add_500) {
+            mLevel += 500;
+            if (mLevel > 10000) {
+                mLevel = 0;
+            }
+            mDrawable.setLevel(mLevel);
+        } else if (viewId == R.id.btn_frame_callback) {
+            if (mFrameCallback == null) {
+                mFrameCallback = new TestFrameCallback();
+            }
+            Choreographer instance = Choreographer.getInstance();
+            mBeginUptime = SystemClock.uptimeMillis();
+            LogUtils.d(TAG, "lookFrame postFrameCallback uptimeMs=%d", mBeginUptime);
+            instance.postFrameCallback(mFrameCallback);
+        }
+    }
+
+    public static class TestFrameCallback implements Choreographer.FrameCallback {
+
+        @Override
+        public void doFrame(long frameTimeNanos) {
+            long endUptime = TimeUnit.NANOSECONDS.toMillis(frameTimeNanos);
+            LogUtils.d(TAG, "lookFrame FrameCallback doFrame msTime=%d interval=%d", endUptime, endUptime - mBeginUptime);
+        }
+    }
 }
+
+/*
+find . -name 'properties.h'
+
+#define PROP_PATH_RAMDISK_DEFAULT  "/default.prop"
+#define PROP_PATH_SYSTEM_BUILD     "/system/build.prop"
+#define PROP_PATH_VENDOR_BUILD     "/vendor/build.prop"
+#define PROP_PATH_LOCAL_OVERRIDE   "/data/local.prop"
+#define PROP_PATH_FACTORY          "/factory/factory.prop"
+
+*/

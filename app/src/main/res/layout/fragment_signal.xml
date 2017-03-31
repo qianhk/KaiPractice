@@ -21,6 +21,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="level加500"/>
+
+        <Button
+            android:id="@+id/btn_frame_callback"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="FrameCallback"/>
     </LinearLayout>
 
     <LinearLayout
