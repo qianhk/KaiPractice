@@ -1,7 +1,9 @@
 package com.njnu.kai.practice;
 
 
+import android.app.Activity;
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
 
@@ -13,6 +15,7 @@ import com.njnu.kai.practice.job.DemoJobCreator;
 import com.njnu.kai.practice.recycler.MultiTypeInstaller;
 import com.njnu.kai.support.AppRuntime;
 import com.njnu.kai.support.BaseApplication;
+import com.njnu.kai.support.LogUtils;
 import com.njnu.kai.support.image.ImageLoader;
 
 import java.io.File;
@@ -25,6 +28,7 @@ import java.io.File;
 public class MainApplication extends BaseApplication {
 
     public static final boolean TEST_CONTINUE_CRASH = false;
+    private TestLookActivityLifecycle mLookActivityLifecycle;
 
     @Override
     public void onCreate() {
@@ -46,6 +50,54 @@ public class MainApplication extends BaseApplication {
                     int a = 20 / 0; //单纯的在application里制造crash基本不能造成连续crash,一般crash2次后停止
                 }
             }, 100);
+        }
+        mLookActivityLifecycle = new TestLookActivityLifecycle();
+        registerActivityLifecycleCallbacks(mLookActivityLifecycle);
+    }
+
+    @Override
+    public void onTerminate() {
+        unregisterActivityLifecycleCallbacks(mLookActivityLifecycle);
+        super.onTerminate();
+    }
+
+    public static class TestLookActivityLifecycle implements ActivityLifecycleCallbacks {
+
+        private static final String TAG = "TestLookActivityLifecycle";
+
+        @Override
+        public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+            LogUtils.i(TAG, "onActivityCreated: " + activity.getClass().getSimpleName());
+        }
+
+        @Override
+        public void onActivityStarted(Activity activity) {
+//            LogUtils.i(TAG, "onActivityStarted: " + activity.getClass().getSimpleName());
+        }
+
+        @Override
+        public void onActivityResumed(Activity activity) {
+//            LogUtils.i(TAG, "onActivityResumed: " + activity.getClass().getSimpleName());
+        }
+
+        @Override
+        public void onActivityPaused(Activity activity) {
+//            LogUtils.i(TAG, "onActivityPaused: " + activity.getClass().getSimpleName());
+        }
+
+        @Override
+        public void onActivityStopped(Activity activity) {
+//            LogUtils.i(TAG, "onActivityStopped: " + activity.getClass().getSimpleName());
+        }
+
+        @Override
+        public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+//            LogUtils.i(TAG, "onActivitySaveInstanceState: " + activity.getClass().getSimpleName());
+        }
+
+        @Override
+        public void onActivityDestroyed(Activity activity) {
+            LogUtils.i(TAG, "onActivityDestroyed: " + activity.getClass().getSimpleName());
         }
     }
 }
