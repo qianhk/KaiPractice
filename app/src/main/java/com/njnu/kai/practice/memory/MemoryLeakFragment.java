@@ -44,7 +44,7 @@ public class MemoryLeakFragment extends BaseTestListFragment {
     public void onTest03() {
         LocalBroadcastManager.getInstance(getContext()).registerReceiver(new TestBroadcastReceiver(), new IntentFilter("xxxxAction"));
         //如果TestBroadcastReceiver是静态类,不会泄露MemoryLeakFragment本身,receiveRecord持有TestBroadcastReceiver
-        //但如果不是静态类, 则不会泄露MemoryLeakFragment也会被receiver持有
+        //但如果不是静态类, 则会泄露MemoryLeakFragment也会被receiver持有
     }
 
     @Override

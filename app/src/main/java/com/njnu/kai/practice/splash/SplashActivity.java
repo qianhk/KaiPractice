@@ -75,6 +75,6 @@ public class SplashActivity extends Activity {
         findViewById(R.id.btn_method1).setOnClickListener(mOnClickListener);
         findViewById(R.id.btn_method2).setOnClickListener(mOnClickListener);
         int i = 0;
-        int j = 100 / i;
+//        int j = 100 / i;
     }
 }
