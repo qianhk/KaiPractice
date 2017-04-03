@@ -73,6 +73,7 @@ public class MainApplication extends BaseApplication {
         MultiTypeInstaller.start();
 
         JobManager.create(this).addJobCreator(new DemoJobCreator());
+        JobManager.instance().getConfig().setAllowSmallerIntervalsForMarshmallow(true);
 
         if (TEST_CONTINUE_CRASH) {
             Intent intent = new Intent(getApplicationContext(), AidlTestService.class);
