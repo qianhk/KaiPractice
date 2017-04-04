@@ -7,15 +7,15 @@
               android:orientation="vertical">
 
     <com.njnu.kai.practice.image.shadow.ShadowImageView
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="200dp"
+        android:layout_height="260dp"
         android:layout_marginTop="12dp"
         app:shadowRound="20dp"
         app:shadowSrc="@drawable/img_splash_main"/>
 
     <com.njnu.kai.practice.image.shadow.ShadowImageView
-        android:layout_width="300dp"
-        android:layout_height="300dp"
+        android:layout_width="200dp"
+        android:layout_height="260dp"
         android:layout_marginTop="12dp"
         app:shadowRound="20dp"
         app:shadowSrc="@drawable/img_artist"/>
