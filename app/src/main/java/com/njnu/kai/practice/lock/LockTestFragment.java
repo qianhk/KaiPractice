@@ -18,6 +18,9 @@ import java.util.concurrent.TimeUnit;
 /**
  * @author kai
  * @since 17/4/4
+ *
+ * CountDownLatch CyclicBarrier Semaphore
+ *
  */
 public class LockTestFragment extends BaseTestListFragment {
 

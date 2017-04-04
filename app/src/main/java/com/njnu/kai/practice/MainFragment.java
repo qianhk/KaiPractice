@@ -23,6 +23,7 @@ import com.njnu.kai.practice.di.TestDaggerFragment;
 import com.njnu.kai.practice.entry.EntryAnimatorActivity;
 import com.njnu.kai.practice.guest.GuestActivity;
 import com.njnu.kai.practice.image.ImageTestEntryFragment;
+import com.njnu.kai.practice.image.shadow.ShadowImageFragment;
 import com.njnu.kai.practice.location.AMap2DTestFragment;
 import com.njnu.kai.practice.location.AMapLocationTestFragment;
 import com.njnu.kai.practice.lock.LockTestFragment;
@@ -84,6 +85,7 @@ public class MainFragment extends ActionBarLayoutFragment implements AdapterView
         FUNCTIONS.add(new FunctionItem("PropertyAnimation", PropertyAnimationActivity.class, true));
         FUNCTIONS.add(new FunctionItem("Chicken Animator", ChickenAnimatorActivity.class, true));
         FUNCTIONS.add(new FunctionItem("Draw View", SignalViewFragment.class, false));
+        FUNCTIONS.add(new FunctionItem("Color Shadow Image", ShadowImageFragment.class, false));
         FUNCTIONS.add(new FunctionItem("Lock Time Test", LockTestFragment.class, false));
         FUNCTIONS.add(new FunctionItem("WebView Test", WebViewFragment.class, false));
         FUNCTIONS.add(new FunctionItem("SplashTest", SplashActivity.class, true));
