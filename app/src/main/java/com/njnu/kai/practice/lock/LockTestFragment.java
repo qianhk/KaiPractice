@@ -38,11 +38,22 @@ public class LockTestFragment extends BaseTestListFragment {
         for (int i = 0; i < N; ++i) { // create and start threads
             mExecutor.execute(new WorkerRunnable1(doneSignal, i));
         }
+        SystemClock.sleep(2_400);
         mExecutor.execute(new WaitRunnable(doneSignal));
     }
 
     @TestFunction("CountDownLatch等待一起开始等待结束")
     public void onTest02() {
+        CountDownLatch doneSignal = new CountDownLatch(N);
+        CountDownLatch startSignal = new CountDownLatch(1);
+        setResult(nowTime() + "begin test02");
+        for (int i = 0; i < N; ++i) { // create and start threads
+            mExecutor.execute(new WorkerRunnable2(startSignal, doneSignal, i));
+        }
+        SystemClock.sleep(2_400);
+        appendAsync("will await");
+        startSignal.countDown();
+        mExecutor.execute(new WaitRunnable(doneSignal));
     }
 
 
@@ -62,6 +73,35 @@ public class LockTestFragment extends BaseTestListFragment {
         }
 
         public void run() {
+            doWork();
+            doneSignal.countDown();
+            appendAsync(i + ": end work");
+        }
+
+        void doWork() {
+            appendAsync(i + ": begin work");
+            SystemClock.sleep(i * 1000);
+        }
+    }
+
+    private class WorkerRunnable2 implements Runnable {
+        private final CountDownLatch startSignal;
+        private final CountDownLatch doneSignal;
+        private final int i;
+
+        WorkerRunnable2(CountDownLatch startSignal, CountDownLatch doneSignal, int i) {
+            this.startSignal = startSignal;
+            this.doneSignal = doneSignal;
+            this.i = i;
+        }
+
+        public void run() {
+            try {
+                startSignal.await();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+                appendAsync(i + ": run await: " + e.getMessage());
+            }
             doWork();
             doneSignal.countDown();
             appendAsync(i + ": end work");
