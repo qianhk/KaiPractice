@@ -350,9 +350,11 @@ public class HanziToPinyin {
          */
         public String target;
     }
+
     protected HanziToPinyin(boolean hasChinaCollator) {
         mHasChinaCollator = hasChinaCollator;
     }
+
     public static HanziToPinyin getInstance() {
         synchronized (HanziToPinyin.class) {
             if (sInstance != null) {
@@ -369,6 +371,10 @@ public class HanziToPinyin {
                     sInstance = new HanziToPinyin(true);
                     return sInstance;
                 }
+            }
+            if (sInstance == null && Locale.CHINA.equals(Locale.getDefault())) {
+                sInstance = new HanziToPinyin(true);
+                return sInstance;
             }
             Log.w(TAG, "There is no Chinese collator, HanziToPinyin is disabled");
             sInstance = new HanziToPinyin(false);
