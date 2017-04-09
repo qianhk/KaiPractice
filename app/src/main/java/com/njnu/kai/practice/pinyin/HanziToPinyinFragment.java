@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.njnu.kai.support.BaseTestFragment;
@@ -25,8 +26,10 @@ public class HanziToPinyinFragment extends BaseTestFragment {
 
     @Override
     protected View onCreateContentView(LayoutInflater layoutInflater, ViewGroup viewGroup, Bundle bundle) {
+        ScrollView scrollView = new ScrollView(layoutInflater.getContext());
         mTextView = new TextView(layoutInflater.getContext());
-        return mTextView;
+        scrollView.addView(mTextView);
+        return scrollView;
     }
 
     @Override
@@ -39,9 +42,9 @@ public class HanziToPinyinFragment extends BaseTestFragment {
         ArrayList<HanziToPinyin.Token> tokenList = HanziToPinyin.getInstance().get(input);
         long timeNs = System.nanoTime() - beginTimeNs;
         StringBuilder builder = new StringBuilder();
-        builder.append(String.format(Locale.getDefault(), "文本长:%d 耗时:%dms", input.length(), TimeUnit.NANOSECONDS.toMillis(timeNs)));
+        builder.append(String.format(Locale.getDefault(), "文本长:%d 耗时:%dms\n", input.length(), TimeUnit.NANOSECONDS.toMillis(timeNs)));
         for (HanziToPinyin.Token token : tokenList) {
-            builder.append(String.format(Locale.getDefault(), "\n%d %s %s", token.type, token.source, token.target));
+            builder.append(String.format(Locale.getDefault(), "%d %s %s              ", token.type, token.source, token.target));
         }
         mTextView.setText(builder.toString());
     }
