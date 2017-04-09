@@ -32,6 +32,7 @@ import com.njnu.kai.practice.material.VectorDrawableActivity;
 import com.njnu.kai.practice.material.composite.MaterialCompositeActivity;
 import com.njnu.kai.practice.material.reveal.RevealActivity;
 import com.njnu.kai.practice.memory.MemoryLeakFragment;
+import com.njnu.kai.practice.pinyin.HanziToPinyinFragment;
 import com.njnu.kai.practice.recycler.RecyclerViewTestFragment;
 import com.njnu.kai.practice.retrofit.RetrofitEntryFragment;
 import com.njnu.kai.practice.rxjava.RxJavaTestFragment;
@@ -96,6 +97,7 @@ public class MainFragment extends ActionBarLayoutFragment implements AdapterView
         FUNCTIONS.add(new FunctionItem("GuestActivity", GuestActivity.class, true));
         FUNCTIONS.add(new FunctionItem("CoordinatorLayout", CoordinatorLayoutActivity.class, true));
         FUNCTIONS.add(new FunctionItem("EditTextStatus", EditTextStatusFragment.class, false));
+        FUNCTIONS.add(new FunctionItem("Hanzi To Pinyin", HanziToPinyinFragment.class, false));
     }
 
     @Override
