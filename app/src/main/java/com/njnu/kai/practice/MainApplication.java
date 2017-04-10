@@ -34,7 +34,7 @@ public class MainApplication extends BaseApplication {
 
     private WeakHashMap<Object, Long> mDetectedLeakActivity = new WeakHashMap<>();
 
-    private static final int DURATION_PRINT_ACTIVITY = 5_000;
+    private static final int DURATION_PRINT_ACTIVITY = 15_000;
 
     public static final int WHAT_PRINT_ACTIVITY = 1;
 
