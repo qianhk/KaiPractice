@@ -98,6 +98,8 @@ dependencies {
 
     compile 'top.zibin:Luban:1.0.9'
 
+    compile 'id.zelory:compressor:1.0.4'
+
 }
 
 final def log = project.logger
