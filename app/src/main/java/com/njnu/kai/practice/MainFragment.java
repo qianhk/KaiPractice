@@ -22,6 +22,7 @@ import com.njnu.kai.practice.danmaku.DanmaukuActivity;
 import com.njnu.kai.practice.di.TestDaggerFragment;
 import com.njnu.kai.practice.entry.EntryAnimatorActivity;
 import com.njnu.kai.practice.guest.GuestActivity;
+import com.njnu.kai.practice.image.ImageCompressFragment;
 import com.njnu.kai.practice.image.ImageTestEntryFragment;
 import com.njnu.kai.practice.image.shadow.ShadowImageFragment;
 import com.njnu.kai.practice.location.AMap2DTestFragment;
@@ -98,6 +99,7 @@ public class MainFragment extends ActionBarLayoutFragment implements AdapterView
         FUNCTIONS.add(new FunctionItem("CoordinatorLayout", CoordinatorLayoutActivity.class, true));
         FUNCTIONS.add(new FunctionItem("EditTextStatus", EditTextStatusFragment.class, false));
         FUNCTIONS.add(new FunctionItem("Hanzi To Pinyin", HanziToPinyinFragment.class, false));
+        FUNCTIONS.add(new FunctionItem("Image Compress", ImageCompressFragment.class, false));
     }
 
     @Override

@@ -96,6 +96,8 @@ dependencies {
 
     compile 'com.evernote:android-job:1.1.8'
 
+    compile 'top.zibin:Luban:1.0.9'
+
 }
 
 final def log = project.logger
