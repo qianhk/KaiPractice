@@ -5,6 +5,11 @@ import com.njnu.kai.support.TestFunction;
 
 import java.io.File;
 
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 import top.zibin.luban.Luban;
 import top.zibin.luban.OnCompressListener;
 
@@ -15,7 +20,7 @@ import top.zibin.luban.OnCompressListener;
  */
 public class ImageCompressFragment extends BaseTestListFragment {
 
-    @TestFunction("压缩图片")
+    @TestFunction("压缩图片 Use listener")
     public void onTest01() {
         File file = new File("/sdcard/dcim/camera/IMG_20170412_195631.jpg");
         Luban.get(getContext())
@@ -38,5 +43,34 @@ public class ImageCompressFragment extends BaseTestListFragment {
                         appendResult(e.getMessage());
                     }
                 }).launch();
+    }
+
+    @TestFunction("压缩图片 use rxJava")
+    public void onTest02() {
+        File file = new File("/sdcard/dcim/camera/IMG_20170412_195631.jpg");
+        Luban.get(getContext())
+                .load(file)
+                .putGear(Luban.THIRD_GEAR)
+                .asObservable()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnError(new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        appendResult(throwable.getMessage());
+                    }
+                })
+                .onErrorResumeNext(new Func1<Throwable, Observable<? extends File>>() {
+                    @Override
+                    public Observable<? extends File> call(Throwable throwable) {
+                        return Observable.empty();
+                    }
+                })
+                .subscribe(new Action1<File>() {
+                    @Override
+                    public void call(File file) {
+                        appendResult(file.getAbsolutePath());
+                    }
+                });
     }
 }
