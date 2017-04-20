@@ -141,5 +141,12 @@ public class EntryAnimatorActivity extends Activity {
 ic_ptr_bkg.png 241kb
 img_artist.png 894kb
 
+打包后： 202.9kb 719.8kb
+
+
+压缩的png： 69kb  259kb
+
+
+
 
  */
