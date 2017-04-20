@@ -41,6 +41,11 @@ android {
         incremental true
         javaMaxHeapSize "4g"
     }
+
+    aaptOptions {
+        cruncherEnabled = false
+//        useNewCruncher = true
+    }
 }
 
 dependencies {

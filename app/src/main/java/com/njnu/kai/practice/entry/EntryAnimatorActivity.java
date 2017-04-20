@@ -135,6 +135,7 @@ public class EntryAnimatorActivity extends Activity {
 }
 
 /*
+
 测试图片压缩:
 
 原始png:
@@ -147,6 +148,12 @@ img_artist.png 894kb
 压缩的png： 69kb  259kb
 
 
+打包后:  75.9kb  283.8kb  apk: 6.32MB
 
+cruncherEnabled false:  69kb  259kb apk: 6.44MB 其他未事先压缩的图片被关闭了压缩
 
- */
+useNewCruncher false 貌似不起作用
+
+png放到libray，library cruncherEnabled false,  app true: 69kb  259kb 6.29MB project源码依赖有效 aar不确定
+
+*/
