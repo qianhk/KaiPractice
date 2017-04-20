@@ -133,3 +133,13 @@ public class EntryAnimatorActivity extends Activity {
     }
 
 }
+
+/*
+测试图片压缩:
+
+原始png:
+ic_ptr_bkg.png 241kb
+img_artist.png 894kb
+
+
+ */
