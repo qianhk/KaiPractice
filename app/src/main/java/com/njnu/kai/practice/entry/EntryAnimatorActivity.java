@@ -111,4 +111,25 @@ public class EntryAnimatorActivity extends Activity {
         return animatorSet;
     }
 
+    @Override
+    public void onBackPressed() {
+        try {
+            super.onBackPressed();
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
+            finish();
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        getWindow().getDecorView().post(new Runnable() {
+            @Override
+            public void run() {
+                onBackPressed();
+            }
+        });
+    }
+
 }
