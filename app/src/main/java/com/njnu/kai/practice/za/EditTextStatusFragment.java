@@ -1,13 +1,14 @@
 package com.njnu.kai.practice.za;
 
 import android.content.ClipData;
-import android.content.ClipDescription;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Looper;
+import android.os.MessageQueue;
 import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.InputFilter;
@@ -197,5 +198,26 @@ public class EditTextStatusFragment extends BaseTestFragment {
 
         // else case
         return null;
+    }
+
+    private MessageQueue.IdleHandler mIdleHandler;
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        mIdleHandler = new MessageQueue.IdleHandler() {
+            @Override
+            public boolean queueIdle() {
+                LogUtils.i(TAG, "queueIdle");
+                return true;
+            }
+        };
+        Looper.myQueue().addIdleHandler(mIdleHandler);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        Looper.myQueue().removeIdleHandler(mIdleHandler);
     }
 }
