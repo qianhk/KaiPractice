@@ -9,6 +9,7 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 
 import com.njnu.kai.practice.aidl.AidlTestFragment;
+import com.njnu.kai.practice.dex.DexTestFragment;
 import com.njnu.kai.practice.guideanimator.ChickenAnimatorActivity;
 import com.njnu.kai.practice.animator.FrameAnimationActivity;
 import com.njnu.kai.practice.animator.PropertyAnimationActivity;
@@ -102,6 +103,7 @@ public class MainFragment extends ActionBarLayoutFragment implements AdapterView
         FUNCTIONS.add(new FunctionItem("Hanzi To Pinyin", HanziToPinyinFragment.class, false));
         FUNCTIONS.add(new FunctionItem("Image Compress", ImageCompressFragment.class, false));
         FUNCTIONS.add(new FunctionItem("Constraint Layout", ConstraintLayoutFragment.class, false));
+        FUNCTIONS.add(new FunctionItem("Dex loader", DexTestFragment.class, false));
     }
 
     @Override
