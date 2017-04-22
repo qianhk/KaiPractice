@@ -10,7 +10,14 @@ public class Text extends BaseVO {
 
     public String mText;
 
+    public boolean mClickable;
+
     public Text(String text) {
         mText = text;
+    }
+
+    public Text(String text, boolean clickable) {
+        mText = text;
+        mClickable = clickable;
     }
 }

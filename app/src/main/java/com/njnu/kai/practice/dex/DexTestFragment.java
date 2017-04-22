@@ -22,6 +22,7 @@ import java.util.Enumeration;
 import java.util.List;
 
 import dalvik.system.DexFile;
+import me.drakeet.multitype.BaseVO;
 import me.drakeet.multitype.MultiTypeAdapter;
 import rx.Observable;
 import rx.Subscriber;
@@ -68,7 +69,7 @@ public class DexTestFragment extends RecyclerViewListFragment {
                 if (strings != null) {
                     for (String string : strings) {
                         if (string.startsWith("com.njnu")) {
-                            list.add(new Text(string));
+                            list.add(new Text(string, true));
                         }
                     }
                 }
@@ -95,6 +96,11 @@ public class DexTestFragment extends RecyclerViewListFragment {
     protected void onContentViewInflated(View contentView) {
         super.onContentViewInflated(contentView);
         getRecyclerView().addItemDecoration(new ColorDividerItemDecoration(Color.LTGRAY, 1, RecyclerView.VERTICAL));
+    }
+
+    @Override
+    public void onMultiTypeViewClicked(BaseVO data, String action) {
+        super.onMultiTypeViewClicked(data, action);
     }
 
     private List<String> getClassNameList() throws PackageManager.NameNotFoundException, IOException {

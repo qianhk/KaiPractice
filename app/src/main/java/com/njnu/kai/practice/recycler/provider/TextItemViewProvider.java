@@ -29,17 +29,26 @@ public class TextItemViewProvider extends ItemViewProvider<Text, TextItemViewPro
         holder.flushView(text);
     }
 
-    static class ViewHolder extends BaseViewHolder {
+    static class ViewHolder extends BaseViewHolder<Text> {
 
         private final TextView mTvText;
 
         ViewHolder(@NonNull View itemView) {
             super(itemView);
             mTvText = (TextView) itemView.findViewById(R.id.tv_text);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    notifyMultiTypeViewClicked(null);
+                }
+            });
+            itemView.setClickable(false);
         }
 
         void flushView(Text text) {
+            bindView(text);
             mTvText.setText(text.mText);
+            itemView.setClickable(text.mClickable);
         }
     }
 
