@@ -1,10 +1,10 @@
 package com.njnu.kai.practice.dex;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.os.Environment;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
@@ -12,15 +12,14 @@ import com.njnu.kai.practice.recycler.ColorDividerItemDecoration;
 import com.njnu.kai.practice.recycler.RecyclerViewListFragment;
 import com.njnu.kai.practice.recycler.modal.Text;
 import com.njnu.kai.practice.recycler.provider.TextItemViewProvider;
-import com.njnu.kai.practice.util.Utils;
 import com.njnu.kai.support.LogUtils;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 
+import dalvik.system.DexClassLoader;
 import dalvik.system.DexFile;
 import me.drakeet.multitype.BaseVO;
 import me.drakeet.multitype.MultiTypeAdapter;
@@ -38,6 +37,8 @@ import rx.schedulers.Schedulers;
 public class DexTestFragment extends RecyclerViewListFragment {
 
     private static final String TAG = "DexTestFragment";
+
+    private DexClassLoader mDexClassLoader;
 
     @Override
     protected boolean needPtrAndLoadNextFeature() {
@@ -100,10 +101,25 @@ public class DexTestFragment extends RecyclerViewListFragment {
 
     @Override
     public void onMultiTypeViewClicked(BaseVO data, String action) {
-        super.onMultiTypeViewClicked(data, action);
+//        super.onMultiTypeViewClicked(data, action);
+        if (mDexClassLoader == null || !(data instanceof Text)) {
+            return;
+        }
+        Text text = (Text) data;
+        try {
+            Class<?> loadClass = mDexClassLoader.loadClass(text.mText);
+            Reflector reflector = new Reflector(loadClass);
+            reflector.generateClassData();
+            String result = reflector.toString();
+
+            LogUtils.i(TAG, result);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    private List<String> getClassNameList() throws PackageManager.NameNotFoundException, IOException {
+    private List<String> getClassNameList() throws Exception {
         Context context = getContext();
         PackageManager packageManager = context.getPackageManager();
         String packageCodePath = context.getPackageCodePath(); //  /data/app/com.njnu.kai.practice-1/base.apk
@@ -118,6 +134,7 @@ public class DexTestFragment extends RecyclerViewListFragment {
 
         File incomeFile = new File(sourceDirFileStr);
 
+        mDexClassLoader = DexLoaderBuilder.fromFile(getContext(), incomeFile);
 //        String optimizedFileStr = Environment.getExternalStorageDirectory().getPath() + File.separator + "optKaiTEst.dex";
 //        //IllegalArgumentException: Optimized data directory /storage/emulated/0 is not owned by the current user. Shared storage cannot protect your application from code injection attacks.
 
