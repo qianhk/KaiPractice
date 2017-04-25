@@ -54,6 +54,7 @@ public class EditTextStatusFragment extends BaseTestFragment {
                 ToastUtils.showToast("点击了mTvText");
             } else if (v == mBtnTest) {
                 ToastUtils.showToast("点击了mBtnTest");
+                TextViewerFragment.launch(EditTextStatusFragment.this, "class Abc {}");
             } else if (v == mEdtText) {
                 ToastUtils.showToast("mEdtText");
             }

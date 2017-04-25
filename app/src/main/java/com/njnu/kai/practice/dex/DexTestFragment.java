@@ -12,6 +12,7 @@ import com.njnu.kai.practice.recycler.ColorDividerItemDecoration;
 import com.njnu.kai.practice.recycler.RecyclerViewListFragment;
 import com.njnu.kai.practice.recycler.modal.Text;
 import com.njnu.kai.practice.recycler.provider.TextItemViewProvider;
+import com.njnu.kai.practice.za.TextViewerFragment;
 import com.njnu.kai.support.LogUtils;
 
 import java.io.File;
@@ -112,7 +113,8 @@ public class DexTestFragment extends RecyclerViewListFragment {
             reflector.generateClassData();
             String result = reflector.toString();
 
-            LogUtils.i(TAG, result);
+//            LogUtils.i(TAG, result);
+            TextViewerFragment.launch(this, result);
 
         } catch (Exception e) {
             e.printStackTrace();
