@@ -12,7 +12,7 @@
  * limitations under the License.
  */
 
-package com.njnu.kai.practice.wave;
+package com.njnu.kai.practice.draw;
 
 import android.animation.TypeEvaluator;
 import android.graphics.PointF;

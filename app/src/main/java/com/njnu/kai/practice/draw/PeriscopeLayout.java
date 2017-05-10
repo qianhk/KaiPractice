@@ -1,6 +1,6 @@
 
 
-package com.njnu.kai.practice.wave;
+package com.njnu.kai.practice.draw;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;

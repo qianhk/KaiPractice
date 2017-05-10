@@ -1,4 +1,4 @@
-package com.njnu.kai.practice.wave;
+package com.njnu.kai.practice.draw;
 
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;

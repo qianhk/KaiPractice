@@ -10,6 +10,7 @@ import android.widget.BaseAdapter;
 
 import com.njnu.kai.practice.aidl.AidlTestFragment;
 import com.njnu.kai.practice.dex.DexTestFragment;
+import com.njnu.kai.practice.draw.MultiLineViewFragment;
 import com.njnu.kai.practice.guideanimator.ChickenAnimatorActivity;
 import com.njnu.kai.practice.animator.FrameAnimationActivity;
 import com.njnu.kai.practice.animator.PropertyAnimationActivity;
@@ -42,7 +43,7 @@ import com.njnu.kai.practice.scroll.ManageTwoScrollFragment;
 import com.njnu.kai.practice.scroll.PullRefreshFragment;
 import com.njnu.kai.practice.splash.SplashActivity;
 import com.njnu.kai.practice.ui.ConstraintLayoutFragment;
-import com.njnu.kai.practice.wave.PeriscopeAnimatorFragment;
+import com.njnu.kai.practice.draw.PeriscopeAnimatorFragment;
 import com.njnu.kai.practice.za.EditTextOutputFragment;
 import com.njnu.kai.practice.za.EditTextStatusFragment;
 import com.njnu.kai.practice.za.ShortcutTestFragment;
@@ -103,6 +104,7 @@ public class MainFragment extends ActionBarLayoutFragment implements AdapterView
         FUNCTIONS.add(new FunctionItem("Hanzi To Pinyin", HanziToPinyinFragment.class, false));
         FUNCTIONS.add(new FunctionItem("Image Compress", ImageCompressFragment.class, false));
         FUNCTIONS.add(new FunctionItem("Constraint Layout", ConstraintLayoutFragment.class, false));
+        FUNCTIONS.add(new FunctionItem("Line Multi", MultiLineViewFragment.class, false));
         FUNCTIONS.add(new FunctionItem("Dex loader", DexTestFragment.class, false));
     }
 

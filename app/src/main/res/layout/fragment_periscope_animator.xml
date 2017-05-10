@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.njnu.kai.practice.wave.PeriscopeLayout
+    <com.njnu.kai.practice.draw.PeriscopeLayout
         android:id="@+id/rl_display"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
