@@ -59,6 +59,16 @@ public class MultiLineView extends View {
     }
 
     @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
+        LogUtils.e(TAG, "onSizeChanged w=%d h=%d", w, h);
+        if (w > 0 && h > 0 && mBitmap != null) {
+            mBitmap.recycle();
+            mBitmap = null;
+        }
+    }
+
+    @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
         Choreographer.getInstance().postFrameCallback(mCallback);
@@ -74,13 +84,15 @@ public class MultiLineView extends View {
 
         @Override
         public void doFrame(long l) {
-            if (mBitmap == null && getWidth() > 0 && getHeight() > 0) {
-                mBitmap = Bitmap.createBitmap(getWidth(), getHeight(), Bitmap.Config.ARGB_8888);
+            int viewWidth = getWidth();
+            int viewHeight = getHeight();
+            if (mBitmap == null && viewWidth > 0 && viewHeight > 0) {
+                mBitmap = Bitmap.createBitmap(viewWidth, viewHeight, Bitmap.Config.ARGB_8888);
                 canvasBitmap = new Canvas(mBitmap);
-                LogUtils.e(TAG, "create bitmap and canvas w=%d h=%d", getWidth(), getHeight());
+                canvasBitmap.translate(viewWidth >> 1, viewHeight >> 1);
+                LogUtils.e(TAG, "create bitmap and canvas w=%d h=%d", viewWidth, viewHeight);
             }
             if (canvasBitmap != null) {
-                canvasBitmap.translate(getWidth() / 2, getHeight() / 2);
                 angleA += speedA;
                 angleB += speedB;
                 aX = (float) (Math.cos(angleA) * aXR);
@@ -88,11 +100,12 @@ public class MultiLineView extends View {
                 bX = (float) (Math.cos(angleB) * bXR);
                 bY = (float) (Math.sin(angleB) * bYR);
                 canvasBitmap.drawLine(aX, aY, bX, bY, mPaint);
-
+//               canvasBitmap.drawCircle(0, 0, 50 + angleA, mPaint);
                 invalidate();
             }
 
-            Choreographer.getInstance().postFrameCallback(mCallback);
+            Choreographer.getInstance().postFrameCallbackDelayed(mCallback, 0);
+
         }
     }
 }
