@@ -19,7 +19,7 @@ public class MultiLineView extends View {
 
     private static final String TAG = "MultiLineView";
 
-    private float aX, aY, bX, bY, angleA, angleB, speedA, speedB, aXR, aYR, bXR, bYR;
+    private float angleA, angleB, speedA, speedB, aXR, aYR, bXR, bYR;
 
     private Paint mPaint;
 
@@ -40,10 +40,10 @@ public class MultiLineView extends View {
         mPaint.setStyle(Paint.Style.FILL);
         speedA = 0.025f;
         speedB = 0.006f;
-        aXR = 320;
-        aYR = 320;
-        bXR = 320;
-        bYR = 80;
+//        aXR = 320;
+//        aYR = 320;
+//        bXR = 320;
+//        bYR = 80;
         mCallback = new DrawFrameCallback();
     }
 
@@ -62,9 +62,15 @@ public class MultiLineView extends View {
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
         LogUtils.e(TAG, "onSizeChanged w=%d h=%d", w, h);
-        if (w > 0 && h > 0 && mBitmap != null) {
-            mBitmap.recycle();
-            mBitmap = null;
+        if (w > 0 && h > 0) {
+            aXR = (float) (Math.min(w, h) * 0.4);
+            aYR = aXR;
+            bXR = aYR;
+            bYR = bXR / 4;
+            if (mBitmap != null) {
+                mBitmap.recycle();
+                mBitmap = null;
+            }
         }
     }
 
@@ -81,6 +87,8 @@ public class MultiLineView extends View {
     }
 
     private class DrawFrameCallback implements Choreographer.FrameCallback {
+
+        private float aX, aY, bX, bY;
 
         @Override
         public void doFrame(long l) {
@@ -109,3 +117,5 @@ public class MultiLineView extends View {
         }
     }
 }
+
+//http://mp.weixin.qq.com/s?__biz=MzA4NTc5MDU5OQ==&mid=411441608&idx=1&sn=5e846a882f58a7ba1b5312bdbeaafccf&scene=23&srcid=0120GiYhMXjmNDoN9MFQj7f5#rd
