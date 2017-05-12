@@ -2,6 +2,7 @@ package com.njnu.kai.practice;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import android.widget.BaseAdapter;
 
 import com.njnu.kai.practice.aidl.AidlTestFragment;
 import com.njnu.kai.practice.dex.DexTestFragment;
+import com.njnu.kai.practice.dex.LookClassLoaderFragment;
 import com.njnu.kai.practice.draw.MultiLineViewFragment;
 import com.njnu.kai.practice.guideanimator.ChickenAnimatorActivity;
 import com.njnu.kai.practice.animator.FrameAnimationActivity;
@@ -134,6 +136,10 @@ public class MainFragment extends ActionBarLayoutFragment implements AdapterView
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         position = ListViewUtils.getValidListViewItemPosition(mListView.getHeaderViewsCount(), position, mListView.getAdapter().getCount());
         FunctionItem functionItem = FUNCTIONS.get(position);
+        gotoPage(functionItem);
+    }
+
+    private void gotoPage(FunctionItem functionItem) {
         if (functionItem.isActivity()) {
             Intent intent = new Intent(getActivity(), functionItem.getActionClass());
             intent.putExtra(ProxyActivity.KEY_TITLE, functionItem.getName());
@@ -148,6 +154,23 @@ public class MainFragment extends ActionBarLayoutFragment implements AdapterView
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        FunctionItem functionItem = null;
+        for (FunctionItem function : FUNCTIONS) {
+            if (function.getActionClass() == LookClassLoaderFragment.class) {
+                functionItem = function;
+                break;
+            }
+        }
+        if (functionItem != null) {
+            gotoPage(functionItem);
         }
     }
 
