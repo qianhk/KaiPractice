@@ -107,6 +107,7 @@ public class MainFragment extends ActionBarLayoutFragment implements AdapterView
         FUNCTIONS.add(new FunctionItem("Image Compress", ImageCompressFragment.class, false));
         FUNCTIONS.add(new FunctionItem("Constraint Layout", ConstraintLayoutFragment.class, false));
         FUNCTIONS.add(new FunctionItem("Line Multi", MultiLineViewFragment.class, false));
+        FUNCTIONS.add(new FunctionItem("Look Class Loader", LookClassLoaderFragment.class, false));
         FUNCTIONS.add(new FunctionItem("Dex loader", DexTestFragment.class, false));
     }
 
