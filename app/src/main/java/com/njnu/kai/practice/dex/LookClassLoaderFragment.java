@@ -1,7 +1,14 @@
 package com.njnu.kai.practice.dex;
 
+import android.content.Context;
+import android.os.Environment;
+
 import com.njnu.kai.support.BaseTestListFragment;
 import com.njnu.kai.support.TestFunction;
+
+import java.io.File;
+
+import dalvik.system.DexClassLoader;
 
 /**
  * @author hongkai.qian
@@ -30,24 +37,47 @@ public class LookClassLoaderFragment extends BaseTestListFragment {
         }
     }
 
-    @TestFunction("KaiClassLoader Person2")
+    @TestFunction("KaiClassLoader Person")
     public void onTest03() {
+//        try {
+//            KaiClassLoader kaiClassLoader = new KaiClassLoader();
+//            Class<?> person2 = kaiClassLoader.loadClass("com.njnu.kai.compiled.Person");
+//            if (person2 != null) {
+//                ClassLoader classLoader = person2.getClassLoader();
+//                setResult("onTest03 load success, loader is " + classLoader.getClass().getName());
+//                while (classLoader.getParent() != null) {
+//                    classLoader = classLoader.getParent();
+//                    appendResult("parent: " + classLoader.getClass().getName());  //java.lang.BootClassLoader
+//                }
+//            } else {
+//                setResult("onTest03 load failed");
+//            }
+//        } catch (Exception e) {
+//            //UnsupportedOperationException can't load this type of class file
+//            //http://blog.csdn.net/jiangwei0910410003/article/details/17679823
+//            appendResult(e);
+//        }
+    }
+
+
+    @TestFunction("DexLassLoader")
+    public void onTest04() {
         try {
-            KaiClassLoader kaiClassLoader = new KaiClassLoader();
-            Class<?> person2 = kaiClassLoader.loadClass("Person2");
-            if (person2 != null) {
-                ClassLoader classLoader = person2.getClassLoader();
-                setResult("person2 load success, loader is " + classLoader.getClass().getName());
-                while (classLoader.getParent() != null) {
-                    classLoader = classLoader.getParent();
-                    appendResult("parent: " + classLoader.getClass().getName());  //java.lang.BootClassLoader
-                }
+            String dexPath = Environment.getExternalStorageDirectory().toString() + File.separator + "dexTest/KaiPersonDex.jar";
+            //String dexOutputDir = getApplicationInfo().dataDir;
+            File optimizedDexOutputPath = getActivity().getDir("outdex", Context.MODE_PRIVATE);
+            DexClassLoader dexClassLoader = new DexClassLoader(dexPath, optimizedDexOutputPath.getAbsolutePath()
+                    , null, getClass().getClassLoader());
+            Class personClass = dexClassLoader.loadClass("com.njnu.kai.compiled.Person");
+            if (personClass != null) {
+                Object person = personClass.newInstance();
+                setResult("person class load success: " + person);
             } else {
-                setResult("person2 load failed");
+                setResult("person class load failed");
             }
         } catch (Exception e) {
-            //UnsupportedOperationException can't load this type of class file
-            //http://blog.csdn.net/jiangwei0910410003/article/details/17679823
+            //ava.lang.IllegalArgumentException: Optimized data directory /sdcard/dexTest is not owned by the current user.
+            // Shared storage cannot protect your application from code injection attacks
             appendResult(e);
         }
     }

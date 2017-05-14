@@ -4,11 +4,17 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 
+import dalvik.system.DexClassLoader;
+
 /**
  * @author kai
  * @since 2017/5/13
  */
-public class KaiClassLoader extends ClassLoader {
+public class KaiClassLoader extends DexClassLoader {
+
+    public KaiClassLoader(String dexPath, String optimizedDirectory, String librarySearchPath, ClassLoader parent) {
+        super(dexPath, optimizedDirectory, librarySearchPath, parent);
+    }
 
     @Override
     protected Class<?> findClass(String name) throws ClassNotFoundException {
