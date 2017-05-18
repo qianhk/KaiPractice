@@ -44,6 +44,7 @@ import com.njnu.kai.practice.rxjava.RxJavaTestFragment;
 import com.njnu.kai.practice.scroll.ManageTwoScrollFragment;
 import com.njnu.kai.practice.scroll.PullRefreshFragment;
 import com.njnu.kai.practice.splash.SplashActivity;
+import com.njnu.kai.practice.sticky.StickyPersonFragment;
 import com.njnu.kai.practice.ui.ConstraintLayoutFragment;
 import com.njnu.kai.practice.draw.PeriscopeAnimatorFragment;
 import com.njnu.kai.practice.za.EditTextOutputFragment;
@@ -109,6 +110,7 @@ public class MainFragment extends ActionBarLayoutFragment implements AdapterView
         FUNCTIONS.add(new FunctionItem("Line Multi", MultiLineViewFragment.class, false));
         FUNCTIONS.add(new FunctionItem("Look Class Loader", LookClassLoaderFragment.class, false));
         FUNCTIONS.add(new FunctionItem("Dex loader", DexTestFragment.class, false));
+        FUNCTIONS.add(new FunctionItem("Sticky Person Horizontal", StickyPersonFragment.class, false));
     }
 
     @Override
@@ -165,7 +167,7 @@ public class MainFragment extends ActionBarLayoutFragment implements AdapterView
 
         FunctionItem functionItem = null;
         for (FunctionItem function : FUNCTIONS) {
-            if (function.getActionClass() == LookClassLoaderFragment.class) {
+            if (function.getActionClass() == StickyPersonFragment.class) {
                 functionItem = function;
                 break;
             }
