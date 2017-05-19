@@ -25,9 +25,10 @@ public class PersonViewHolder extends RecyclerView.ViewHolder {
         mIvAvatar = (ImageView) itemView.findViewById(R.id.iv_avatar);
     }
 
-    public void flushView(Person person) {
+    public void flushView(Person person, boolean showYearView) {
         mTvName.setText(person.mName);
         mTvYear.setText(person.mYear);
         mIvAvatar.setImageResource(person.mAvatarId);
+        mTvYear.setVisibility(showYearView ? View.VISIBLE : View.GONE);
     }
 }

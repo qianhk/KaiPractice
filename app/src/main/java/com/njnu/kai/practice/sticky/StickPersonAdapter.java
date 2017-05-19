@@ -4,7 +4,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.njnu.kai.practice.R;
 
@@ -32,13 +31,24 @@ public class StickPersonAdapter extends RecyclerView.Adapter<PersonViewHolder> {
         return new PersonViewHolder(itemView);
     }
 
+    public final boolean showYearView(int pos) {
+        if (pos == 0) {
+            return true;
+        }
+        return !mPerson.get(pos).mYear.equals(mPerson.get(pos - 1).mYear);
+    }
+
     @Override
     public void onBindViewHolder(PersonViewHolder holder, int position) {
-        holder.flushView(mPerson.get(position));
+        holder.flushView(mPerson.get(position), showYearView(position));
     }
 
     @Override
     public int getItemCount() {
         return mPerson.size();
+    }
+
+    public String yearString(int pos) {
+        return mPerson.get(pos).mYear;
     }
 }
