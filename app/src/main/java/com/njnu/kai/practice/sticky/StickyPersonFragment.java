@@ -1,6 +1,7 @@
 package com.njnu.kai.practice.sticky;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
@@ -36,8 +37,10 @@ public class StickyPersonFragment extends BaseTestFragment {
 
     private String mYearString = "";
     private TextView mTvTitleLayout;
-    private int mLayoutPadding = DisplayUtils.dp2px(10);
+    private int mLayoutPadding = DisplayUtils.dp2px(12);
     private LinearLayoutManager mLayoutManager;
+
+    private int mHeaderBeginPos = 0;
 
     private RecyclerView.AdapterDataObserver mAdapterDataObserver;
 
@@ -54,7 +57,7 @@ public class StickyPersonFragment extends BaseTestFragment {
         mRecyclerView.setBackgroundColor(0x20000000);
         mRecyclerView.addItemDecoration(new LeftSpacesItemDecoration(mLayoutPadding));
         ViewGroup.MarginLayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        layoutParams.topMargin = DisplayUtils.dp2px(20);
+        layoutParams.topMargin = DisplayUtils.dp2px(30);
         layout.addView(mRecyclerView, layoutParams);
 
         mTvTitleLayout = new TextView(context);
@@ -65,10 +68,15 @@ public class StickyPersonFragment extends BaseTestFragment {
         }
         mTvTitleLayout.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
         mTvTitleLayout.setGravity(Gravity.CENTER);
-        ViewGroup.MarginLayoutParams titleLayoutParams = new FrameLayout.LayoutParams(DisplayUtils.dp2px(37) + mLayoutPadding + mLayoutPadding, DisplayUtils.dp2px(17));
-//        titleLayoutParams.topMargin = DisplayUtils.dp2px(20);
+        ViewGroup.MarginLayoutParams titleLayoutParams = new FrameLayout.LayoutParams(DisplayUtils.dp2px(37) + mLayoutPadding, DisplayUtils.dp2px(17));
+        titleLayoutParams.topMargin = DisplayUtils.dp2px(30);
         layout.addView(mTvTitleLayout, titleLayoutParams);
-        mTvTitleLayout.setPadding(mLayoutPadding, 0, mLayoutPadding, 0);
+        mTvTitleLayout.setPadding(mLayoutPadding, 0, 0, 0);
+
+        View view = new View(context);
+        ViewGroup.MarginLayoutParams viewLayoutParams = new FrameLayout.LayoutParams(mLayoutPadding, DisplayUtils.dp2px(4));
+        view.setBackgroundColor(Color.CYAN);
+        layout.addView(view, viewLayoutParams);
 
         Button buttonLeft = new Button(context);
         buttonLeft.setText("向左拉了");
@@ -100,19 +108,20 @@ public class StickyPersonFragment extends BaseTestFragment {
     }
 
     private void recyclerViewOnScrolled(RecyclerView recyclerView, int dx) {
-        int newTitlePos = 1;
-        int firstVisiblePosition = mLayoutManager.findFirstVisibleItemPosition();
+        int newTitlePos;
+        int visiblePosition = mLayoutManager.findFirstVisibleItemPosition();
         int completelyVisiblePosition = mLayoutManager.findFirstCompletelyVisibleItemPosition();
         boolean needChangeTitle;
-        View firstCompleteVisibleView = recyclerView.findViewHolderForAdapterPosition(completelyVisiblePosition).itemView;
-        int completeVisibleViewLeft = firstCompleteVisibleView.getLeft();
+        View visibleView = recyclerView.findViewHolderForAdapterPosition(visiblePosition).itemView;
+        View completeVisibleView = recyclerView.findViewHolderForAdapterPosition(completelyVisiblePosition).itemView;
+        int completeVisibleViewLeft = completeVisibleView.getLeft();
         if (dx <= 0) {
             if (completeVisibleViewLeft < mLayoutPadding) {
                 needChangeTitle = false;
             } else {
                 needChangeTitle = true;
             }
-            newTitlePos = firstVisiblePosition;
+            newTitlePos = visiblePosition;
         } else {
             if (completeVisibleViewLeft > mLayoutPadding) {
                 needChangeTitle = false;
@@ -127,19 +136,32 @@ public class StickyPersonFragment extends BaseTestFragment {
                 mTvTitleLayout.setText(mAdapter.yearString(newTitlePos));
                 mYearString = mAdapter.yearString(newTitlePos);
             }
-            mTvTitleLayout.setTranslationX(0.0f);
-            if (mTvTitleLayout.getVisibility() != View.VISIBLE) {
-                mTvTitleLayout.setVisibility(View.VISIBLE);
+            mTvTitleLayout.setTranslationX(mHeaderBeginPos);
+            setViewVisibility(mTvTitleLayout, View.VISIBLE);
+        }
+
+        if (completelyVisiblePosition == 0) {
+            if (completeVisibleViewLeft >= mLayoutPadding) {
+                setViewVisibility(mTvTitleLayout, View.INVISIBLE);
             }
+        }
+        if (visiblePosition == 0 && visibleView.getLeft() < mLayoutPadding) {
+            setViewVisibility(mTvTitleLayout, View.VISIBLE);
         }
 
         if (mAdapter.showYearView(completelyVisiblePosition)) {
             int titleLayoutWidth = mTvTitleLayout.getMeasuredWidth();
             if (completeVisibleViewLeft > titleLayoutWidth || completeVisibleViewLeft < mLayoutPadding) {
-                mTvTitleLayout.setTranslationX(0.0f);
+                mTvTitleLayout.setTranslationX(mHeaderBeginPos);
             } else {
                 mTvTitleLayout.setTranslationX(completeVisibleViewLeft - titleLayoutWidth);
             }
+        }
+    }
+
+    private static void setViewVisibility(View view, int visibility) {
+        if (view.getVisibility() != visibility) {
+            view.setVisibility(visibility);
         }
     }
 
