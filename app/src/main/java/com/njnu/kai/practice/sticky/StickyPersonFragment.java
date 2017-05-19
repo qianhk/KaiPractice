@@ -7,9 +7,11 @@ import android.support.annotation.RequiresApi;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
@@ -28,6 +30,7 @@ import java.util.ArrayList;
  */
 public class StickyPersonFragment extends BaseTestFragment {
 
+    private static final String TAG = "StickyPersonFragment";
     private StickPersonAdapter mAdapter;
     private RecyclerView mRecyclerView;
 
@@ -35,6 +38,8 @@ public class StickyPersonFragment extends BaseTestFragment {
     private TextView mTvTitleLayout;
     private int mLayoutPadding = DisplayUtils.dp2px(10);
     private LinearLayoutManager mLayoutManager;
+
+    private RecyclerView.AdapterDataObserver mAdapterDataObserver;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -59,57 +64,91 @@ public class StickyPersonFragment extends BaseTestFragment {
             mTvTitleLayout.setLetterSpacing(0.1f);
         }
         mTvTitleLayout.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
-        ViewGroup.MarginLayoutParams titleLayoutParams = new FrameLayout.LayoutParams(DisplayUtils.dp2px(37), DisplayUtils.dp2px(17));
+        mTvTitleLayout.setGravity(Gravity.CENTER);
+        ViewGroup.MarginLayoutParams titleLayoutParams = new FrameLayout.LayoutParams(DisplayUtils.dp2px(37) + mLayoutPadding + mLayoutPadding, DisplayUtils.dp2px(17));
 //        titleLayoutParams.topMargin = DisplayUtils.dp2px(20);
         layout.addView(mTvTitleLayout, titleLayoutParams);
+        mTvTitleLayout.setPadding(mLayoutPadding, 0, mLayoutPadding, 0);
 
+        Button buttonLeft = new Button(context);
+        buttonLeft.setText("向左拉了");
+        ViewGroup.MarginLayoutParams buttonLeftLayoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        buttonLeftLayoutParams.topMargin = DisplayUtils.dp2px(250);
+        layout.addView(buttonLeft, buttonLeftLayoutParams);
+        buttonLeft.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                recyclerViewOnScrolled(mRecyclerView, 10);
+            }
+        });
+
+        Button buttonRight = new Button(context);
+        buttonRight.setText("向右拉了");
+        ViewGroup.MarginLayoutParams buttonRightLayoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        buttonRightLayoutParams.topMargin = DisplayUtils.dp2px(250);
+        buttonRightLayoutParams.leftMargin = DisplayUtils.dp2px(100);
+        layout.addView(buttonRight, buttonRightLayoutParams);
+        buttonRight.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                recyclerViewOnScrolled(mRecyclerView, -10);
+            }
+        });
+        mAdapterDataObserver = new ClassAdapterDataObserver();
+        mAdapter.registerAdapterDataObserver(mAdapterDataObserver);
         return layout;
     }
 
     private void recyclerViewOnScrolled(RecyclerView recyclerView, int dx) {
-        int pos = 1;
-        int findFirstVisibleItemPosition = mLayoutManager.findFirstVisibleItemPosition();
-        int findFirstCompletelyVisibleItemPosition = mLayoutManager.findFirstCompletelyVisibleItemPosition();
-        View view = recyclerView.findViewHolderForAdapterPosition(findFirstVisibleItemPosition).itemView;
-        View view2 = recyclerView.findViewHolderForAdapterPosition(findFirstCompletelyVisibleItemPosition).itemView;
+        int newTitlePos = 1;
+        int firstVisiblePosition = mLayoutManager.findFirstVisibleItemPosition();
+        int completelyVisiblePosition = mLayoutManager.findFirstCompletelyVisibleItemPosition();
+        boolean needChangeTitle;
+        View firstCompleteVisibleView = recyclerView.findViewHolderForAdapterPosition(completelyVisiblePosition).itemView;
+        int completeVisibleViewLeft = firstCompleteVisibleView.getLeft();
         if (dx <= 0) {
-            if (view2.getLeft() < mLayoutPadding) {
-                pos = 0;
+            if (completeVisibleViewLeft < mLayoutPadding) {
+                needChangeTitle = false;
+            } else {
+                needChangeTitle = true;
             }
-            int i3 = findFirstVisibleItemPosition;
-            findFirstVisibleItemPosition = pos;
-            pos = i3;
-        } else if (findFirstVisibleItemPosition == 0) {
-            if (view.getLeft() > mLayoutPadding) {
-                pos = 0;
-            }
-            findFirstVisibleItemPosition = pos;
-            pos = findFirstCompletelyVisibleItemPosition;
+            newTitlePos = firstVisiblePosition;
         } else {
-            if (view2.getLeft() > mLayoutPadding) {
-                pos = 0;
+            if (completeVisibleViewLeft > mLayoutPadding) {
+                needChangeTitle = false;
+            } else {
+                needChangeTitle = true;
             }
-            findFirstVisibleItemPosition = pos;
-            pos = findFirstCompletelyVisibleItemPosition;
+            newTitlePos = completelyVisiblePosition;
         }
-        if (findFirstVisibleItemPosition != 0) {
-            if (!mYearString.equals(mAdapter.yearString(pos))) {
-                mTvTitleLayout.setText(mAdapter.yearString(pos));
-                mYearString = mAdapter.yearString(pos);
+
+        if (needChangeTitle) {
+            if (!mYearString.equals(mAdapter.yearString(newTitlePos))) {
+                mTvTitleLayout.setText(mAdapter.yearString(newTitlePos));
+                mYearString = mAdapter.yearString(newTitlePos);
             }
-            if (mTvTitleLayout.getTranslationX() != 0.0f) {
-                mTvTitleLayout.setTranslationX(0.0f);
-            }
+            mTvTitleLayout.setTranslationX(0.0f);
             if (mTvTitleLayout.getVisibility() != View.VISIBLE) {
                 mTvTitleLayout.setVisibility(View.VISIBLE);
             }
         }
-        if (mAdapter.showYearView(findFirstCompletelyVisibleItemPosition)) {
-            pos = mTvTitleLayout.getMeasuredWidth();
-            if (view2.getLeft() > pos || view2.getLeft() < mLayoutPadding) {
+
+        if (mAdapter.showYearView(completelyVisiblePosition)) {
+            int titleLayoutWidth = mTvTitleLayout.getMeasuredWidth();
+            if (completeVisibleViewLeft > titleLayoutWidth || completeVisibleViewLeft < mLayoutPadding) {
                 mTvTitleLayout.setTranslationX(0.0f);
             } else {
-                mTvTitleLayout.setTranslationX((float) (view2.getLeft() - pos));
+                mTvTitleLayout.setTranslationX(completeVisibleViewLeft - titleLayoutWidth);
+            }
+        }
+    }
+
+    private class ClassAdapterDataObserver extends RecyclerView.AdapterDataObserver {
+
+        public void onChanged() {
+            if (mAdapter.getItemCount() > 0 && !mYearString.equals(mAdapter.yearString(0))) {
+                mTvTitleLayout.setText(mAdapter.yearString(0));
+                mYearString = mAdapter.yearString(0);
             }
         }
     }
@@ -121,10 +160,17 @@ public class StickyPersonFragment extends BaseTestFragment {
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+//                LogUtils.e(TAG, "onScrolled dx=%d", dx);
                 recyclerViewOnScrolled(recyclerView, dx);
             }
         });
         prepareData();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mAdapter.unregisterAdapterDataObserver(mAdapterDataObserver);
     }
 
     private void prepareData() {
