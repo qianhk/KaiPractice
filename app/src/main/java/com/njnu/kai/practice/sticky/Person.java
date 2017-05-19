@@ -7,5 +7,13 @@ package com.njnu.kai.practice.sticky;
  */
 public class Person {
 
+    public String mYear;
     public String mName;
+    public int mAvatarId;
+
+    public Person(String year, String name, int avatarId) {
+        mYear = year;
+        mName = name;
+        mAvatarId = avatarId;
+    }
 }
