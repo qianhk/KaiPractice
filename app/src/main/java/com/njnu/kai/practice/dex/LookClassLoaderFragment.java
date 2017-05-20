@@ -17,6 +17,8 @@ import dalvik.system.DexClassLoader;
  */
 public class LookClassLoaderFragment extends BaseTestListFragment {
 
+    private DexClassLoader mMockClickClassLoader;
+
     @TestFunction("Fragment加载")
     public void onTest01() {
         ClassLoader classLoader = getClass().getClassLoader();
@@ -78,6 +80,28 @@ public class LookClassLoaderFragment extends BaseTestListFragment {
         } catch (Exception e) {
             //ava.lang.IllegalArgumentException: Optimized data directory /sdcard/dexTest is not owned by the current user.
             // Shared storage cannot protect your application from code injection attacks
+            appendResult(e);
+        }
+    }
+
+    @TestFunction("加载mockClick apk")
+    public void onTest05() {
+        try {
+            if (mMockClickClassLoader == null) {
+                String dexPath = Environment.getExternalStorageDirectory().toString() + File.separator + "dexTest/mockClick.apk";
+                //String dexOutputDir = getApplicationInfo().dataDir;
+                File optimizedDexOutputPath = getActivity().getDir("outdex", Context.MODE_PRIVATE);
+                mMockClickClassLoader = new DexClassLoader(dexPath, optimizedDexOutputPath.getAbsolutePath()
+                        , null, getClass().getClassLoader());
+            }
+            Class mainActivityClass = mMockClickClassLoader.loadClass("com.njnu.kai.mockclick.MainActivity");
+            if (mainActivityClass != null) {
+                Object mainActivity = mainActivityClass.newInstance();
+                setResult("mainActivityClass load success: " + mainActivity);
+            } else {
+                setResult("mainActivityClass load failed");
+            }
+        } catch (Exception e) {
             appendResult(e);
         }
     }
