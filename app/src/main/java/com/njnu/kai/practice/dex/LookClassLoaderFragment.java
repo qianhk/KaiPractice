@@ -119,9 +119,13 @@ public class LookClassLoaderFragment extends BaseTestListFragment {
     }
 
     private void startupActivity(Object mainActivity) throws Exception {
-        Method method = mainActivity.getClass().getDeclaredMethod("onCreate", Bundle.class);
-        method.setAccessible(true);
-        method.invoke(mainActivity, new Bundle());
+        Method attachBaseContextMethod = mainActivity.getClass().getDeclaredMethod("attachBaseContext", Context.class);
+        attachBaseContextMethod.setAccessible(true);
+        attachBaseContextMethod.invoke(mainActivity, getActivity().getBaseContext());
+
+        Method onCreateMethod = mainActivity.getClass().getDeclaredMethod("onCreate", Bundle.class);
+        onCreateMethod.setAccessible(true);
+        onCreateMethod.invoke(mainActivity, new Bundle());
     }
 
 }
