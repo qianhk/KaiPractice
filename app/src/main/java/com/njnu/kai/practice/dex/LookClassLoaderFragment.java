@@ -1,12 +1,15 @@
 package com.njnu.kai.practice.dex;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.os.Environment;
 
 import com.njnu.kai.support.BaseTestListFragment;
 import com.njnu.kai.support.TestFunction;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 import dalvik.system.DexClassLoader;
 
@@ -59,6 +62,7 @@ public class LookClassLoaderFragment extends BaseTestListFragment {
 //            //http://blog.csdn.net/jiangwei0910410003/article/details/17679823
 //            appendResult(e);
 //        }
+        setResult("UnsupportedOperationException\n不能load 普通jar文件或class");
     }
 
 
@@ -98,12 +102,26 @@ public class LookClassLoaderFragment extends BaseTestListFragment {
             if (mainActivityClass != null) {
                 Object mainActivity = mainActivityClass.newInstance();
                 setResult("mainActivityClass load success: " + mainActivity);
+                startupActivity(mainActivity);
             } else {
                 setResult("mainActivityClass load failed");
             }
-        } catch (Exception e) {
-            appendResult(e);
+        } catch (Throwable t) {
+            if (t instanceof InvocationTargetException) {
+                InvocationTargetException invocationTargetException = (InvocationTargetException) t;
+                if (invocationTargetException.getTargetException() != null) {
+                    appendResult(t);
+                    t = invocationTargetException.getTargetException();
+                }
+            }
+            appendResult(t);
         }
+    }
+
+    private void startupActivity(Object mainActivity) throws Exception {
+        Method method = mainActivity.getClass().getDeclaredMethod("onCreate", Bundle.class);
+        method.setAccessible(true);
+        method.invoke(mainActivity, new Bundle());
     }
 
 }
