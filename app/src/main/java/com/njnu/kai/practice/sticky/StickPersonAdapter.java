@@ -17,6 +17,12 @@ import java.util.List;
  */
 public class StickPersonAdapter extends RecyclerView.Adapter<PersonViewHolder> {
 
+    private boolean mHideTitle;
+
+    public StickPersonAdapter(boolean hideTitle) {
+        mHideTitle = hideTitle;
+    }
+
     private ArrayList<Person> mPerson = new ArrayList<>();
 
     public void updateData(List<Person> dataList) {
@@ -28,7 +34,7 @@ public class StickPersonAdapter extends RecyclerView.Adapter<PersonViewHolder> {
     @Override
     public PersonViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_sticky_person_item, parent, false);
-        return new PersonViewHolder(itemView);
+        return new PersonViewHolder(itemView, mHideTitle);
     }
 
     public final boolean showYearView(int pos) {

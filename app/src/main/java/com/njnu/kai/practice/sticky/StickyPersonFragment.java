@@ -46,6 +46,11 @@ public class StickyPersonFragment extends BaseTestFragment {
 
     private RecyclerView.AdapterDataObserver mAdapterDataObserver;
 
+    private RecyclerView mRecyclerView2;
+    private LinearLayoutManager mLayoutManager2;
+    private StickPersonAdapter mAdapter2;
+    private StickyHeaderView mStickyHeaderView;
+
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected View onCreateContentView(LayoutInflater layoutInflater, ViewGroup viewGroup, Bundle bundle) {
@@ -54,7 +59,7 @@ public class StickyPersonFragment extends BaseTestFragment {
         mRecyclerView = new RecyclerView(context);
         mLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mAdapter = new StickPersonAdapter();
+        mAdapter = new StickPersonAdapter(false);
         mRecyclerView.setAdapter(mAdapter);
 //        mRecyclerView.setBackgroundColor(0x20000000);
         mRecyclerView.addItemDecoration(new LeftSpacesItemDecoration(mLayoutPadding));
@@ -63,17 +68,21 @@ public class StickyPersonFragment extends BaseTestFragment {
         layout.addView(mRecyclerView, layoutParams);
 
         mTitleLayout = new FrameLayout(context);
+        mTitleLayout.setBackgroundColor(Color.WHITE);
         ViewGroup.MarginLayoutParams titleLayoutParams = new FrameLayout.LayoutParams(DisplayUtils.dp2px(37) + mLayoutPadding, DisplayUtils.dp2px(17));
         titleLayoutParams.topMargin = DisplayUtils.dp2px(30);
         layout.addView(mTitleLayout, titleLayoutParams);
 
+        final int floatColor = Color.RED; //0xFFB5B5B5;
+
         View titleLineView = new View(context);
-        titleLineView.setBackgroundColor(0xFFB5B5B5);
-        ViewGroup.MarginLayoutParams titleLineLayoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, getResources().getDimensionPixelSize(R.dimen.half_dp));
-        layout.addView(titleLineView, titleLineLayoutParams);
+        titleLineView.setBackgroundColor(floatColor);
+        FrameLayout.LayoutParams titleLineLayoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, getResources().getDimensionPixelSize(R.dimen.half_dp));
+        titleLineLayoutParams.gravity = Gravity.CENTER;
+        mTitleLayout.addView(titleLineView, titleLineLayoutParams);
 
         mTvTitle = new TextView(context);
-        mTvTitle.setTextColor(0xFFB5B5B5);
+        mTvTitle.setTextColor(floatColor);
         mTvTitle.setBackgroundDrawable(getResources().getDrawable(R.drawable.bkg_sticky_time_line_year));
         if (SDKVersionUtils.hasLollipop()) {
 //            mTvTitle.setLetterSpacing(0.1f);
@@ -100,6 +109,7 @@ public class StickyPersonFragment extends BaseTestFragment {
                 recyclerViewOnScrolled(mRecyclerView, 10);
             }
         });
+        buttonLeft.setVisibility(View.GONE);
 
         Button buttonRight = new Button(context);
         buttonRight.setText("向右拉了");
@@ -113,8 +123,28 @@ public class StickyPersonFragment extends BaseTestFragment {
                 recyclerViewOnScrolled(mRecyclerView, -10);
             }
         });
+        buttonRight.setVisibility(View.GONE);
+
         mAdapterDataObserver = new ClassAdapterDataObserver();
         mAdapter.registerAdapterDataObserver(mAdapterDataObserver);
+
+
+        mRecyclerView2 = new RecyclerView(context);
+        mLayoutManager2 = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
+        mRecyclerView2.setLayoutManager(mLayoutManager2);
+        mAdapter2 = new StickPersonAdapter(true);
+        mRecyclerView2.setAdapter(mAdapter2);
+//        mRecyclerView.setBackgroundColor(0x20000000);
+        mRecyclerView2.addItemDecoration(new LeftSpacesItemDecoration(mLayoutPadding));
+        ViewGroup.MarginLayoutParams layoutParams2 = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        layoutParams2.topMargin = DisplayUtils.dp2px(280);
+        layout.addView(mRecyclerView2, layoutParams2);
+
+        mStickyHeaderView = new StickyHeaderView(context);
+        ViewGroup.MarginLayoutParams stickyLayoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        stickyLayoutParams.topMargin = DisplayUtils.dp2px(280);
+        layout.addView(mStickyHeaderView, stickyLayoutParams);
+
         return layout;
     }
 
@@ -147,25 +177,25 @@ public class StickyPersonFragment extends BaseTestFragment {
                 mTvTitle.setText(mAdapter.yearString(newTitlePos));
                 mYearString = mAdapter.yearString(newTitlePos);
             }
-            mTvTitle.setTranslationX(mHeaderBeginPos);
-            setViewVisibility(mTvTitle, View.VISIBLE);
+            mTitleLayout.setTranslationX(mHeaderBeginPos);
+            setViewVisibility(mTitleLayout, View.VISIBLE);
         }
 
         if (completelyVisiblePosition == 0) {
             if (completeVisibleViewLeft >= mLayoutPadding) {
-                setViewVisibility(mTvTitle, View.INVISIBLE);
+                setViewVisibility(mTitleLayout, View.INVISIBLE);
             }
         }
         if (visiblePosition == 0 && visibleView.getLeft() < mLayoutPadding) {
-            setViewVisibility(mTvTitle, View.VISIBLE);
+            setViewVisibility(mTitleLayout, View.VISIBLE);
         }
 
         if (mAdapter.showYearView(completelyVisiblePosition)) {
             int titleLayoutWidth = mTitleLayout.getMeasuredWidth();
             if (completeVisibleViewLeft > titleLayoutWidth || completeVisibleViewLeft < mLayoutPadding) {
-                mTvTitle.setTranslationX(mHeaderBeginPos);
+                mTitleLayout.setTranslationX(mHeaderBeginPos);
             } else {
-                mTvTitle.setTranslationX(completeVisibleViewLeft - titleLayoutWidth);
+                mTitleLayout.setTranslationX(completeVisibleViewLeft - titleLayoutWidth);
             }
         }
     }
@@ -189,12 +219,18 @@ public class StickyPersonFragment extends BaseTestFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        view.setBackgroundColor(Color.WHITE);
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
 //                LogUtils.e(TAG, "onScrolled dx=%d", dx);
                 recyclerViewOnScrolled(recyclerView, dx);
+            }
+        });
+        mRecyclerView2.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                mStickyHeaderView.translationWhole(dx);
             }
         });
         prepareData();
@@ -222,5 +258,22 @@ public class StickyPersonFragment extends BaseTestFragment {
         personList.add(new Person("2017", "第12个人", R.drawable.p7));
         personList.add(new Person("2017", "第13个人", R.drawable.p1));
         mAdapter.updateData(personList);
+        mAdapter2.updateData(personList);
+
+        ArrayList<StickyHeaderView.Info> infoList = new ArrayList<>();
+        String year = null;
+        final int singleViewWidth = DisplayUtils.dp2px(118);
+        int viewWidth = 0;
+        for (int idx = 0; idx < personList.size(); ++idx) {
+            Person person = personList.get(idx);
+            if (person.mYear.equals(year)) {
+                viewWidth += singleViewWidth;
+            } else {
+                infoList.add(new StickyHeaderView.Info(person.mYear, viewWidth));
+                year = person.mYear;
+                viewWidth = singleViewWidth;
+            }
+        }
+        mStickyHeaderView.updateData(mLayoutPadding, infoList);
     }
 }
