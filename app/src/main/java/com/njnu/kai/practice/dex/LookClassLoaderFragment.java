@@ -1,12 +1,15 @@
 package com.njnu.kai.practice.dex;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.os.Environment;
 
 import com.njnu.kai.support.BaseTestListFragment;
 import com.njnu.kai.support.TestFunction;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 import dalvik.system.DexClassLoader;
 
@@ -16,6 +19,8 @@ import dalvik.system.DexClassLoader;
  * @since 2017/5/12
  */
 public class LookClassLoaderFragment extends BaseTestListFragment {
+
+    private DexClassLoader mMockClickClassLoader;
 
     @TestFunction("Fragment加载")
     public void onTest01() {
@@ -57,6 +62,7 @@ public class LookClassLoaderFragment extends BaseTestListFragment {
 //            //http://blog.csdn.net/jiangwei0910410003/article/details/17679823
 //            appendResult(e);
 //        }
+        setResult("UnsupportedOperationException\n不能load 普通jar文件或class");
     }
 
 
@@ -80,6 +86,46 @@ public class LookClassLoaderFragment extends BaseTestListFragment {
             // Shared storage cannot protect your application from code injection attacks
             appendResult(e);
         }
+    }
+
+    @TestFunction("加载mockClick apk")
+    public void onTest05() {
+        try {
+            if (mMockClickClassLoader == null) {
+                String dexPath = Environment.getExternalStorageDirectory().toString() + File.separator + "dexTest/mockClick.apk";
+                //String dexOutputDir = getApplicationInfo().dataDir;
+                File optimizedDexOutputPath = getActivity().getDir("outdex", Context.MODE_PRIVATE);
+                mMockClickClassLoader = new DexClassLoader(dexPath, optimizedDexOutputPath.getAbsolutePath()
+                        , null, getClass().getClassLoader());
+            }
+            Class mainActivityClass = mMockClickClassLoader.loadClass("com.njnu.kai.mockclick.MainActivity");
+            if (mainActivityClass != null) {
+                Object mainActivity = mainActivityClass.newInstance();
+                setResult("mainActivityClass load success: " + mainActivity);
+                startupActivity(mainActivity);
+            } else {
+                setResult("mainActivityClass load failed");
+            }
+        } catch (Throwable t) {
+            if (t instanceof InvocationTargetException) {
+                InvocationTargetException invocationTargetException = (InvocationTargetException) t;
+                if (invocationTargetException.getTargetException() != null) {
+                    appendResult(t);
+                    t = invocationTargetException.getTargetException();
+                }
+            }
+            appendResult(t);
+        }
+    }
+
+    private void startupActivity(Object mainActivity) throws Exception {
+        Method attachBaseContextMethod = mainActivity.getClass().getDeclaredMethod("attachBaseContext", Context.class);
+        attachBaseContextMethod.setAccessible(true);
+        attachBaseContextMethod.invoke(mainActivity, getActivity().getBaseContext());
+
+        Method onCreateMethod = mainActivity.getClass().getDeclaredMethod("onCreate", Bundle.class);
+        onCreateMethod.setAccessible(true);
+        onCreateMethod.invoke(mainActivity, new Bundle());
     }
 
 }
