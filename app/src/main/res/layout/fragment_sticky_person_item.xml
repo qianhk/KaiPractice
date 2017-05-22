@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="140dp"
+              android:layout_width="118dp"
               android:layout_height="wrap_content"
-              android:gravity="center_horizontal"
+              android:gravity="left"
               android:orientation="vertical"
               tools:background="#4F00">
 
@@ -15,38 +15,34 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="0.5dp"
+            android:layout_height="@dimen/half_dp"
             android:layout_gravity="center_vertical"
-            android:background="#FFB5B5B5"/>
+            android:background="#B5B5B5"/>
 
         <TextView
             android:id="@+id/tv_year"
             android:layout_width="37dp"
-            android:letterSpacing="0.1"
             android:layout_height="17dp"
-            android:background="#FFB5B5B5"
+            android:background="@drawable/bkg_sticky_time_line_year"
             android:gravity="center"
-            android:textColor="#333333"
+            android:textColor="#B5B5B5"
             android:textSize="12sp"
             tools:text="2017"/>
     </FrameLayout>
 
     <ImageView
         android:id="@+id/iv_avatar"
-        android:layout_width="match_parent"
+        android:layout_width="114dp"
         android:layout_height="170dp"
-        android:layout_marginRight="30dp"
         android:scaleType="centerCrop"
         tools:background="#4F00"/>
 
     <TextView
         android:id="@+id/tv_name"
-        android:layout_width="match_parent"
+        android:layout_width="114dp"
         android:layout_height="wrap_content"
-        android:layout_marginRight="30dp"
         android:layout_marginTop="6dp"
         android:gravity="center_vertical|left"
-        android:layout_marginLeft="0dp"
         android:singleLine="true"
         android:text="第几个人"
         tools:background="#4F00"/>

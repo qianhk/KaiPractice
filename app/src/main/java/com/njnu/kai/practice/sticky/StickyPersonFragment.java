@@ -36,9 +36,11 @@ public class StickyPersonFragment extends BaseTestFragment {
     private RecyclerView mRecyclerView;
 
     private String mYearString = "";
-    private TextView mTvTitleLayout;
+    private TextView mTvTitle;
     private int mLayoutPadding = DisplayUtils.dp2px(12);
     private LinearLayoutManager mLayoutManager;
+
+    private FrameLayout mTitleLayout;
 
     private int mHeaderBeginPos = 0;
 
@@ -54,24 +56,33 @@ public class StickyPersonFragment extends BaseTestFragment {
         mRecyclerView.setLayoutManager(mLayoutManager);
         mAdapter = new StickPersonAdapter();
         mRecyclerView.setAdapter(mAdapter);
-        mRecyclerView.setBackgroundColor(0x20000000);
+//        mRecyclerView.setBackgroundColor(0x20000000);
         mRecyclerView.addItemDecoration(new LeftSpacesItemDecoration(mLayoutPadding));
         ViewGroup.MarginLayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         layoutParams.topMargin = DisplayUtils.dp2px(30);
         layout.addView(mRecyclerView, layoutParams);
 
-        mTvTitleLayout = new TextView(context);
-        mTvTitleLayout.setTextColor(0xFFFF3333);
-        mTvTitleLayout.setBackgroundColor(0xFFB5B5B5);
-        if (SDKVersionUtils.hasLollipop()) {
-            mTvTitleLayout.setLetterSpacing(0.1f);
-        }
-        mTvTitleLayout.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
-        mTvTitleLayout.setGravity(Gravity.CENTER);
+        mTitleLayout = new FrameLayout(context);
         ViewGroup.MarginLayoutParams titleLayoutParams = new FrameLayout.LayoutParams(DisplayUtils.dp2px(37) + mLayoutPadding, DisplayUtils.dp2px(17));
         titleLayoutParams.topMargin = DisplayUtils.dp2px(30);
-        layout.addView(mTvTitleLayout, titleLayoutParams);
-        mTvTitleLayout.setPadding(mLayoutPadding, 0, 0, 0);
+        layout.addView(mTitleLayout, titleLayoutParams);
+
+        View titleLineView = new View(context);
+        titleLineView.setBackgroundColor(0xFFB5B5B5);
+        ViewGroup.MarginLayoutParams titleLineLayoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, getResources().getDimensionPixelSize(R.dimen.half_dp));
+        layout.addView(titleLineView, titleLineLayoutParams);
+
+        mTvTitle = new TextView(context);
+        mTvTitle.setTextColor(0xFFB5B5B5);
+        mTvTitle.setBackgroundDrawable(getResources().getDrawable(R.drawable.bkg_sticky_time_line_year));
+        if (SDKVersionUtils.hasLollipop()) {
+//            mTvTitle.setLetterSpacing(0.1f);
+        }
+        mTvTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
+        mTvTitle.setGravity(Gravity.CENTER);
+        ViewGroup.MarginLayoutParams tvTitleParams = new FrameLayout.LayoutParams(DisplayUtils.dp2px(37), DisplayUtils.dp2px(17));
+        tvTitleParams.leftMargin = mLayoutPadding;
+        mTitleLayout.addView(mTvTitle, tvTitleParams);
 
         View view = new View(context);
         ViewGroup.MarginLayoutParams viewLayoutParams = new FrameLayout.LayoutParams(mLayoutPadding, DisplayUtils.dp2px(4));
@@ -133,28 +144,28 @@ public class StickyPersonFragment extends BaseTestFragment {
 
         if (needChangeTitle) {
             if (!mYearString.equals(mAdapter.yearString(newTitlePos))) {
-                mTvTitleLayout.setText(mAdapter.yearString(newTitlePos));
+                mTvTitle.setText(mAdapter.yearString(newTitlePos));
                 mYearString = mAdapter.yearString(newTitlePos);
             }
-            mTvTitleLayout.setTranslationX(mHeaderBeginPos);
-            setViewVisibility(mTvTitleLayout, View.VISIBLE);
+            mTvTitle.setTranslationX(mHeaderBeginPos);
+            setViewVisibility(mTvTitle, View.VISIBLE);
         }
 
         if (completelyVisiblePosition == 0) {
             if (completeVisibleViewLeft >= mLayoutPadding) {
-                setViewVisibility(mTvTitleLayout, View.INVISIBLE);
+                setViewVisibility(mTvTitle, View.INVISIBLE);
             }
         }
         if (visiblePosition == 0 && visibleView.getLeft() < mLayoutPadding) {
-            setViewVisibility(mTvTitleLayout, View.VISIBLE);
+            setViewVisibility(mTvTitle, View.VISIBLE);
         }
 
         if (mAdapter.showYearView(completelyVisiblePosition)) {
-            int titleLayoutWidth = mTvTitleLayout.getMeasuredWidth();
+            int titleLayoutWidth = mTitleLayout.getMeasuredWidth();
             if (completeVisibleViewLeft > titleLayoutWidth || completeVisibleViewLeft < mLayoutPadding) {
-                mTvTitleLayout.setTranslationX(mHeaderBeginPos);
+                mTvTitle.setTranslationX(mHeaderBeginPos);
             } else {
-                mTvTitleLayout.setTranslationX(completeVisibleViewLeft - titleLayoutWidth);
+                mTvTitle.setTranslationX(completeVisibleViewLeft - titleLayoutWidth);
             }
         }
     }
@@ -169,7 +180,7 @@ public class StickyPersonFragment extends BaseTestFragment {
 
         public void onChanged() {
             if (mAdapter.getItemCount() > 0 && !mYearString.equals(mAdapter.yearString(0))) {
-                mTvTitleLayout.setText(mAdapter.yearString(0));
+                mTvTitle.setText(mAdapter.yearString(0));
                 mYearString = mAdapter.yearString(0);
             }
         }
