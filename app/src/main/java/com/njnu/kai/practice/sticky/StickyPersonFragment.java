@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.njnu.kai.practice.R;
 import com.njnu.kai.support.BaseTestFragment;
 import com.njnu.kai.support.DisplayUtils;
+import com.njnu.kai.support.LogUtils;
 import com.njnu.kai.support.SDKVersionUtils;
 
 import java.util.ArrayList;
@@ -99,20 +100,21 @@ public class StickyPersonFragment extends BaseTestFragment {
         layout.addView(view, viewLayoutParams);
 
         Button buttonLeft = new Button(context);
-        buttonLeft.setText("向左拉了");
+        buttonLeft.setText("向右拉70dp");
         ViewGroup.MarginLayoutParams buttonLeftLayoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         buttonLeftLayoutParams.topMargin = DisplayUtils.dp2px(250);
         layout.addView(buttonLeft, buttonLeftLayoutParams);
         buttonLeft.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                recyclerViewOnScrolled(mRecyclerView, 10);
+//                recyclerViewOnScrolled(mRecyclerView, 10);
+                mRecyclerView2.scrollBy(DisplayUtils.dp2px(70), 0);
             }
         });
         buttonLeft.setVisibility(View.GONE);
 
         Button buttonRight = new Button(context);
-        buttonRight.setText("向右拉了");
+        buttonRight.setText("向右拉30dp");
         ViewGroup.MarginLayoutParams buttonRightLayoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         buttonRightLayoutParams.topMargin = DisplayUtils.dp2px(250);
         buttonRightLayoutParams.leftMargin = DisplayUtils.dp2px(100);
@@ -120,10 +122,11 @@ public class StickyPersonFragment extends BaseTestFragment {
         buttonRight.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                recyclerViewOnScrolled(mRecyclerView, -10);
+//                recyclerViewOnScrolled(mRecyclerView, -10);
+                mRecyclerView2.scrollBy(DisplayUtils.dp2px(30), 0);
             }
         });
-        buttonRight.setVisibility(View.GONE);
+//        buttonRight.setVisibility(View.GONE);
 
         mAdapterDataObserver = new ClassAdapterDataObserver();
         mAdapter.registerAdapterDataObserver(mAdapterDataObserver);
@@ -137,12 +140,12 @@ public class StickyPersonFragment extends BaseTestFragment {
 //        mRecyclerView.setBackgroundColor(0x20000000);
         mRecyclerView2.addItemDecoration(new LeftSpacesItemDecoration(mLayoutPadding));
         ViewGroup.MarginLayoutParams layoutParams2 = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        layoutParams2.topMargin = DisplayUtils.dp2px(280);
+        layoutParams2.topMargin = DisplayUtils.dp2px(310);
         layout.addView(mRecyclerView2, layoutParams2);
 
         mStickyHeaderView = new StickyHeaderView(context);
         ViewGroup.MarginLayoutParams stickyLayoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        stickyLayoutParams.topMargin = DisplayUtils.dp2px(280);
+        stickyLayoutParams.topMargin = DisplayUtils.dp2px(310);
         layout.addView(mStickyHeaderView, stickyLayoutParams);
 
         return layout;
@@ -230,7 +233,8 @@ public class StickyPersonFragment extends BaseTestFragment {
         mRecyclerView2.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                mStickyHeaderView.translationWhole(dx);
+//                LogUtils.e(TAG, "onScrolled dx=%d", dx);
+                mStickyHeaderView.translationWhole(dx, mLayoutManager2.findFirstCompletelyVisibleItemPosition());
             }
         });
         prepareData();
@@ -269,7 +273,7 @@ public class StickyPersonFragment extends BaseTestFragment {
             if (person.mYear.equals(year)) {
                 viewWidth += singleViewWidth;
             } else {
-                infoList.add(new StickyHeaderView.Info(person.mYear, viewWidth));
+                infoList.add(new StickyHeaderView.Info(person.mYear, viewWidth, singleViewWidth));
                 year = person.mYear;
                 viewWidth = singleViewWidth;
             }
