@@ -111,7 +111,7 @@ public class StickyPersonFragment extends BaseTestFragment {
                 mRecyclerView2.scrollBy(DisplayUtils.dp2px(70), 0);
             }
         });
-        buttonLeft.setVisibility(View.GONE);
+//        buttonLeft.setVisibility(View.GONE);
 
         Button buttonRight = new Button(context);
         buttonRight.setText("向右拉30dp");

@@ -145,7 +145,7 @@ public class StickyHeaderView extends FrameLayout {
                 int titleViewWidth = getChildAt(idx).getMeasuredWidth();
                 Info info = mInfoList.get(idx);
                 int jdx = idx + 1;
-                mBuilder.append(String.format(Locale.getDefault(), " idx=%d tx=%d vH=%d tx+vh=%d", idx, info.mTx, titleViewWidth, info.mTx + titleViewWidth));
+//                mBuilder.append(String.format(Locale.getDefault(), " idx=%d tx=%d vH=%d tx+vh=%d", idx, info.mTx, titleViewWidth, info.mTx + titleViewWidth));
                 if (info.mTx < 0) {
                     if (info.mTx + titleViewWidth > 0) {
                         if (jdx < childCount) {
@@ -166,21 +166,30 @@ public class StickyHeaderView extends FrameLayout {
                         }
                     }
                 } else {
-                    if (jdx < childCount) {
-                        Info after = mInfoList.get(jdx);
-                        int intervalX = after.mTx - info.mTx;
-                        mBuilder.append(String.format(Locale.getDefault(), " A j_tx=%d interval=%d", after.mTx, intervalX));
-                        if (intervalX > titleViewWidth) {
-                            info.mTx = mLeftPadding;
+                    if (info.mTx > mLeftPadding) {
+                        Info before = mInfoList.get(idx - 1);
+                        if (info.mTx > mLeftPadding + titleViewWidth) {
+                            before.mTx = mLeftPadding;
                         } else {
-                            info.mTx = after.mTx - titleViewWidth;
+                            before.mTx = info.mTx - titleViewWidth;
                         }
-                        mBuilder.append(String.format(Locale.getDefault(), " A tx amend = %d", info.mTx));
-
                     } else {
-                        if (info.mTx < mLeftPadding) {
-                            info.mTx = mLeftPadding;
-                            mBuilder.append(String.format(Locale.getDefault(), " A else tx amend = %d", info.mTx));
+                        if (jdx < childCount) {
+                            Info after = mInfoList.get(jdx);
+                            int intervalX = after.mTx - info.mTx;
+//                            mBuilder.append(String.format(Locale.getDefault(), " A j_tx=%d interval=%d", after.mTx, intervalX));
+                            if (intervalX > titleViewWidth) {
+                                info.mTx = mLeftPadding;
+                            } else {
+                                info.mTx = after.mTx - titleViewWidth;
+                            }
+//                            mBuilder.append(String.format(Locale.getDefault(), " A tx amend = %d", info.mTx));
+
+                        } else {
+                            if (info.mTx < mLeftPadding) {
+                                info.mTx = mLeftPadding;
+//                                mBuilder.append(String.format(Locale.getDefault(), " A else tx amend = %d", info.mTx));
+                            }
                         }
                     }
                     break;
