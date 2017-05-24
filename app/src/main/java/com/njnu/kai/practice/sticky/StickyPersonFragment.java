@@ -99,34 +99,48 @@ public class StickyPersonFragment extends BaseTestFragment {
         view.setBackgroundColor(Color.CYAN);
         layout.addView(view, viewLayoutParams);
 
-        Button buttonLeft = new Button(context);
-        buttonLeft.setText("向右拉70dp");
-        ViewGroup.MarginLayoutParams buttonLeftLayoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        buttonLeftLayoutParams.topMargin = DisplayUtils.dp2px(250);
-        layout.addView(buttonLeft, buttonLeftLayoutParams);
-        buttonLeft.setOnClickListener(new View.OnClickListener() {
+        Button button1 = new Button(context);
+        button1.setText("向左拉70dp");
+        ViewGroup.MarginLayoutParams button1LayoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        button1LayoutParams.topMargin = DisplayUtils.dp2px(250);
+        layout.addView(button1, button1LayoutParams);
+        button1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 //                recyclerViewOnScrolled(mRecyclerView, 10);
-                mRecyclerView2.scrollBy(DisplayUtils.dp2px(70), 0);
+                mRecyclerView2.scrollBy(-DisplayUtils.dp2px(70), 0);
             }
         });
-//        buttonLeft.setVisibility(View.GONE);
+//        button1.setVisibility(View.GONE);
 
-        Button buttonRight = new Button(context);
-        buttonRight.setText("向右拉30dp");
-        ViewGroup.MarginLayoutParams buttonRightLayoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        buttonRightLayoutParams.topMargin = DisplayUtils.dp2px(250);
-        buttonRightLayoutParams.leftMargin = DisplayUtils.dp2px(100);
-        layout.addView(buttonRight, buttonRightLayoutParams);
-        buttonRight.setOnClickListener(new View.OnClickListener() {
+        Button button2 = new Button(context);
+        button2.setText("向左拉30dp");
+        ViewGroup.MarginLayoutParams button2LayoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        button2LayoutParams.topMargin = DisplayUtils.dp2px(250);
+        button2LayoutParams.leftMargin = DisplayUtils.dp2px(100);
+        layout.addView(button2, button2LayoutParams);
+        button2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 //                recyclerViewOnScrolled(mRecyclerView, -10);
-                mRecyclerView2.scrollBy(DisplayUtils.dp2px(30), 0);
+                mRecyclerView2.scrollBy(-DisplayUtils.dp2px(30), 0);
             }
         });
-//        buttonRight.setVisibility(View.GONE);
+//        button2.setVisibility(View.GONE);
+
+        Button button3 = new Button(context);
+        button3.setText("向左拉3dp");
+        ViewGroup.MarginLayoutParams button3LayoutParams3 = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        button3LayoutParams3.topMargin = DisplayUtils.dp2px(250);
+        button3LayoutParams3.leftMargin = DisplayUtils.dp2px(200);
+        layout.addView(button3, button3LayoutParams3);
+        button3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+//                recyclerViewOnScrolled(mRecyclerView, -10);
+                mRecyclerView2.scrollBy(-DisplayUtils.dp2px(3), 0);
+            }
+        });
 
         mAdapterDataObserver = new ClassAdapterDataObserver();
         mAdapter.registerAdapterDataObserver(mAdapterDataObserver);

@@ -33,8 +33,8 @@ public class StickyHeaderView extends FrameLayout {
         public int mWidth;
         public int mViewWidth;
 
-        protected int mWholeTx;
-        protected int mTx;
+        private int mWholeTx; //整体应处于的偏移值
+        private int mTx; //当前应处于的经过修正后的偏移值
 
         public Info(String title, int width, int viewWidth) {
             mTitle = title;
@@ -138,120 +138,104 @@ public class StickyHeaderView extends FrameLayout {
         }
 
         mBuilder.setLength(0);
-        mBuilder.append("lookTranslation: dx=" + dx + " ");
+        mBuilder.append(String.format(Locale.getDefault(), "lookTranslation: dx=%d ", dx));
 
         if (dx > 0) {
-            for (int idx = 0; idx < childCount; ++idx) {
-                int titleViewWidth = getChildAt(idx).getMeasuredWidth();
-                Info info = mInfoList.get(idx);
-                int jdx = idx + 1;
-//                mBuilder.append(String.format(Locale.getDefault(), " idx=%d tx=%d vH=%d tx+vh=%d", idx, info.mTx, titleViewWidth, info.mTx + titleViewWidth));
-                if (info.mTx < 0) {
-                    if (info.mTx + titleViewWidth > 0) {
-                        if (jdx < childCount) {
-                            Info after = mInfoList.get(jdx);
-                            mBuilder.append(String.format(Locale.getDefault(), " a j_tx=%d", after.mTx));
-                            if (after.mTx > mLeftPadding + titleViewWidth) {
-                                info.mTx = mLeftPadding;
-                            } else {
-                                if (after.mTx > mLeftPadding) {
-                                    info.mTx = after.mTx - titleViewWidth;
-                                } else {
-                                    after.mTx = mLeftPadding;
-                                }
-                            }
-                            break;
+            scrollToRight();
+        } else if (dx < 0) {
+            scrollToLeft();
+        }
+
+        LogUtils.d(TAG, mBuilder.toString());
+
+        updateViewTranslationX();
+
+    }
+
+    private void scrollToLeft() {
+        int childCount = getChildCount();
+        for (int idx = 0; idx < childCount; ++idx) {
+            int titleViewWidth = getChildAt(idx).getMeasuredWidth();
+            Info info = mInfoList.get(idx);
+            if (info.mTx >= mLeftPadding) {
+                mBuilder.append(String.format(Locale.getDefault(), " info %s mTx=%d wTx=%d", info.mTitle, info.mTx, info.mWholeTx));
+                if (info.mWholeTx > 0.0f) {
+                    if (idx > 0) {
+                        Info before = mInfoList.get(idx - 1);
+                        mBuilder.append(String.format(Locale.getDefault(), " before wTx=%d", before.mWholeTx));
+                        if (info.mWholeTx > mLeftPadding + titleViewWidth) {
+                            before.mTx = mLeftPadding;
                         } else {
-                            info.mTx = mLeftPadding;
+                            before.mTx = info.mWholeTx - titleViewWidth;
+                            info.mTx = info.mWholeTx;
                         }
+                    } else {
+                        info.mTx = mLeftPadding;
                     }
-                } else {
-                    if (info.mTx > mLeftPadding) {
+                }
+                if (info.mWholeTx < mLeftPadding) {
+                    info.mTx = mLeftPadding;
+                }
+                break;
+            }
+        }
+    }
+
+    private void scrollToRight() {
+        int childCount = getChildCount();
+        for (int idx = 0; idx < childCount; ++idx) {
+            int titleViewWidth = getChildAt(idx).getMeasuredWidth();
+            Info info = mInfoList.get(idx);
+            int jdx = idx + 1;
+//                mBuilder.append(String.format(Locale.getDefault(), " idx=%d tx=%d vH=%d tx+vh=%d", idx, info.mTx, titleViewWidth, info.mTx + titleViewWidth));
+            if (info.mTx < 0) {
+                if (info.mTx + titleViewWidth > 0) {
+                    if (jdx < childCount) {
+                        Info after = mInfoList.get(jdx);
+                        mBuilder.append(String.format(Locale.getDefault(), " a j_tx=%d", after.mTx));
+                        if (after.mTx > mLeftPadding + titleViewWidth) {
+                            info.mTx = mLeftPadding;
+                        } else {
+                            if (after.mTx > mLeftPadding) {
+                                info.mTx = after.mTx - titleViewWidth;
+                            } else {
+                                after.mTx = mLeftPadding;
+                            }
+                        }
+                        break;
+                    } else {
+                        info.mTx = mLeftPadding;
+                    }
+                }
+            } else {
+                if (info.mTx > mLeftPadding) {
+                    if (idx > 0) {
                         Info before = mInfoList.get(idx - 1);
                         if (info.mTx > mLeftPadding + titleViewWidth) {
                             before.mTx = mLeftPadding;
                         } else {
                             before.mTx = info.mTx - titleViewWidth;
                         }
-                    } else {
-                        if (jdx < childCount) {
-                            Info after = mInfoList.get(jdx);
-                            int intervalX = after.mTx - info.mTx;
+                    }
+                } else {
+                    if (jdx < childCount) {
+                        Info after = mInfoList.get(jdx);
 //                            mBuilder.append(String.format(Locale.getDefault(), " A j_tx=%d interval=%d", after.mTx, intervalX));
-                            if (intervalX > titleViewWidth) {
-                                info.mTx = mLeftPadding;
-                            } else {
-                                info.mTx = after.mTx - titleViewWidth;
-                            }
-//                            mBuilder.append(String.format(Locale.getDefault(), " A tx amend = %d", info.mTx));
-
+                        if (after.mTx > info.mTx + titleViewWidth) {
+                            info.mTx = mLeftPadding;
                         } else {
-                            if (info.mTx < mLeftPadding) {
-                                info.mTx = mLeftPadding;
+                            info.mTx = after.mTx - titleViewWidth;
+                        }
+//                            mBuilder.append(String.format(Locale.getDefault(), " A tx amend = %d", info.mTx));
+                    } else {
+                        if (info.mTx < mLeftPadding) {
+                            info.mTx = mLeftPadding;
 //                                mBuilder.append(String.format(Locale.getDefault(), " A else tx amend = %d", info.mTx));
-                            }
                         }
                     }
-                    break;
                 }
-            }
-        } else if (dx < 0) {
-            for (Info info : mInfoList) {
-                info.mTx = info.mWholeTx;
+                break;
             }
         }
-
-        LogUtils.d(TAG, mBuilder.toString());
-
-//
-//        Info before = null, after = null;
-//        View beforeView = null;
-//        if (dx > 0) {
-//            for (int idx = 0; idx < childCount; ++idx) {
-//                Info info = mInfoList.get(idx);
-//                if (info.mWholeTx < 0) {
-//
-//                } else if (info.mWholeTx <= mLeftPadding) {
-//                    info.mTx = mLeftPadding;
-//                    break;
-//                } else {
-//                    after = info;
-//                    int intervalX = after.mWholeTx - before.mWholeTx;
-//                    before.mTx = mLeftPadding;
-//                    intervalX = after.mWholeTx - before.mTx;
-//                    int titleViewWidth = beforeView.getMeasuredWidth();
-//                    if (intervalX < titleViewWidth) {
-//                        before.mTx = after.mWholeTx - titleViewWidth;
-//                    }
-//                    break;
-//                }
-//                before = info;
-//                beforeView = getChildAt(idx);
-//            }
-//        }
-
-//        if (dx > 0) { //内容逐渐展示右边的
-//            for (int idx = 0; idx < childCount; ++idx) {
-//                View childView = getChildAt(idx);
-//                Info info = mInfoList.get(idx);
-//                float translationX = info.mTx;
-//                if (translationX >= 0f && translationX <= mLeftPadding) {
-//                    info.mTx = mLeftPadding;
-//                    int nextIdx = idx + 1;
-//                    if (nextIdx < childCount) {
-//                        Info nextInfo = mInfoList.get(nextIdx);
-//                        int viewWidth = childView.getMeasuredWidth();
-//                        float intervalX = nextInfo.mTx - info.mTx;
-//                        if (intervalX < viewWidth) {
-//                            info.mTx = nextInfo.mTx - viewWidth;
-//                        }
-//                    }
-//                }
-//            }
-//        } else if (dx < 0) { //内容逐渐展示左边的
-//
-//        }
-        updateViewTranslationX();
-
     }
 }
