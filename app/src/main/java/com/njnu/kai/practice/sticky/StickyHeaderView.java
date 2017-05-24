@@ -30,16 +30,16 @@ public class StickyHeaderView extends FrameLayout {
     private static final String TAG = "StickyHeaderView";
 
     public static class Info {
-        public String mTitle;
-        public int mWidth;
-        public int mViewWidth;
+        private String mTitle;
+        private int mMarginLeft;
+        private int mViewWidth;
 
         private int mWholeTx; //整体应处于的偏移值
         private int mTx; //当前应处于的经过修正后的偏移值
 
-        public Info(String title, int width, int viewWidth) {
+        public Info(String title, int marginLeft, int viewWidth) {
             mTitle = title;
-            mWidth = width;
+            mMarginLeft = marginLeft;
             mViewWidth = viewWidth;
         }
     }
@@ -90,7 +90,7 @@ public class StickyHeaderView extends FrameLayout {
         for (Info info : infoList) {
             TextView textView = getTextView();
             textView.setText(info.mTitle);
-            x += info.mWidth;
+            x += info.mMarginLeft;
             info.mWholeTx = x;
             info.mTx = x;
         }

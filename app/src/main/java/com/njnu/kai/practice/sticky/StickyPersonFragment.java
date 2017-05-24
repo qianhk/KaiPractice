@@ -339,15 +339,15 @@ public class StickyPersonFragment extends BaseTestFragment {
         ArrayList<StickyHeaderView.Info> infoList = new ArrayList<>();
         String year = null;
         final int singleViewWidth = DisplayUtils.dp2px(118);
-        int viewWidth = 0;
+        int marginLeft = 0;
         for (int idx = 0; idx < personList.size(); ++idx) {
             Person person = personList.get(idx);
             if (person.mYear.equals(year)) {
-                viewWidth += singleViewWidth;
+                marginLeft += singleViewWidth;
             } else {
-                infoList.add(new StickyHeaderView.Info(person.mYear, viewWidth, singleViewWidth));
+                infoList.add(new StickyHeaderView.Info(person.mYear, marginLeft, singleViewWidth));
                 year = person.mYear;
-                viewWidth = singleViewWidth;
+                marginLeft = singleViewWidth;
             }
         }
         mStickyHeaderView.updateData(mLayoutPadding, infoList);
