@@ -1,6 +1,7 @@
 package com.njnu.kai.practice.sticky;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.annotation.AttrRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -43,15 +44,10 @@ public class StickyHeaderView extends FrameLayout {
         }
     }
 
-
     public int mLeftPadding;
-    public ArrayList<Info> mInfoList;
+    public ArrayList<Info> mInfoList = new ArrayList<>();
 
-//    interface Adapter {
-//        int leftPadding();
-//        int viewWidth(int position);
-//        int viewTitle(int position);
-//    }
+    private View mLeftHolderView;
 
     private ArrayList<TextView> mViewPool = new ArrayList<>();
 
@@ -69,19 +65,27 @@ public class StickyHeaderView extends FrameLayout {
 
     public void updateData(int leftPadding, ArrayList<Info> infoList) {
         mLeftPadding = leftPadding;
-        mInfoList = infoList;
         int childCount = getChildCount();
-        for (int idx = 0; idx < childCount; ++idx) {
+        for (int idx = childCount - 1; idx >= 0; --idx) {
             View childView = getChildAt(idx);
-//            if (childView.getVisibility() == View.VISIBLE) {
-            mViewPool.add((TextView) childView);
+            if (childView != mLeftHolderView) {
+                mViewPool.add((TextView) childView);
+            }
             ((ViewGroup) childView.getParent()).removeView(childView);
-//                childView.setVisibility(View.INVISIBLE);
-//            }
         }
-        if (mInfoList == null || mInfoList.isEmpty()) {
+
+        mInfoList.clear();
+        int infoSize = infoList != null ? infoList.size() : 0;
+        if (infoSize == 0) {
             return;
         }
+
+        if (infoSize > 40) {
+            mInfoList.addAll(infoList.subList(0, 40));
+        } else {
+            mInfoList.addAll(infoList);
+        }
+
         int x = mLeftPadding;
         for (Info info : infoList) {
             TextView textView = getTextView();
@@ -90,14 +94,22 @@ public class StickyHeaderView extends FrameLayout {
             info.mWholeTx = x;
             info.mTx = x;
         }
+        if (mLeftHolderView == null) {
+            mLeftHolderView = getLeftHolderView();
+        }
+        addView(mLeftHolderView);
         updateViewTranslationX();
     }
 
     private void updateViewTranslationX() {
-        int childCount = getChildCount();
-        for (int idx = 0; idx < childCount; ++idx) {
+        int infoSize = mInfoList.size();
+        for (int idx = 0; idx < infoSize; ++idx) {
             View childView = getChildAt(idx);
             childView.setTranslationX(mInfoList.get(idx).mTx);
+        }
+        if (infoSize > 0) {
+            Info info = mInfoList.get(0);
+            mLeftHolderView.setTranslationX(info.mTx - mLeftHolderView.getMeasuredWidth());
         }
     }
 
@@ -119,19 +131,17 @@ public class StickyHeaderView extends FrameLayout {
         }
     }
 
-    private StringBuilder mBuilder = new StringBuilder();
-
-    private void makeBeforeUseAfterTx(Info before, Info after, int viewWidth) {
-        before.mTx = after.mTx - viewWidth;
+    private View getLeftHolderView() {
+        View holderView = new View(getContext());
+        holderView.setBackgroundColor(Color.WHITE);
+        ViewGroup.MarginLayoutParams layoutParams = new FrameLayout.LayoutParams(mLeftPadding, DisplayUtils.dp2px(17));
+        holderView.setLayoutParams(layoutParams);
+        return holderView;
     }
 
-    public void translationWhole(int dx, int completelyVisiblePosition) {
-        int childCount = getChildCount();
-//        for (int idx = 0; idx < childCount; ++idx) {
-//            View childView = getChildAt(idx);
-//            childView.setTranslationX(childView.getTranslationX() - dx);
-//        }
+    private StringBuilder mBuilder = new StringBuilder();
 
+    public void translationWhole(int dx) {
         for (Info info : mInfoList) {
             info.mWholeTx -= dx;
             info.mTx -= dx;
@@ -146,20 +156,37 @@ public class StickyHeaderView extends FrameLayout {
             scrollToLeft();
         }
 
-        LogUtils.d(TAG, mBuilder.toString());
+        int infoSize = mInfoList.size();
+        boolean needLog = false;
+        for (int idx = 1; idx < infoSize; ++idx) {
+            Info beforeInfo = mInfoList.get(idx - 1);
+            int beforeTx = beforeInfo.mTx;
+            int viewWidth = getChildAt(idx - 1).getMeasuredWidth();
+            Info info = mInfoList.get(idx);
+            int tx = info.mTx;
+            if (beforeTx + viewWidth > tx) {
+                needLog = true;
+                mBuilder.append(String.format(Locale.getDefault(), " calc: %s wTx=%d tx=%d, %s wTx=%d tx=%d cha=%d"
+                        , beforeInfo.mTitle, beforeInfo.mWholeTx, beforeInfo.mTx
+                        , info.mTitle, info.mWholeTx, info.mTx
+                        , beforeTx + viewWidth - tx));
+            }
+        }
+        if (needLog) {
+            LogUtils.e(TAG, mBuilder.toString());
+        }
 
         updateViewTranslationX();
-
     }
 
     private void scrollToLeft() {
-        int childCount = getChildCount();
-        for (int idx = 0; idx < childCount; ++idx) {
+        int titleCount = mInfoList.size();
+        for (int idx = 0; idx < titleCount; ++idx) {
             int titleViewWidth = getChildAt(idx).getMeasuredWidth();
             Info info = mInfoList.get(idx);
             if (info.mTx >= mLeftPadding) {
-                mBuilder.append(String.format(Locale.getDefault(), " info %s mTx=%d wTx=%d", info.mTitle, info.mTx, info.mWholeTx));
-                if (info.mWholeTx > 0.0f) {
+                mBuilder.append(String.format(Locale.getDefault(), " info %s tx=%d wTx=%d", info.mTitle, info.mTx, info.mWholeTx));
+                if (info.mWholeTx > 0) {
                     if (idx > 0) {
                         Info before = mInfoList.get(idx - 1);
                         mBuilder.append(String.format(Locale.getDefault(), " before wTx=%d", before.mWholeTx));
@@ -174,7 +201,16 @@ public class StickyHeaderView extends FrameLayout {
                     }
                 }
                 if (info.mWholeTx < mLeftPadding) {
-                    info.mTx = mLeftPadding;
+                    if (idx > 0) {
+                        Info before = mInfoList.get(idx - 1);
+                        if (before.mTx + titleViewWidth > mLeftPadding) {
+                            info.mTx = before.mTx + titleViewWidth;
+                        } else {
+                            info.mTx = mLeftPadding;
+                        }
+                    } else {
+                        info.mTx = mLeftPadding;
+                    }
                 }
                 break;
             }
@@ -182,15 +218,15 @@ public class StickyHeaderView extends FrameLayout {
     }
 
     private void scrollToRight() {
-        int childCount = getChildCount();
-        for (int idx = 0; idx < childCount; ++idx) {
+        int titleCount = mInfoList.size();
+        for (int idx = 0; idx < titleCount; ++idx) {
             int titleViewWidth = getChildAt(idx).getMeasuredWidth();
             Info info = mInfoList.get(idx);
             int jdx = idx + 1;
-//                mBuilder.append(String.format(Locale.getDefault(), " idx=%d tx=%d vH=%d tx+vh=%d", idx, info.mTx, titleViewWidth, info.mTx + titleViewWidth));
+            mBuilder.append(String.format(Locale.getDefault(), " idx=%d tx=%d vW=%d tx+vW=%d", idx, info.mTx, titleViewWidth, info.mTx + titleViewWidth));
             if (info.mTx < 0) {
                 if (info.mTx + titleViewWidth > 0) {
-                    if (jdx < childCount) {
+                    if (jdx < titleCount) {
                         Info after = mInfoList.get(jdx);
                         mBuilder.append(String.format(Locale.getDefault(), " a j_tx=%d", after.mTx));
                         if (after.mTx > mLeftPadding + titleViewWidth) {
@@ -218,19 +254,19 @@ public class StickyHeaderView extends FrameLayout {
                         }
                     }
                 } else {
-                    if (jdx < childCount) {
+                    if (jdx < titleCount) {
                         Info after = mInfoList.get(jdx);
-//                            mBuilder.append(String.format(Locale.getDefault(), " A j_tx=%d interval=%d", after.mTx, intervalX));
-                        if (after.mTx > info.mTx + titleViewWidth) {
+                        mBuilder.append(String.format(Locale.getDefault(), " A j_tx=%d tx+vW=%d", after.mTx, info.mTx + titleViewWidth));
+                        if (after.mTx > mLeftPadding + titleViewWidth ) {
                             info.mTx = mLeftPadding;
                         } else {
                             info.mTx = after.mTx - titleViewWidth;
                         }
-//                            mBuilder.append(String.format(Locale.getDefault(), " A tx amend = %d", info.mTx));
+                        mBuilder.append(String.format(Locale.getDefault(), " A tx amend = %d", info.mTx));
                     } else {
                         if (info.mTx < mLeftPadding) {
                             info.mTx = mLeftPadding;
-//                                mBuilder.append(String.format(Locale.getDefault(), " A else tx amend = %d", info.mTx));
+                            mBuilder.append(String.format(Locale.getDefault(), " A else tx amend = %d", info.mTx));
                         }
                     }
                 }

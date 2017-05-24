@@ -65,13 +65,13 @@ public class StickyPersonFragment extends BaseTestFragment {
 //        mRecyclerView.setBackgroundColor(0x20000000);
         mRecyclerView.addItemDecoration(new LeftSpacesItemDecoration(mLayoutPadding));
         ViewGroup.MarginLayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        layoutParams.topMargin = DisplayUtils.dp2px(30);
+        layoutParams.topMargin = DisplayUtils.dp2px(0);
         layout.addView(mRecyclerView, layoutParams);
 
         mTitleLayout = new FrameLayout(context);
         mTitleLayout.setBackgroundColor(Color.WHITE);
         ViewGroup.MarginLayoutParams titleLayoutParams = new FrameLayout.LayoutParams(DisplayUtils.dp2px(37) + mLayoutPadding, DisplayUtils.dp2px(17));
-        titleLayoutParams.topMargin = DisplayUtils.dp2px(30);
+        titleLayoutParams.topMargin = DisplayUtils.dp2px(0);
         layout.addView(mTitleLayout, titleLayoutParams);
 
         final int floatColor = Color.RED; //0xFFB5B5B5;
@@ -100,9 +100,9 @@ public class StickyPersonFragment extends BaseTestFragment {
         layout.addView(view, viewLayoutParams);
 
         Button button1 = new Button(context);
-        button1.setText("向左拉70dp");
+        button1.setText("左拉70dp");
         ViewGroup.MarginLayoutParams button1LayoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        button1LayoutParams.topMargin = DisplayUtils.dp2px(250);
+        button1LayoutParams.topMargin = DisplayUtils.dp2px(220);
         layout.addView(button1, button1LayoutParams);
         button1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -114,10 +114,10 @@ public class StickyPersonFragment extends BaseTestFragment {
 //        button1.setVisibility(View.GONE);
 
         Button button2 = new Button(context);
-        button2.setText("向左拉30dp");
+        button2.setText("左拉30dp");
         ViewGroup.MarginLayoutParams button2LayoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        button2LayoutParams.topMargin = DisplayUtils.dp2px(250);
-        button2LayoutParams.leftMargin = DisplayUtils.dp2px(100);
+        button2LayoutParams.topMargin = DisplayUtils.dp2px(220);
+        button2LayoutParams.leftMargin = DisplayUtils.dp2px(90);
         layout.addView(button2, button2LayoutParams);
         button2.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -129,16 +129,73 @@ public class StickyPersonFragment extends BaseTestFragment {
 //        button2.setVisibility(View.GONE);
 
         Button button3 = new Button(context);
-        button3.setText("向左拉3dp");
+        button3.setText("左拉3dp");
         ViewGroup.MarginLayoutParams button3LayoutParams3 = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        button3LayoutParams3.topMargin = DisplayUtils.dp2px(250);
-        button3LayoutParams3.leftMargin = DisplayUtils.dp2px(200);
+        button3LayoutParams3.topMargin = DisplayUtils.dp2px(220);
+        button3LayoutParams3.leftMargin = DisplayUtils.dp2px(180);
         layout.addView(button3, button3LayoutParams3);
         button3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 //                recyclerViewOnScrolled(mRecyclerView, -10);
                 mRecyclerView2.scrollBy(-DisplayUtils.dp2px(3), 0);
+            }
+        });
+
+
+        Button button = new Button(context);
+        button.setText("右拉70dp");
+        ViewGroup.MarginLayoutParams buttonLayoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        buttonLayoutParams.topMargin = DisplayUtils.dp2px(260);
+        layout.addView(button, buttonLayoutParams);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+//                recyclerViewOnScrolled(mRecyclerView, 10);
+                mRecyclerView2.scrollBy(DisplayUtils.dp2px(70), 0);
+            }
+        });
+//        button.setVisibility(View.GONE);
+
+        button = new Button(context);
+        button.setText("右拉30dp");
+        buttonLayoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        buttonLayoutParams.topMargin = DisplayUtils.dp2px(260);
+        buttonLayoutParams.leftMargin = DisplayUtils.dp2px(90);
+        layout.addView(button, buttonLayoutParams);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+//                recyclerViewOnScrolled(mRecyclerView, -10);
+                mRecyclerView2.scrollBy(DisplayUtils.dp2px(30), 0);
+            }
+        });
+//        button.setVisibility(View.GONE);
+
+        button = new Button(context);
+        button.setText("右拉3dp");
+        buttonLayoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        buttonLayoutParams.topMargin = DisplayUtils.dp2px(260);
+        buttonLayoutParams.leftMargin = DisplayUtils.dp2px(180);
+        layout.addView(button, buttonLayoutParams);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+//                recyclerViewOnScrolled(mRecyclerView, -10);
+                mRecyclerView2.scrollBy(DisplayUtils.dp2px(3), 0);
+            }
+        });
+
+        button = new Button(context);
+        button.setText("Update");
+        buttonLayoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        buttonLayoutParams.topMargin = DisplayUtils.dp2px(240);
+        buttonLayoutParams.leftMargin = DisplayUtils.dp2px(270);
+        layout.addView(button, buttonLayoutParams);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                prepareData();
             }
         });
 
@@ -154,12 +211,12 @@ public class StickyPersonFragment extends BaseTestFragment {
 //        mRecyclerView.setBackgroundColor(0x20000000);
         mRecyclerView2.addItemDecoration(new LeftSpacesItemDecoration(mLayoutPadding));
         ViewGroup.MarginLayoutParams layoutParams2 = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        layoutParams2.topMargin = DisplayUtils.dp2px(310);
+        layoutParams2.topMargin = DisplayUtils.dp2px(320);
         layout.addView(mRecyclerView2, layoutParams2);
 
         mStickyHeaderView = new StickyHeaderView(context);
         ViewGroup.MarginLayoutParams stickyLayoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        stickyLayoutParams.topMargin = DisplayUtils.dp2px(310);
+        stickyLayoutParams.topMargin = DisplayUtils.dp2px(320);
         layout.addView(mStickyHeaderView, stickyLayoutParams);
 
         return layout;
@@ -248,7 +305,7 @@ public class StickyPersonFragment extends BaseTestFragment {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
 //                LogUtils.e(TAG, "onScrolled dx=%d", dx);
-                mStickyHeaderView.translationWhole(dx, mLayoutManager2.findFirstCompletelyVisibleItemPosition());
+                mStickyHeaderView.translationWhole(dx);
             }
         });
         prepareData();
@@ -262,21 +319,22 @@ public class StickyPersonFragment extends BaseTestFragment {
 
     private void prepareData() {
         ArrayList<Person> personList = new ArrayList<>();
-        personList.add(new Person("1999", "第一个人", R.drawable.p1_1));
-        personList.add(new Person("2003", "第二个人", R.drawable.p1_2));
-        personList.add(new Person("2008", "第三个人", R.drawable.p1_3));
-        personList.add(new Person("2008", "第四个人", R.drawable.p2));
-        personList.add(new Person("2011", "第五个人", R.drawable.p2_1));
-        personList.add(new Person("2011", "第六个人", R.drawable.p2_2));
-        personList.add(new Person("2011", "第七个人", R.drawable.p2_3));
-        personList.add(new Person("2014", "第八个人", R.drawable.p3));
-        personList.add(new Person("2015", "第九个人", R.drawable.p4));
-        personList.add(new Person("2016", "第十个人", R.drawable.p5));
-        personList.add(new Person("2016", "第11个人", R.drawable.p6));
-        personList.add(new Person("2017", "第12个人", R.drawable.p7));
-        personList.add(new Person("2017", "第13个人", R.drawable.p1));
+        personList.add(new Person("2000", "第一个人", R.drawable.p1_1));
+        personList.add(new Person("2001", "第二个人", R.drawable.p1_2));
+        personList.add(new Person("2002", "第三个人", R.drawable.p1_3));
+        personList.add(new Person("2002", "第四个人", R.drawable.p2));
+        personList.add(new Person("2003", "第五个人", R.drawable.p2_1));
+        personList.add(new Person("2003", "第六个人", R.drawable.p2_2));
+        personList.add(new Person("2003", "第七个人", R.drawable.p2_3));
+        personList.add(new Person("2004", "第八个人", R.drawable.p3));
+        personList.add(new Person("2005", "第九个人", R.drawable.p4));
+        personList.add(new Person("2006", "第十个人", R.drawable.p5));
+        personList.add(new Person("2006", "第11个人", R.drawable.p6));
+        personList.add(new Person("2007", "第12个人", R.drawable.p7));
+        personList.add(new Person("2007", "第13个人", R.drawable.p1));
         mAdapter.updateData(personList);
         mAdapter2.updateData(personList);
+        mRecyclerView2.scrollToPosition(0);
 
         ArrayList<StickyHeaderView.Info> infoList = new ArrayList<>();
         String year = null;
