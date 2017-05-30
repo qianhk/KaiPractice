@@ -47,6 +47,7 @@ import com.njnu.kai.practice.splash.SplashActivity;
 import com.njnu.kai.practice.sticky.StickyPersonFragment;
 import com.njnu.kai.practice.ui.ConstraintLayoutFragment;
 import com.njnu.kai.practice.draw.PeriscopeAnimatorFragment;
+import com.njnu.kai.practice.ui.UIShowFragment;
 import com.njnu.kai.practice.za.EditTextOutputFragment;
 import com.njnu.kai.practice.za.EditTextStatusFragment;
 import com.njnu.kai.practice.za.ShortcutTestFragment;
@@ -111,6 +112,7 @@ public class MainFragment extends ActionBarLayoutFragment implements AdapterView
         FUNCTIONS.add(new FunctionItem("Look Class Loader", LookClassLoaderFragment.class, false));
         FUNCTIONS.add(new FunctionItem("Dex loader", DexTestFragment.class, false));
         FUNCTIONS.add(new FunctionItem("Sticky Person Horizontal", StickyPersonFragment.class, false));
+        FUNCTIONS.add(new FunctionItem("UI show", UIShowFragment.class, false));
     }
 
     @Override
