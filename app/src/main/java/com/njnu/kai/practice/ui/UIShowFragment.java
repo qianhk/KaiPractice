@@ -10,6 +10,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.njnu.kai.practice.R;
+import com.njnu.kai.practice.ui.dividerdrawable.DividerDrawable;
+import com.njnu.kai.practice.ui.dividerdrawable.DividerLayout;
+import com.njnu.kai.practice.ui.dividerdrawable.DividerUtils;
 import com.njnu.kai.support.BaseTestFragment;
 import com.njnu.kai.support.DisplayUtils;
 
@@ -23,6 +26,108 @@ public class UIShowFragment extends BaseTestFragment {
     protected View onCreateContentView(LayoutInflater layoutInflater, ViewGroup viewGroup, Bundle bundle) {
         View view = layoutInflater.inflate(R.layout.fragment_ui_show, viewGroup, false);
 
+        testBadgeDrawable(view);
+
+        testDividerDrawable(view);
+
+        return view;
+    }
+
+    private void testDividerDrawable(View view) {
+        DividerDrawable dividerDrawable = new DividerDrawable();
+        dividerDrawable
+                .setStrokeWidth(10)
+                .setColor(0xFFFFFFFF)
+                .getLayout()
+                .setCenter(DividerLayout.CENTER_VERTICAL);
+        DividerUtils.addDividersTo(view.findViewById(R.id.linear1), dividerDrawable);
+
+        dividerDrawable = new DividerDrawable();
+        dividerDrawable
+                .setStrokeWidth(10)
+                .setColor(0xFFFFFFFF)
+                .getLayout()
+                .setMarginLeftDp(50)
+                .setCenter(DividerLayout.CENTER_VERTICAL);
+        DividerUtils.addDividersTo(view.findViewById(R.id.linear2), dividerDrawable);
+
+        dividerDrawable = new DividerDrawable();
+        dividerDrawable
+                .setStrokeWidth(10)
+                .setColor(0xFFFFFFFF)
+                .getLayout()
+                .setOrientation(DividerLayout.ORIENTATION_VERTICAL)
+                .setAlign(DividerLayout.ALIGN_PARENT_RIGHT)
+                .setMarginTopDp(16)
+                .setMarginBottomDp(16);
+        DividerUtils.addDividersTo(view.findViewById(R.id.text_3_1), dividerDrawable);
+        DividerUtils.addDividersTo(view.findViewById(R.id.text_3_3), dividerDrawable);
+        dividerDrawable = new DividerDrawable();
+        dividerDrawable
+                .setStrokeWidth(10)
+                .setColor(0xFFFFFFFF)
+                .getLayout()
+                .setOrientation(DividerLayout.ORIENTATION_VERTICAL)
+                .setAlign(DividerLayout.ALIGN_PARENT_RIGHT)
+                .setMarginTopDp(32)
+                .setMarginBottomDp(32);
+        DividerUtils.addDividersTo(view.findViewById(R.id.text_3_2), dividerDrawable);
+
+        dividerDrawable = new DividerDrawable();
+        dividerDrawable
+                .setStrokeWidth(10)
+                .setColor(0xFFFFFFFF)
+                .getLayout()
+                .setMarginLeftDp(16)
+                .setLengthDp(100);
+        DividerUtils.addDividersTo(view.findViewById(R.id.text_4_1), dividerDrawable);
+        dividerDrawable = new DividerDrawable();
+        dividerDrawable
+                .setStrokeWidth(10)
+                .setColor(0xFFFFFFFF)
+                .getLayout()
+                .setOrientation(DividerLayout.ORIENTATION_VERTICAL)
+                .setCenter(DividerLayout.CENTER_VERTICAL)
+                .setLengthDp(46);
+        DividerUtils.addDividersTo(view.findViewById(R.id.text_4_1), dividerDrawable);
+        dividerDrawable = new DividerDrawable();
+        dividerDrawable
+                .setStrokeWidth(10)
+                .setColor(0xFFFFFFFF)
+                .getLayout()
+                .setCenter(DividerLayout.CENTER_HORIZONTAL)
+                .setLengthDp(100);
+        DividerUtils.addDividersTo(view.findViewById(R.id.text_4_2), dividerDrawable);
+        dividerDrawable = new DividerDrawable();
+        dividerDrawable
+                .setStrokeWidth(10)
+                .setColor(0xFFFFFFFF)
+                .getLayout()
+                .setOrientation(DividerLayout.ORIENTATION_VERTICAL)
+                .setAlign(DividerLayout.ALIGN_PARENT_RIGHT)
+                .setCenter(DividerLayout.CENTER_VERTICAL)
+                .setLengthDp(46);
+        DividerUtils.addDividersTo(view.findViewById(R.id.text_4_2), dividerDrawable);
+        dividerDrawable = new DividerDrawable();
+        dividerDrawable
+                .setStrokeWidth(10)
+                .setColor(0xFFFFFFFF)
+                .getLayout()
+                .setAlign(DividerLayout.ALIGN_PARENT_RIGHT)
+                .setMarginRightDp(16)
+                .setLengthDp(100);
+        DividerUtils.addDividersTo(view.findViewById(R.id.text_4_3), dividerDrawable);
+        dividerDrawable = new DividerDrawable();
+        dividerDrawable
+                .setStrokeWidth(10)
+                .setColor(0xFFFFFFFF)
+                .getLayout()
+                .setCenter(DividerLayout.CENTER_HORIZONTAL)
+                .setLengthDp(300);
+        DividerUtils.addDividersTo(view.findViewById(R.id.text_4_4), dividerDrawable);
+    }
+
+    private void testBadgeDrawable(View view) {
         final TextView textView = (TextView) view.findViewById(R.id.tvHelloWorld);
         final ImageView imageView = (ImageView) view.findViewById(R.id.imageView);
 
@@ -93,8 +198,5 @@ public class UIShowFragment extends BaseTestFragment {
 
             imageView.setImageDrawable(drawable6);
         }
-
-
-        return view;
     }
 }
