@@ -1,6 +1,7 @@
 package com.njnu.kai.practice.ui;
 
 import android.os.Bundle;
+import android.text.Html;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -34,6 +35,14 @@ public class UIShowFragment extends BaseTestFragment {
     }
 
     private void testDividerDrawable(View view) {
+        TextView tvHtml = (TextView) view.findViewById(R.id.tv_html);
+
+        String html="<html><head><title>TextView使用HTML</title></head><body><p><strong>强调</strong></p><p><em>斜体</em></p>"
+                +"<p><a href=\"http://www.dreamdu.com/xhtml/\">超链接HTML入门</a>学习HTML!</p><p><font color=\"#aabb00\"  style=\"font-size:40%\">颜色1"
+                +"</p><p><font color=\"#00bbaa\"  style=\"font-size:200%\">颜色2</p><h1>标题1</h1><h3>标题2</h3><h6>标题3</h6><p>大于>小于<</p><p>" +
+                "</body></html>";
+
+        tvHtml.setText(Html.fromHtml(html));
         DividerDrawable dividerDrawable = new DividerDrawable();
         dividerDrawable
                 .setStrokeWidth(10)
