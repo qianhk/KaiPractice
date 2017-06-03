@@ -119,6 +119,12 @@ public class LookClassLoaderFragment extends BaseTestListFragment {
         }
     }
 
+    @TestFunction("加载mockClick apk method2")
+    public void onTest06() {
+        String dexPath = Environment.getExternalStorageDirectory().toString() + File.separator + "dexTest/mockClick.apk";
+        ProxyActivity.startup(getActivity(), dexPath, "com.njnu.kai.mockclick.MainActivity");
+    }
+
     private void startupActivity(Object mainActivity) throws Exception {
         Class<?> activityClass = mainActivity.getClass();
 

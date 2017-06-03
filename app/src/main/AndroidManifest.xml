@@ -113,6 +113,9 @@
         <activity
             android:name="com.njnu.kai.practice.guest.GuestActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"/>
+        <activity
+            android:name=".dex.ProxyActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"/>
 
         <activity
             android:name="com.njnu.kai.practice.guest.Guest2Activity"
