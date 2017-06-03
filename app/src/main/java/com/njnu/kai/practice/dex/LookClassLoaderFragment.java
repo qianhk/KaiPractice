@@ -10,6 +10,7 @@ import com.njnu.kai.support.TestFunction;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 
 import dalvik.system.DexClassLoader;
 
@@ -119,13 +120,36 @@ public class LookClassLoaderFragment extends BaseTestListFragment {
     }
 
     private void startupActivity(Object mainActivity) throws Exception {
-        Method attachBaseContextMethod = mainActivity.getClass().getDeclaredMethod("attachBaseContext", Context.class);
-        attachBaseContextMethod.setAccessible(true);
-        attachBaseContextMethod.invoke(mainActivity, getActivity().getBaseContext());
+        Class<?> activityClass = mainActivity.getClass();
 
-        Method onCreateMethod = mainActivity.getClass().getDeclaredMethod("onCreate", Bundle.class);
-        onCreateMethod.setAccessible(true);
-        onCreateMethod.invoke(mainActivity, new Bundle());
+        Class<?> enclosingClass = activityClass.getEnclosingClass();
+        Class<?>[] classes = activityClass.getClasses();
+        Class<?> declaringClass = activityClass.getDeclaringClass();
+        Class<?>[] declaredClasses = activityClass.getDeclaredClasses();
+        Class<?> superclass = activityClass.getSuperclass();
+        Type genericSuperclass = activityClass.getGenericSuperclass();
+
+
+        Method attachBaseContextMethod = null;
+        Class<?> classWithAttachBaseContext = activityClass;
+        do {
+            try {
+                attachBaseContextMethod = classWithAttachBaseContext.getDeclaredMethod("attachBaseContext", Context.class);
+            } catch (NoSuchMethodException e) {
+                classWithAttachBaseContext = classWithAttachBaseContext.getSuperclass();
+            }
+        } while (attachBaseContextMethod == null && classWithAttachBaseContext != null);
+
+        if (attachBaseContextMethod != null) {
+            attachBaseContextMethod.setAccessible(true);
+            attachBaseContextMethod.invoke(mainActivity, getActivity().getBaseContext());
+
+            Method onCreateMethod = activityClass.getDeclaredMethod("onCreate", Bundle.class);
+            onCreateMethod.setAccessible(true);
+            onCreateMethod.invoke(mainActivity, new Bundle());
+        } else {
+            appendResult("没有找到有attachBaseContext Method的类");
+        }
     }
 
 }

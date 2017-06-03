@@ -169,7 +169,7 @@ public class MainFragment extends ActionBarLayoutFragment implements AdapterView
 
         FunctionItem functionItem = null;
         for (FunctionItem function : FUNCTIONS) {
-            if (function.getActionClass() == StickyPersonFragment.class) {
+            if (function.getActionClass() == LookClassLoaderFragment.class) {
                 functionItem = function;
                 break;
             }
