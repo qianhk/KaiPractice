@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+          xmlns:tools="http://schemas.android.com/tools"
+          android:layout_width="wrap_content"
+          android:layout_height="25dp"
+          android:layout_margin="5dp"
+          android:background="@drawable/xml_bkg_state_checked_label"
+          android:gravity="center"
+          android:textColor="@color/xml_state_checked_label"
+          android:textSize="13sp"
+          tools:text="TagTest">
+
+</TextView>

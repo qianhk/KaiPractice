@@ -45,6 +45,7 @@ import com.njnu.kai.practice.scroll.ManageTwoScrollFragment;
 import com.njnu.kai.practice.scroll.PullRefreshFragment;
 import com.njnu.kai.practice.splash.SplashActivity;
 import com.njnu.kai.practice.sticky.StickyPersonFragment;
+import com.njnu.kai.practice.tag.TagTestFragment;
 import com.njnu.kai.practice.ui.ConstraintLayoutFragment;
 import com.njnu.kai.practice.draw.PeriscopeAnimatorFragment;
 import com.njnu.kai.practice.ui.UIShowFragment;
@@ -113,6 +114,7 @@ public class MainFragment extends ActionBarLayoutFragment implements AdapterView
         FUNCTIONS.add(new FunctionItem("Dex loader", DexTestFragment.class, false));
         FUNCTIONS.add(new FunctionItem("Sticky Person Horizontal", StickyPersonFragment.class, false));
         FUNCTIONS.add(new FunctionItem("UI show", UIShowFragment.class, false));
+        FUNCTIONS.add(new FunctionItem("Tag Test", TagTestFragment.class, false));
     }
 
     @Override

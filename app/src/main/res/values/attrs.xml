@@ -4,4 +4,11 @@
         <attr name="shadowRound" format="dimension" />
         <attr name="shadowSrc" format="reference" />
     </declare-styleable>
+
+    <declare-styleable name="TagFlowLayout">
+        <attr name="tfl_auto_select_effect" format="boolean"/>
+        <attr name="tfl_max_select" format="integer"/>
+    </declare-styleable>
+
+
 </resources>
