@@ -8,7 +8,13 @@
     <com.njnu.kai.practice.tag.TagFlowLayout
         android:id="@+id/tag_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         app:tfl_auto_select_effect="true"
         app:tfl_max_select="3"/>
+
+    <TextView
+        android:id="@+id/tv_result"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 </LinearLayout>
