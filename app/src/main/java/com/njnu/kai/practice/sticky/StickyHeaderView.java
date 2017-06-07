@@ -87,7 +87,7 @@ public class StickyHeaderView extends FrameLayout {
         }
 
         int x = mLeftPadding;
-        for (Info info : infoList) {
+        for (Info info : mInfoList) {
             TextView textView = getTextView();
             textView.setText(info.mTitle);
             x += info.mMarginLeft;

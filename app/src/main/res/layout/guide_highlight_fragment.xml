@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:orientation="vertical">
+
+    <Button
+        android:id="@+id/btn_top_left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:text="左上椭圆"/>
+
+    <Button
+        android:id="@+id/btn_top_right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:layout_margin="20dp"
+        android:text="右上椭圆"/>
+
+    <ImageView
+        android:id="@+id/btn_center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="20dp"
+        android:src="@drawable/circle_button"/>
+
+    <Button
+        android:id="@+id/btn_bottom_left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_margin="20dp"
+        android:text="左下矩形"/>
+
+    <Button
+        android:id="@+id/btn_bottom_right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:layout_margin="20dp"
+        android:text="右下椭圆"/>
+
+
+</FrameLayout>

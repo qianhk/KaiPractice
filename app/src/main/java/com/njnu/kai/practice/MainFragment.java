@@ -13,6 +13,7 @@ import com.njnu.kai.practice.aidl.AidlTestFragment;
 import com.njnu.kai.practice.dex.DexTestFragment;
 import com.njnu.kai.practice.dex.LookClassLoaderFragment;
 import com.njnu.kai.practice.draw.MultiLineViewFragment;
+import com.njnu.kai.practice.guide.GuideHighlightFragment;
 import com.njnu.kai.practice.guideanimator.ChickenAnimatorActivity;
 import com.njnu.kai.practice.animator.FrameAnimationActivity;
 import com.njnu.kai.practice.animator.PropertyAnimationActivity;
@@ -115,6 +116,7 @@ public class MainFragment extends ActionBarLayoutFragment implements AdapterView
         FUNCTIONS.add(new FunctionItem("Sticky Person Horizontal", StickyPersonFragment.class, false));
         FUNCTIONS.add(new FunctionItem("UI show", UIShowFragment.class, false));
         FUNCTIONS.add(new FunctionItem("Tag Test", TagTestFragment.class, false));
+        FUNCTIONS.add(new FunctionItem("Guide Highlight", GuideHighlightFragment.class, false));
     }
 
     @Override
