@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 
 import com.njnu.kai.practice.R;
+import com.njnu.kai.support.DisplayUtils;
 
 import java.util.ArrayList;
 
@@ -54,33 +55,21 @@ public class HighLightGuideView extends View {
     private ArrayList<View> targetViews;//高亮目标view
     private int maskColor = 0x99000000;// 蒙版层颜色
     private int borderWitdh = 10;
-    private int highLisghtPadding = 0;// 高亮控件padding
+    private int highLightPadding = 0;// 高亮控件padding
 
 
     private HighLightGuideView(Activity activity) {
         super(activity);
-        this.activity=activity;
+        this.activity = activity;
         // 计算参数
-        cal(activity);
+        screenW = DisplayUtils.getWidthPixels();
+        screenH = DisplayUtils.getHeightPixels();
         // 初始化对象
         init(activity);
     }
 
     public static HighLightGuideView builder(Activity activity) {
         return new HighLightGuideView(activity);
-    }
-
-    /**
-     * 计算参数
-     *
-     * @param context 上下文环境引用
-     */
-    private void cal(Context context) {
-        // 获取屏幕尺寸数组
-        int[] screenSize = UiUtil.getScreenSize((Activity) context);
-        // 获取屏幕宽高
-        screenW = screenSize[0];
-        screenH = screenSize[1];
     }
 
     /**
@@ -137,31 +126,31 @@ public class HighLightGuideView extends View {
                 int right = 0;
                 int bottom = 0;
                 try {
-                    Rect rtLocation =ViewUtils.getLocationInView(((ViewGroup)activity.findViewById(Window.ID_ANDROID_CONTENT)).getChildAt(0),targetViews.get(i));
+                    Rect rtLocation = ViewUtils.getLocationInView(((ViewGroup) activity.findViewById(Window.ID_ANDROID_CONTENT)).getChildAt(0), targetViews.get(i));
                     left = rtLocation.left;
                     top = rtLocation.top;
                     right = rtLocation.right;
                     bottom = rtLocation.bottom;
-                    Log.d("statusheightssleft",left+"");
-                    Log.d("statusheightsstop",top+"");
-                    Log.d("statusheightbottom",right+"");
-                    Log.d("statusheightsbottom",bottom+"");
+                    Log.d("statusheightssleft", left + "");
+                    Log.d("statusheightsstop", top + "");
+                    Log.d("statusheightbottom", right + "");
+                    Log.d("statusheightsbottom", bottom + "");
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
                 //绘制高亮形状
                 switch (highLightStyle) {
                     case VIEWSTYLE_OVAL:
-                        RectF rectf = new RectF(left-highLisghtPadding, top-highLisghtPadding, right+highLisghtPadding, bottom+highLisghtPadding);
+                        RectF rectf = new RectF(left - highLightPadding, top - highLightPadding, right + highLightPadding, bottom + highLightPadding);
                         mCanvas.drawOval(rectf, mPaint);
                         break;
                     case VIEWSTYLE_RECT:
-                        RectF rect = new RectF(left - borderWitdh-highLisghtPadding, top - borderWitdh-highLisghtPadding, right + borderWitdh+highLisghtPadding, bottom + borderWitdh+highLisghtPadding);
+                        RectF rect = new RectF(left - borderWitdh - highLightPadding, top - borderWitdh - highLightPadding, right + borderWitdh + highLightPadding, bottom + borderWitdh + highLightPadding);
                         mCanvas.drawRoundRect(rect, 20, 20, mPaint);
                         break;
                     case VIEWSTYLE_CIRCLE:
                     default:
-                        radius = vWidth > vHeight ? vWidth / 2 +highLisghtPadding/2: vHeight / 2+ highLisghtPadding/2;
+                        radius = vWidth > vHeight ? vWidth / 2 + highLightPadding / 2 : vHeight / 2 + highLightPadding / 2;
                         if (radius < 50) {
                             radius = 100;
                         }
@@ -171,7 +160,7 @@ public class HighLightGuideView extends View {
                 }
                 //绘制箭头和提示图
                 if (bottom < screenH / 2 || (screenH / 2 - top > bottom - screenH / 2)) {// 偏上
-                    int jtTop = highLightStyle == VIEWSTYLE_CIRCLE ? bottom +highLisghtPadding + margin+radius/3 : bottom +highLisghtPadding+ margin;
+                    int jtTop = highLightStyle == VIEWSTYLE_CIRCLE ? bottom + highLightPadding + margin + radius / 3 : bottom + highLightPadding + margin;
                     if (right < screenW / 2 || (screenW / 2 - left > right - screenW / 2)) {//偏左
                         canvas.drawBitmap(jtUpLeft, left + vWidth / 2, jtTop, null);
                         if (tipBitmaps.get(i) != null) {
@@ -184,7 +173,7 @@ public class HighLightGuideView extends View {
                         }
                     }
                 } else {
-                    int jtTop = highLightStyle == VIEWSTYLE_CIRCLE ? top - jtDownLeft.getHeight()-radius/3 -highLisghtPadding- margin : top - jtDownLeft.getHeight() - margin-highLisghtPadding;
+                    int jtTop = highLightStyle == VIEWSTYLE_CIRCLE ? top - jtDownLeft.getHeight() - radius / 3 - highLightPadding - margin : top - jtDownLeft.getHeight() - margin - highLightPadding;
                     if (right < screenW / 2 || (screenW / 2 - left > right - screenW / 2)) {
                         canvas.drawBitmap(jtDownLeft, left + vWidth / 2, jtTop, null);
                         if (tipBitmaps.get(i) != null) {
@@ -239,7 +228,7 @@ public class HighLightGuideView extends View {
      */
     public HighLightGuideView setMaskColor(int bgColor) {
         try {
-            this.maskColor = ContextCompat.getColor(getContext(),bgColor);
+            this.maskColor = ContextCompat.getColor(getContext(), bgColor);
             // 重新绘制前景画布
             mCanvas.drawColor(maskColor);
         } catch (Exception e) {
@@ -322,10 +311,10 @@ public class HighLightGuideView extends View {
      * 设置状态栏高度 默认是减去了一个状态栏高度 如果主题设置android:windowTranslucentStatus=true
      * 需要设置状态栏高度为0
      *
-     * @param highLisghtPadding
+     * @param highLightPadding
      */
-    public HighLightGuideView setHighLisghtPadding(int highLisghtPadding) {
-        this.highLisghtPadding = highLisghtPadding;
+    public HighLightGuideView setHighLightPadding(int highLightPadding) {
+        this.highLightPadding = highLightPadding;
         return this;
     }
 
