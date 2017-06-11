@@ -16,6 +16,7 @@ import com.njnu.kai.practice.ui.dividerdrawable.DividerLayout;
 import com.njnu.kai.practice.ui.dividerdrawable.DividerUtils;
 import com.njnu.kai.support.BaseTestFragment;
 import com.njnu.kai.support.DisplayUtils;
+import com.njnu.kai.support.ToastUtils;
 
 /**
  * @author kai
@@ -139,6 +140,13 @@ public class UIShowFragment extends BaseTestFragment {
     private void testBadgeDrawable(View view) {
         final TextView textView = (TextView) view.findViewById(R.id.tvHelloWorld);
         final ImageView imageView = (ImageView) view.findViewById(R.id.imageView);
+
+        textView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ToastUtils.showToast("resourceName=" + getResources().getResourceName(v.getId()));
+            }
+        });
 
         final BadgeDrawable drawable =
                 new BadgeDrawable.Builder()
