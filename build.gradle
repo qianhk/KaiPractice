@@ -6,7 +6,7 @@ buildscript {
         google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.0.0-alpha7'
+        classpath 'com.android.tools.build:gradle:3.0.0-alpha8'
         classpath 'me.tatarka:gradle-retrolambda:3.2.4'
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
 //        classpath 'com.uphyca.gradle:gradle-android-aspectj-plugin:0.9.14' //it does not work with databinding
@@ -34,7 +34,6 @@ project.ext {
     targetSdkVersion = 22
     versionCode = 1
     versionName = "0.0.1"
-    useJack = false
     abortOnLintError = false
     checkLintRelease = false
 

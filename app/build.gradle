@@ -35,9 +35,6 @@ android {
         versionName rootProject.ext.versionName
         multiDexEnabled false
         resConfigs "zh", "en"  //, "xxhdpi" 加了xxhdpi就无法编译  failed to execute aapt，可能这个目录资源不全
-        jackOptions {
-            enabled rootProject.ext.useJack
-        }
     }
 
 
@@ -105,10 +102,10 @@ dependencies {
 
     compile 'com.jakewharton.threetenabp:threetenabp:1.0.3'
 
-    provided "com.google.dagger:dagger-compiler:2.2"
+    annotationProcessor "com.google.dagger:dagger-compiler:2.2"
     compile 'com.google.dagger:dagger:2.2'
 
-    provided 'org.glassfish:javax.annotation:10.0-b28'
+    compileOnly 'org.glassfish:javax.annotation:10.0-b28'
 
     compile 'org.java-websocket:Java-WebSocket:1.3.0'
 
