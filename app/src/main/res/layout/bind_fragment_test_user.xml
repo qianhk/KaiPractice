@@ -38,12 +38,12 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="@{handlers.onClickIdPlus1}"
+            android:onClick="@{handlers::onClickIdPlus1}"
             android:text="id +1"/>
 
         <Button
             android:layout_width="wrap_content"
-            android:onClick="@{handlers.onClickIdMinus1}"
+            android:onClick="@{handlers::onClickIdMinus1}"
             android:layout_height="wrap_content"
             android:text="id -1"/>
     </LinearLayout>
