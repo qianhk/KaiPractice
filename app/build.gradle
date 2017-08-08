@@ -7,7 +7,6 @@ apply plugin: 'com.android.application'
 //apply plugin: 'com.uphyca.android-aspectj' //it does not work with databinding
 
 
-
 buildscript {
     repositories {
         jcenter()
@@ -116,6 +115,19 @@ dependencies {
 
     compile 'id.zelory:compressor:1.0.4'
 
+}
+
+// If you use each() to iterate through the variant objects,
+// you need to start using all(). That's because each() iterates
+// through only the objects that already exist during configuration time—
+// but those object don't exist at configuration time with the new model.
+// However, all() adapts to the new model by picking up object as they are
+// added during execution.
+android.applicationVariants.all { variant ->
+    variant.outputs.all {
+//        outputFileName = "${variant.name}-${variant.versionName}.apk"
+        outputFileName = "KaiPractice-${variant.buildType.name}-${variant.versionName}.apk"
+    }
 }
 
 //final def log = project.logger
