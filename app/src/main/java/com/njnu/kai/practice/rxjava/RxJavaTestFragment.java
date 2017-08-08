@@ -198,9 +198,7 @@ public class RxJavaTestFragment extends BaseTestListFragment {
                 delay = 500;
 
             return Observable.from(new Integer[]{integer, integer / 2}).delay(delay, TimeUnit.MILLISECONDS);
-        }).observeOn(AndroidSchedulers.mainThread()).subscribe(integer -> {
-            appendResult("flatMap Next:" + integer);
-        });
+        }).observeOn(AndroidSchedulers.mainThread()).subscribe(integer -> appendResult("flatMap Next:" + integer));
 
     }
 

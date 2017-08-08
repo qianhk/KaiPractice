@@ -4,7 +4,6 @@ import org.aspectj.bridge.MessageHandler
 import org.aspectj.tools.ajc.Main
 
 apply plugin: 'com.android.library'
-apply plugin: 'me.tatarka.retrolambda'
 
 buildscript {
     repositories {
