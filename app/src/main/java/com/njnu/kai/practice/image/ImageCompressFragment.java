@@ -8,11 +8,9 @@ import com.njnu.kai.support.TestFunction;
 import java.io.File;
 
 import id.zelory.compressor.Compressor;
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.functions.Func1;
-import rx.schedulers.Schedulers;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 import top.zibin.luban.Luban;
 import top.zibin.luban.OnCompressListener;
 

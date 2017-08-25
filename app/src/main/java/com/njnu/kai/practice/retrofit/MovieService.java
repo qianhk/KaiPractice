@@ -3,10 +3,10 @@ package com.njnu.kai.practice.retrofit;
 import com.njnu.kai.practice.retrofit.data.MovieEntity;
 import com.njnu.kai.practice.retrofit.data.UserInfo;
 
+import io.reactivex.Observable;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.*;
-import rx.Observable;
 
 import java.util.List;
 import java.util.Map;

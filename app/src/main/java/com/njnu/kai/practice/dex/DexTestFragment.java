@@ -15,6 +15,8 @@ import com.njnu.kai.practice.recycler.provider.TextItemViewProvider;
 import com.njnu.kai.practice.za.TextViewerFragment;
 import com.njnu.kai.support.LogUtils;
 
+import org.reactivestreams.Subscriber;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -22,13 +24,11 @@ import java.util.List;
 
 import dalvik.system.DexClassLoader;
 import dalvik.system.DexFile;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 import me.drakeet.multitype.BaseVO;
 import me.drakeet.multitype.MultiTypeAdapter;
-import rx.Observable;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
-import rx.schedulers.Schedulers;
 
 /**
  * @author hongkai.qian

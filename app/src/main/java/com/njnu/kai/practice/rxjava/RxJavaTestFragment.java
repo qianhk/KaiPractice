@@ -5,13 +5,11 @@ import android.os.SystemClock;
 import com.njnu.kai.support.BaseTestListFragment;
 import com.njnu.kai.support.TestFunction;
 
+import org.reactivestreams.Subscription;
+
 import java.util.concurrent.TimeUnit;
 
-import rx.Observable;
-import rx.Subscriber;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
+import io.reactivex.Observable;
 
 /**
  * @author hongkai.qian

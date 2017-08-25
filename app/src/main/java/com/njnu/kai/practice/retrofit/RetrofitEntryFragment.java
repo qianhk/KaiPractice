@@ -13,6 +13,7 @@ import com.njnu.kai.support.JSONUtils;
 import com.njnu.kai.support.TestFunction;
 import com.njnu.kai.support.executor.RxExecutor;
 
+import io.reactivex.Observable;
 import okhttp3.FormBody;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -20,9 +21,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
-import rx.Observable;
 
 import java.io.File;
 import java.util.ArrayList;
