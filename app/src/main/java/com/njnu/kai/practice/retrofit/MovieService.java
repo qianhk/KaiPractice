@@ -29,7 +29,7 @@ public interface MovieService {
 
     @Headers("KaiHeader:      kaiValue") //似乎整理过，这样写不会有多余的空格发出去
     @GET("top250")
-    Observable<MovieEntity> getTopMovieObservable(@Header("Authorization") String authorization, @Query("start") int start, @Query("count") int count);
+    Observable<MovieEntity> getTopMovieObservable(@Header("Authorization2") String authorization, @Query("start") int start, @Query("count") int count);
 
     @GET("{No}")
     Observable<MovieEntity> getTopMovieObservableByPath(@Path("No") String no, @Query("start") int start, @Query("count") int count);
