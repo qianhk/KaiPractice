@@ -23,9 +23,10 @@ import com.njnu.kai.support.image.BitmapUtils;
 
 import java.io.ByteArrayOutputStream;
 
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
+
 
 /**
  * Created by kai
@@ -274,8 +275,8 @@ public class ShortcutTestFragment extends BaseTestListFragment {
     }
 
     private Observable<Bitmap> getBitmapObservable(String url) {
-        return Observable.create(subscriber -> {
-            if (subscriber.isUnsubscribed()) {
+        return Observable.create(emitter -> {
+            if (emitter.isDisposed()) {
                 return;
             }
             String tmpPath = String.format("%s/app_icon_%s.jpg"
@@ -291,8 +292,8 @@ public class ShortcutTestFragment extends BaseTestListFragment {
                             , bitmap.getByteCount(), bitmap.getWidth(), bitmap.getHeight());
                 }
             }
-            subscriber.onNext(bitmap);
-            subscriber.onCompleted();
+            emitter.onNext(bitmap);
+            emitter.onComplete();
         });
     }
 

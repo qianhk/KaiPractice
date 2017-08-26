@@ -5,11 +5,21 @@ import android.graphics.Bitmap;
 import com.njnu.kai.support.BaseTestListFragment;
 import com.njnu.kai.support.TestFunction;
 
+import org.reactivestreams.Subscription;
+
 import java.io.File;
 
 import id.zelory.compressor.Compressor;
+import io.reactivex.BackpressureStrategy;
+import io.reactivex.Flowable;
+import io.reactivex.FlowableEmitter;
+import io.reactivex.FlowableOnSubscribe;
+import io.reactivex.FlowableSubscriber;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import top.zibin.luban.Luban;
 import top.zibin.luban.OnCompressListener;
@@ -24,9 +34,8 @@ public class ImageCompressFragment extends BaseTestListFragment {
     @TestFunction("Luban 压缩图片 Use listener")
     public void onTest01() {
         File file = new File("/sdcard/dcim/camera/IMG_20170412_195631.jpg");
-        Luban.get(getContext())
+        Luban.with(getContext())
                 .load(file)                     //传人要压缩的图片
-                .putGear(Luban.THIRD_GEAR)      //设定压缩档次，默认三挡
                 .setCompressListener(new OnCompressListener() { //设置回调
 
                     @Override
@@ -49,74 +58,45 @@ public class ImageCompressFragment extends BaseTestListFragment {
     @TestFunction("Luban 压缩图片 use rxJava")
     public void onTest02() {
         File file = new File("/sdcard/dcim/camera/IMG_20170412_195631.jpg");
-        Luban.get(getContext())
-                .load(file)
-                .putGear(Luban.THIRD_GEAR)
-                .asObservable()
-                .subscribeOn(Schedulers.io())
+        Flowable.just(file)
+                .observeOn(Schedulers.io())
+                .map(oriFile -> Luban.with(getActivity()).load(oriFile).get())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnError(new Action1<Throwable>() {
-                    @Override
-                    public void call(Throwable throwable) {
-                        appendResult(throwable.getMessage());
-                    }
-                })
-                .onErrorResumeNext(new Func1<Throwable, Observable<? extends File>>() {
-                    @Override
-                    public Observable<? extends File> call(Throwable throwable) {
-                        return Observable.empty();
-                    }
-                })
-                .subscribe(new Action1<File>() {
-                    @Override
-                    public void call(File file) {
-                        appendResult(file.getAbsolutePath());
-                    }
-                });
+                .subscribe(newFile -> appendResult(newFile.getCanonicalPath()), this::appendResult);
     }
 
     @TestFunction("Compressor 压缩图片  use rxJava")
     public void onTest03() {
         File file = new File("/sdcard/dcim/camera/IMG_20170412_195631.jpg");
-        Compressor.getDefault(getContext())
-                .compressToFileAsObservable(file)
+        Flowable.create(new FlowableOnSubscribe<File>() {
+            @Override
+            public void subscribe(FlowableEmitter<File> e) throws Exception {
+                Compressor compressor = new Compressor(getActivity())
+                        .setMaxWidth(640)
+                        .setMaxHeight(480)
+                        .setQuality(75)
+//                        .setDestinationDirectoryPath(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getAbsolutePath())
+                        .setCompressFormat(Bitmap.CompressFormat.WEBP);
+                e.onNext(compressor.compressToFile(file));
+                e.onComplete();
+            }
+        }, BackpressureStrategy.MISSING)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<File>() {
-                    @Override
-                    public void call(File file) {
-                        appendResult(file.getAbsolutePath());
-                    }
-                }, new Action1<Throwable>() {
-                    @Override
-                    public void call(Throwable throwable) {
-                        appendResult(throwable.getMessage());
-                    }
-                });
+                .subscribe(newFile -> appendResult(file.getAbsolutePath()), this::appendResult);
     }
 
     @TestFunction("Compressor 压缩图片  use rxJava max size")
     public void onTest04() {
         File file = new File("/sdcard/dcim/camera/IMG_20170412_195631.jpg");
-        new Compressor.Builder(getContext())
+        new Compressor(getContext())
                 .setMaxWidth(1200)
                 .setMaxHeight(1500)
                 .setCompressFormat(Bitmap.CompressFormat.WEBP)
                 .setDestinationDirectoryPath("/sdcard/")
-                .build()
-                .compressToFileAsObservable(file)
+                .compressToFileAsFlowable(file)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<File>() {
-                    @Override
-                    public void call(File file) {
-                        appendResult(file.getAbsolutePath());
-                    }
-                }, new Action1<Throwable>() {
-                    @Override
-                    public void call(Throwable throwable) {
-                        appendResult(throwable.getMessage());
-                    }
-                });
+                .subscribe(newFile -> appendResult(file.getAbsolutePath()), this::appendResult);
     }
 }

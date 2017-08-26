@@ -21,8 +21,8 @@ public class OneGlideImageTestFragment extends BaseImageTestFragment {
     protected void loadImageForView(ImageView view, int pos) {
         super.loadImageForView(view, pos);
         if (pos == 0) {
-//            Glide.with(this).load(TEST_IMAGE_URL).into(view);
-            Glide.with(this).load(TEST_IMAGE_URL).override(DisplayUtils.getWidthPixels(), DisplayUtils.getWidthPixels()).into(view);
+            Glide.with(this).load(TEST_IMAGE_URL).into(view);
+//            Glide.with(this).load(TEST_IMAGE_URL).override(DisplayUtils.getWidthPixels(), DisplayUtils.getWidthPixels()).into(view);
 //            Glide.with(this).load(TEST_IMAGE_URL).diskCacheStrategy(DiskCacheStrategy.ALL).into(view);
         }
     }

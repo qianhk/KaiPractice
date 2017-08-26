@@ -13,7 +13,7 @@ import com.njnu.kai.practice.danmaku.data.SongDanmaku;
 import com.njnu.kai.practice.danmaku.data.SongDanmakuListResult;
 import com.njnu.kai.support.JSONUtils;
 import com.njnu.kai.support.StringUtils;
-import com.njnu.kai.support.TaskScheduler;
+import com.njnu.kai.support.executor.TaskScheduler;
 
 import java.util.ArrayList;
 import java.util.Collections;

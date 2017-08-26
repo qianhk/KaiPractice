@@ -13,6 +13,9 @@ import com.njnu.kai.support.JSONUtils;
 import com.njnu.kai.support.TestFunction;
 import com.njnu.kai.support.executor.RxExecutor;
 
+import java.io.File;
+import java.util.ArrayList;
+
 import io.reactivex.Observable;
 import okhttp3.FormBody;
 import okhttp3.MultipartBody;
@@ -21,10 +24,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
-
-import java.io.File;
-import java.util.ArrayList;
 
 /**
  * @author hongkai.qian
@@ -45,7 +46,7 @@ public class RetrofitEntryFragment extends BaseTestListFragment {
         mRetrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .client(HttpUtils.getOkHttpClient())
-                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create(JSONUtils.gsonInstance()))
                 .build();
 
@@ -138,27 +139,21 @@ public class RetrofitEntryFragment extends BaseTestListFragment {
 
     @TestFunction("https(google apis)")
     private void on11() {
-        Observable<String> objectObservable = Observable.create(subscriber -> {
-            if (subscriber.isUnsubscribed()) {
+        Observable<String> objectObservable = Observable.create(emitter -> {
+            if (emitter.isDisposed()) {
                 return;
             }
             String str = HttpUtils.getStringFromUrlSync("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=-33.8670,151.1957&radius=500");
-            subscriber.onNext(str);
-            subscriber.onCompleted();
+            emitter.onNext(str);
+            emitter.onComplete();
         });
         RxExecutor.execute(objectObservable, this::setResult);
     }
 
     @TestFunction("https(github apis)")
     private void on12() {
-        Observable<String> objectObservable = Observable.create(subscriber -> {
-            if (subscriber.isUnsubscribed()) {
-                return;
-            }
-            String str = HttpUtils.getStringFromUrlSync("https://api.github.com");
-            subscriber.onNext(str);
-            subscriber.onCompleted();
-        });
+        Observable<String> objectObservable = Observable.defer(()
+                -> Observable.just(HttpUtils.getStringFromUrlSync("https://api.github.com")));
         RxExecutor.execute(objectObservable, this::setResult);
     }
 }

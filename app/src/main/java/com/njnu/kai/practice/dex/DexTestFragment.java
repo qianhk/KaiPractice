@@ -1,7 +1,6 @@
 package com.njnu.kai.practice.dex;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -15,8 +14,6 @@ import com.njnu.kai.practice.recycler.provider.TextItemViewProvider;
 import com.njnu.kai.practice.za.TextViewerFragment;
 import com.njnu.kai.support.LogUtils;
 
-import org.reactivestreams.Subscriber;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -25,7 +22,11 @@ import java.util.List;
 import dalvik.system.DexClassLoader;
 import dalvik.system.DexFile;
 import io.reactivex.Observable;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import me.drakeet.multitype.BaseVO;
 import me.drakeet.multitype.MultiTypeAdapter;
@@ -53,38 +54,32 @@ public class DexTestFragment extends RecyclerViewListFragment {
 
     @Override
     public void onReloadData(int page, boolean auto) {
-        Observable.create(new Observable.OnSubscribe<List<String>>() {
-            @Override
-            public void call(Subscriber<? super List<String>> subscriber) {
-                try {
-                    subscriber.onNext(getClassNameList());
-                    subscriber.onCompleted();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    subscriber.onError(e);
-                }
-            }
-        }).map(new Func1<List<String>, List<Text>>() {
-            @Override
-            public List<Text> call(List<String> strings) {
-                ArrayList<Text> list = new ArrayList<>();
-                if (strings != null) {
-                    for (String string : strings) {
-                        if (string.startsWith("com.njnu")) {
-                            list.add(new Text(string, true));
-                        }
+        Observable.create((ObservableOnSubscribe<List<String>>) emitter -> {
+            emitter.onNext(getClassNameList());
+            emitter.onComplete();
+        }).map((Function<List<String>, List<Text>>) strings -> {
+            ArrayList<Text> list = new ArrayList<>();
+            if (strings != null) {
+                for (String string : strings) {
+                    if (string.startsWith("com.njnu")) {
+                        list.add(new Text(string, true));
                     }
                 }
-                return list;
             }
-        }).observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.newThread()).subscribe(new Subscriber<List<Text>>() {
+            return list;
+        }).observeOn(AndroidSchedulers.mainThread()).subscribeOn(Schedulers.newThread()).subscribe(new Observer<List<Text>>() {
             @Override
-            public void onCompleted() {
+            public void onComplete() {
             }
 
             @Override
             public void onError(Throwable e) {
                 handleLoadDataFailed();
+            }
+
+            @Override
+            public void onSubscribe(Disposable d) {
+
             }
 
             @Override

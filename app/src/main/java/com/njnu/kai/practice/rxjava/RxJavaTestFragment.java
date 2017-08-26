@@ -10,6 +10,12 @@ import org.reactivestreams.Subscription;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * @author hongkai.qian
@@ -18,35 +24,40 @@ import io.reactivex.Observable;
  */
 public class RxJavaTestFragment extends BaseTestListFragment {
 
-    private Subscription mTestSubscribe;
+    private Disposable mDisposable;
 
 
     @TestFunction("throttleWithTimeout")
     public void onTestPosition80() {
-        Observable.create(new Observable.OnSubscribe<Integer>() {
-            @Override
-            public void call(Subscriber<? super Integer> subscriber) {
-                next(subscriber, 1, 0);
-                next(subscriber, 2, 50);
-                next(subscriber, 3, 100);
-                next(subscriber, 4, 30);
-                next(subscriber, 5, 40);
-                next(subscriber, 6, 130);
-                subscriber.onCompleted();
+        Observable.create((ObservableOnSubscribe<Integer>) emitter -> {
+            if (emitter.isDisposed()) {
+                return;
             }
+            next(emitter, 1, 0);
+            next(emitter, 2, 50);
+            next(emitter, 3, 100);
+            next(emitter, 4, 30);
+            next(emitter, 5, 40);
+            next(emitter, 6, 130);
+            emitter.onComplete();
         })
                 .subscribeOn(Schedulers.newThread())
                 .throttleWithTimeout(100, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<Integer>() {
+                .subscribe(new Observer<Integer>() {
                     @Override
-                    public void onCompleted() {
+                    public void onComplete() {
                         appendResult("onCompleted");
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         appendResult("onError: " + e.getMessage());
+                    }
+
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        mDisposable = d;
                     }
 
                     @Override
@@ -59,30 +70,32 @@ public class RxJavaTestFragment extends BaseTestListFragment {
 
     @TestFunction("throttleFirst")
     public void onTestPosition81() {
-        Observable.create(new Observable.OnSubscribe<Integer>() {
-            @Override
-            public void call(Subscriber<? super Integer> subscriber) {
-                next(subscriber, 1, 0);
-                next(subscriber, 2, 50);
-                next(subscriber, 3, 50);
-                next(subscriber, 4, 30);
-                next(subscriber, 5, 40);
-                next(subscriber, 6, 130);
-                subscriber.onCompleted();
-            }
+        Observable.create((ObservableOnSubscribe<Integer>) emitter -> {
+            next(emitter, 1, 0);
+            next(emitter, 2, 50);
+            next(emitter, 3, 50);
+            next(emitter, 4, 30);
+            next(emitter, 5, 40);
+            next(emitter, 6, 130);
+            emitter.onComplete();
         })
                 .subscribeOn(Schedulers.newThread())
                 .throttleFirst(100, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<Integer>() {
+                .subscribe(new Observer<Integer>() {
                     @Override
-                    public void onCompleted() {
+                    public void onComplete() {
                         appendResult("onCompleted");
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         appendResult("onError: " + e.getMessage());
+                    }
+
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
                     }
 
                     @Override
@@ -95,30 +108,32 @@ public class RxJavaTestFragment extends BaseTestListFragment {
 
     @TestFunction("throttleLast")
     public void onTestPosition82() {
-        Observable.create(new Observable.OnSubscribe<Integer>() {
-            @Override
-            public void call(Subscriber<? super Integer> subscriber) {
-                next(subscriber, 1, 0);
-                next(subscriber, 2, 50);
-                next(subscriber, 3, 50);
-                next(subscriber, 4, 30);
-                next(subscriber, 5, 40);
-                next(subscriber, 6, 130);
-                subscriber.onCompleted();
-            }
+        Observable.create((ObservableOnSubscribe<Integer>) emitter -> {
+            next(emitter, 1, 0);
+            next(emitter, 2, 50);
+            next(emitter, 3, 50);
+            next(emitter, 4, 30);
+            next(emitter, 5, 40);
+            next(emitter, 6, 130);
+            emitter.onComplete();
         })
                 .subscribeOn(Schedulers.newThread())
                 .throttleLast(100, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<Integer>() {
+                .subscribe(new Observer<Integer>() {
                     @Override
-                    public void onCompleted() {
+                    public void onComplete() {
                         appendResult("onCompleted");
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         appendResult("onError: " + e.getMessage());
+                    }
+
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
                     }
 
                     @Override
@@ -129,29 +144,35 @@ public class RxJavaTestFragment extends BaseTestListFragment {
                 });
     }
 
-    private void next(Subscriber<? super Integer> subscriber, int value, int millis) {
+    private void next(ObservableEmitter<Integer> emitter, int value, int millis) {
         SystemClock.sleep(millis);
-        subscriber.onNext(value);
+        emitter.onNext(value);
     }
 
     @TestFunction("interval with take, 预期后面的不执行")
     public void onTestPosition70() {
-        Observable.interval(1000, TimeUnit.MILLISECONDS).take(5).observeOn(AndroidSchedulers.mainThread()).subscribe(new Subscriber<Long>() {
-            @Override
-            public void onCompleted() {
-                appendResult("onCompleted");
-            }
+        Observable.interval(1000, TimeUnit.MILLISECONDS).take(5).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Long>() {
+                    @Override
+                    public void onComplete() {
+                        appendResult("onCompleted");
+                    }
 
-            @Override
-            public void onError(Throwable e) {
-                appendResult("Throwable: " + e.toString());
-            }
+                    @Override
+                    public void onError(Throwable e) {
+                        appendResult("Throwable: " + e.toString());
+                    }
 
-            @Override
-            public void onNext(Long aLong) {
-                appendResult("onNext: " + aLong);
-            }
-        });
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(Long aLong) {
+                        appendResult("onNext: " + aLong);
+                    }
+                });
     }
 
     @TestFunction("flatMap")
@@ -163,7 +184,7 @@ public class RxJavaTestFragment extends BaseTestListFragment {
             if (integer > 10)
                 delay = 500;
 
-            return Observable.from(new Integer[]{integer, integer / 2}).delay(delay, TimeUnit.MILLISECONDS);
+            return Observable.fromArray(integer, integer / 2).delay(delay, TimeUnit.MILLISECONDS);
         }).observeOn(AndroidSchedulers.mainThread()).subscribe(integer -> {
             appendResult("flatMap Next:" + integer);
         });
@@ -179,7 +200,7 @@ public class RxJavaTestFragment extends BaseTestListFragment {
             if (integer > 10)
                 delay = 500;
 
-            return Observable.from(new Integer[]{integer, integer / 2}).delay(delay, TimeUnit.MILLISECONDS);
+            return Observable.fromArray(integer, integer / 2).delay(delay, TimeUnit.MILLISECONDS);
         }).observeOn(AndroidSchedulers.mainThread()).subscribe(integer -> {
             appendResult("flatMap Next:" + integer);
         });
@@ -195,14 +216,14 @@ public class RxJavaTestFragment extends BaseTestListFragment {
             if (integer > 10)
                 delay = 500;
 
-            return Observable.from(new Integer[]{integer, integer / 2}).delay(delay, TimeUnit.MILLISECONDS);
+            return Observable.fromArray(integer, integer / 2).delay(delay, TimeUnit.MILLISECONDS);
         }).observeOn(AndroidSchedulers.mainThread()).subscribe(integer -> appendResult("flatMap Next:" + integer));
 
     }
 
     @TestFunction("timer然后map")
     protected void onTestPosition30() {
-        mTestSubscribe = Observable.timer(2000, TimeUnit.MILLISECONDS).map(aLong -> "\nnumber=" + aLong)
+        Observable.timer(2000, TimeUnit.MILLISECONDS).map(aLong -> "\nnumber=" + aLong)
                 .observeOn(AndroidSchedulers.mainThread()).subscribe(this::appendResult);
     }
 
@@ -211,15 +232,20 @@ public class RxJavaTestFragment extends BaseTestListFragment {
         Observable.zip(
                 Observable.interval(1, TimeUnit.SECONDS),
                 Observable.range(101, 10), (aLong, integer) -> integer)
-                .map(aLong -> "next=" + aLong).observeOn(AndroidSchedulers.mainThread()).subscribe(new Subscriber<String>() {
+                .map(aLong -> "next=" + aLong).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<String>() {
             @Override
-            public void onCompleted() {
+            public void onComplete() {
                 appendResult("onCompleted");
             }
 
             @Override
             public void onError(Throwable e) {
                 appendResult("onError" + e.toString());
+            }
+
+            @Override
+            public void onSubscribe(Disposable d) {
+
             }
 
             @Override
@@ -231,32 +257,37 @@ public class RxJavaTestFragment extends BaseTestListFragment {
 
     @TestFunction("interval并主动取消")
     protected void onTestPosition10() {
-        mTestSubscribe = Observable.interval(1, TimeUnit.SECONDS).map(aLong -> {
+        Observable.interval(1, TimeUnit.SECONDS).map(aLong -> {
             if (aLong < 10) {
                 return "next=" + aLong;
             } else {
                 return "over";
             }
         }).subscribeOn(AndroidSchedulers.mainThread())
-                .observeOn(AndroidSchedulers.mainThread()).subscribe(new Subscriber<String>() {
-                    @Override
-                    public void onCompleted() {
-                        appendResult("onCompleted");
-                    }
+                .observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<String>() {
+            @Override
+            public void onComplete() {
+                appendResult("onCompleted");
+            }
 
-                    @Override
-                    public void onError(Throwable e) {
-                        appendResult("onError" + e.toString());
-                    }
+            @Override
+            public void onError(Throwable e) {
+                appendResult("onError" + e.toString());
+            }
 
-                    @Override
-                    public void onNext(String s) {
-                        appendResult(s);
-                        if (s.equals("over")) {
-                            cancelTestSubscribe();
-                        }
-                    }
-                });
+            @Override
+            public void onSubscribe(Disposable d) {
+                mDisposable = d;
+            }
+
+            @Override
+            public void onNext(String s) {
+                appendResult(s);
+                if (s.equals("over")) {
+                    cancelTestSubscribe();
+                }
+            }
+        });
     }
 
     @TestFunction("just filter map")
@@ -270,9 +301,9 @@ public class RxJavaTestFragment extends BaseTestListFragment {
     }
 
     private void cancelTestSubscribe() {
-        if (mTestSubscribe != null) {
-            mTestSubscribe.unsubscribe();
-            mTestSubscribe = null;
+        if (mDisposable != null) {
+            mDisposable.dispose();
+            mDisposable = null;
         }
     }
 
