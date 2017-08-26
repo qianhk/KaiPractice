@@ -112,9 +112,9 @@ dependencies {
 
     compile 'com.evernote:android-job:1.1.8'
 
-    compile 'top.zibin:Luban:1.1.2'
+//    compile 'top.zibin:Luban:1.1.2'
 
-    compile 'id.zelory:compressor:2.1.0'
+//    compile 'id.zelory:compressor:2.1.0'
 }
 
 // If you use each() to iterate through the variant objects,
