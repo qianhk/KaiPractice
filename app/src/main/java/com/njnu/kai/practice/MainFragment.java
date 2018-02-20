@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 
+import com.njnu.kai.practice.ai.LinearRegressionFragment;
 import com.njnu.kai.practice.aidl.AidlTestFragment;
 import com.njnu.kai.practice.dex.DexTestFragment;
 import com.njnu.kai.practice.dex.LookClassLoaderFragment;
@@ -117,6 +118,7 @@ public class MainFragment extends ActionBarLayoutFragment implements AdapterView
         FUNCTIONS.add(new FunctionItem("UI show", UIShowFragment.class, false));
         FUNCTIONS.add(new FunctionItem("Tag Test", TagTestFragment.class, false));
         FUNCTIONS.add(new FunctionItem("Guide Highlight", GuideHighlightFragment.class, false));
+        FUNCTIONS.add(new FunctionItem("Linear Regression", LinearRegressionFragment.class, false));
     }
 
     @Override
@@ -173,13 +175,13 @@ public class MainFragment extends ActionBarLayoutFragment implements AdapterView
 
         FunctionItem functionItem = null;
         for (FunctionItem function : FUNCTIONS) {
-            if (function.getActionClass() == LookClassLoaderFragment.class) {
+            if (function.getActionClass() == LinearRegressionFragment.class) {
                 functionItem = function;
                 break;
             }
         }
         if (functionItem != null) {
-//            gotoPage(functionItem);
+            gotoPage(functionItem);
         }
     }
 
