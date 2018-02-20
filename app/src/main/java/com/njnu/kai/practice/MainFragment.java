@@ -179,7 +179,7 @@ public class MainFragment extends ActionBarLayoutFragment implements AdapterView
             }
         }
         if (functionItem != null) {
-            gotoPage(functionItem);
+//            gotoPage(functionItem);
         }
     }
 
